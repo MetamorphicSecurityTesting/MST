@@ -1141,6 +1141,19 @@ public class Operations {
 	public static Object RandomCookiePath(int x){ 
 		return MR.CURRENT.getMRData("RandomCookiePath",x);
 	}
+	
+	
+	
+	@MRDataProvider  
+	public static Object InvalidCookieTags(){ 
+		return InvalidCookieTags(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static Object InvalidCookieTags(int x){ 
+		return MR.CURRENT.getMRData("InvalidCookieTags",x);
+	}
 
 }
 

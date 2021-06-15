@@ -517,6 +517,12 @@ public abstract class Action implements Cloneable {
 		return true;
 		// FIXME : ADD CODE
 	}
+	
+	
+	public boolean setCookie(Object cookie) {
+		return true;
+		// FIXME : ADD CODE
+	}
 }
 
 
