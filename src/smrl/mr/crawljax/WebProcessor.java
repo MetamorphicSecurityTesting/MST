@@ -141,6 +141,11 @@ public class WebProcessor {
 	private boolean headless=true;
 	private boolean backToRightPageBeforeAction=true;
 	private boolean checkStatusCode=false;
+	
+	//Nazanin
+	private List<String> randomCookiePath;
+	//
+	
 	private static HashSet<String> visibleWithoutLogin;
 	
 	
@@ -150,6 +155,10 @@ public class WebProcessor {
 		this.setInputList(new ArrayList<WebInputCrawlJax>());
 		this.inputIter = this.getInputList().iterator();
 		this.randomFilePath = new ArrayList<String>();
+		
+		///Nazanin
+		this.randomCookiePath = new ArrayList<String>();
+		
 		this.latestUrl = "";
 		this.currentUsername = "";
 		this.changedUsername = "";
@@ -2808,6 +2817,12 @@ public class WebProcessor {
 		return this.randomFilePath;
 	}
 	
+	///Nazanin
+	
+	public List<String> getRandomCookiePath() {
+		return this.randomCookiePath;
+	}
+	
 	public void loadRandomAdminFilePath(String randomFilePathCatalogFile ) throws IOException {
 		randomAdminFilePath = new ArrayList<String>();
 		_loadRandomFilePath(randomFilePathCatalogFile, randomAdminFilePath);
@@ -2816,6 +2831,12 @@ public class WebProcessor {
 	public void loadRandomFilePath(String randomFilePathCatalogFile ) throws IOException {
 		randomFilePath = new ArrayList<String>();
 		_loadRandomFilePath(randomFilePathCatalogFile, randomFilePath);
+	}
+	
+	
+	public void loadRandomCookiePath(String randomCookiePathCatalogFile ) throws IOException {
+		randomCookiePath = new ArrayList<String>();
+		_loadRandomFilePath(randomCookiePathCatalogFile, randomCookiePath);
 	}
 	
 	public void loadAdminRandomFilePath(String randomAdminFilePathCatalogFile ) throws IOException {

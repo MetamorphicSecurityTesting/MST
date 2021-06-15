@@ -1125,6 +1125,23 @@ public class Operations {
 //		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
 		return MR.CURRENT.getMRDataSize("RandomFilePath");
 	}
+	
+	
+	
+	///////////////////NAZANIN
+	
+	
+	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
+	public static Object RandomCookiePath(){ 
+		return RandomCookiePath(1);
+	}
+	
+	
+	@MRDataProvider
+	public static Object RandomCookiePath(int x){ 
+//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
+		return MR.CURRENT.getMRData("RandomCookiePath",x);
+	}
 
 }
 

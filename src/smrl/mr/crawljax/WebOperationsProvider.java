@@ -70,6 +70,9 @@ public class WebOperationsProvider implements OperationsProvider {
 		
 		try {
 			impl.loadRandomFilePath(impl.getSysConfig().getRandomFilePathFile());
+			
+			impl.loadRandomCookiePath(impl.getSysConfig().getRandomCookiePathFile());
+			
 			impl.loadRandomAdminFilePath(impl.getSysConfig().getRandomAdminFilePathFile());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -307,6 +310,11 @@ public class WebOperationsProvider implements OperationsProvider {
 	private List loadRandomFilePath() {
 		return impl.getRandomFilePath();
 	}
+	/////Nazanin
+	
+	private List loadRandomCookiePath() {
+		return impl.getRandomCookiePath();
+	}
 	
 	private List loadRandomAdminFilePath() {
 		return impl.getRandomAdminFilePath();
@@ -361,6 +369,9 @@ public class WebOperationsProvider implements OperationsProvider {
 			return loadRandomAdminFilePath();
 		case "WeakEncryption":
 			return loadWeakCipherSuite();
+			
+		case "RandomCookiePath":
+			return loadRandomCookiePath();
 		}
 		return null;
 	}

@@ -508,4 +508,27 @@ public abstract class Action implements Cloneable {
 	}
 	
 	public abstract boolean isMethodChanged();
+	
+	///// Nazanin's implementation start point
+	
+	
+	
+	public boolean setCookiePath(Object path) {
+		return true;
+		// FIXME : ADD CODE
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

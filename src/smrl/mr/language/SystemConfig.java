@@ -58,6 +58,7 @@ public class SystemConfig {
 	private Map<String, ArrayList<String>> supervisedUser;
 	private boolean headless;
 	private String actionsChangedUrlFileName;
+	private String randomCookiePathFile;
 	
 	
 	static final int DEFAULT_WAIT_TIME = 1000;
@@ -139,6 +140,17 @@ public class SystemConfig {
 			else{
 				this.randomFilePathFile = "";
 			}
+			
+			
+			if(jsonObject.keySet().contains("randomCookiePathFile")){
+				this.randomCookiePathFile = jsonObject.get("randomCookiePathFile").getAsString().trim();
+			}
+			else{
+				this.randomCookiePathFile = "";
+			}
+			
+			
+			
 			
 			if(jsonObject.keySet().contains("randomAdminFilePathFile")){
 				this.randomAdminFilePathFile = jsonObject.get("randomAdminFilePathFile").getAsString().trim();
@@ -766,6 +778,11 @@ public class SystemConfig {
 	
 	public String getActionsChangedUrlFileName() {
 		return this.actionsChangedUrlFileName;
+	}
+
+	public String getRandomCookiePathFile() {
+		// TODO Auto-generated method stub
+		return randomCookiePathFile;
 	}
 	
 }
