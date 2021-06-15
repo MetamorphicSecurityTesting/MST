@@ -523,6 +523,13 @@ public abstract class Action implements Cloneable {
 		return true;
 		// FIXME : ADD CODE
 	}
+	
+	
+	public String EncodeUrl(String url){
+		return "";
+		// FIXME : ADD CODE
+	}
+	
 }
 
 
