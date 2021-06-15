@@ -59,6 +59,7 @@ public class SystemConfig {
 	private boolean headless;
 	private String actionsChangedUrlFileName;
 	private String randomCookiePathFile;
+	private JsonObject jsonConfig;
 	
 	
 	static final int DEFAULT_WAIT_TIME = 1000;
@@ -95,6 +96,7 @@ public class SystemConfig {
 	}
 	
 	public SystemConfig(String configFile){
+		
 		//1. Load input from json file
 		Gson gson = new Gson();
 		File jsonFile = Paths.get(configFile).toFile();
@@ -102,9 +104,12 @@ public class SystemConfig {
 			System.out.println("File not found: " + configFile);
 			return;
 		}
+		
+		
 
 		try {
 			JsonObject jsonObject = gson.fromJson(new FileReader(jsonFile), JsonObject.class);
+			this.jsonConfig = jsonObject;
 			
 			if(jsonObject.keySet().contains("SUT")){
 				this.SUT = jsonObject.get("SUT").getAsString().trim();
@@ -139,16 +144,7 @@ public class SystemConfig {
 			}
 			else{
 				this.randomFilePathFile = "";
-			}
-			
-			
-			if(jsonObject.keySet().contains("randomCookiePathFile")){
-				this.randomCookiePathFile = jsonObject.get("randomCookiePathFile").getAsString().trim();
-			}
-			else{
-				this.randomCookiePathFile = "";
-			}
-			
+			}			
 			
 			
 			
@@ -780,9 +776,18 @@ public class SystemConfig {
 		return this.actionsChangedUrlFileName;
 	}
 
-	public String getRandomCookiePathFile() {
-		// TODO Auto-generated method stub
-		return randomCookiePathFile;
+
+	public String getConfigStringValue( String key ) {
+		if ( jsonConfig == null ) {
+			return null;
+		}
+		
+		if(jsonConfig.keySet().contains(key)){
+			return jsonConfig.get(key).getAsString().trim();
+		}
+		else{
+			throw new RuntimeException("Missing configuration: "+key);
+		}
 	}
 	
 }

@@ -142,10 +142,6 @@ public class WebProcessor {
 	private boolean backToRightPageBeforeAction=true;
 	private boolean checkStatusCode=false;
 	
-	//Nazanin
-	private List<String> randomCookiePath;
-	//
-	
 	private static HashSet<String> visibleWithoutLogin;
 	
 	
@@ -155,9 +151,7 @@ public class WebProcessor {
 		this.setInputList(new ArrayList<WebInputCrawlJax>());
 		this.inputIter = this.getInputList().iterator();
 		this.randomFilePath = new ArrayList<String>();
-		
-		///Nazanin
-		this.randomCookiePath = new ArrayList<String>();
+	
 		
 		this.latestUrl = "";
 		this.currentUsername = "";
@@ -2817,11 +2811,6 @@ public class WebProcessor {
 		return this.randomFilePath;
 	}
 	
-	///Nazanin
-	
-	public List<String> getRandomCookiePath() {
-		return this.randomCookiePath;
-	}
 	
 	public void loadRandomAdminFilePath(String randomFilePathCatalogFile ) throws IOException {
 		randomAdminFilePath = new ArrayList<String>();
@@ -2831,12 +2820,6 @@ public class WebProcessor {
 	public void loadRandomFilePath(String randomFilePathCatalogFile ) throws IOException {
 		randomFilePath = new ArrayList<String>();
 		_loadRandomFilePath(randomFilePathCatalogFile, randomFilePath);
-	}
-	
-	
-	public void loadRandomCookiePath(String randomCookiePathCatalogFile ) throws IOException {
-		randomCookiePath = new ArrayList<String>();
-		_loadRandomFilePath(randomCookiePathCatalogFile, randomCookiePath);
 	}
 	
 	public void loadAdminRandomFilePath(String randomAdminFilePathCatalogFile ) throws IOException {
@@ -3102,6 +3085,24 @@ public class WebProcessor {
 		
 		//clear all replacer rules
 		clearProxyReplacerRules();
+	}
+
+
+	HashMap<String,List<Object>> _loadedData = new HashMap<String,List<Object>>(); 
+ 	public List _load(String dataName) {
+ 		if ( _loadedData.containsKey(dataName) ) {
+ 			return _loadedData.get(dataName);
+ 		}
+ 		
+ 		ArrayList<String> list = new ArrayList<String>();
+ 		
+		try {
+			_loadRandomFilePath(sysConfig.getConfigStringValue(dataName), list);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+		return list;
 	}
 	
 }

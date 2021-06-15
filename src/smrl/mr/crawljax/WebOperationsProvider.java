@@ -71,8 +71,6 @@ public class WebOperationsProvider implements OperationsProvider {
 		try {
 			impl.loadRandomFilePath(impl.getSysConfig().getRandomFilePathFile());
 			
-			impl.loadRandomCookiePath(impl.getSysConfig().getRandomCookiePathFile());
-			
 			impl.loadRandomAdminFilePath(impl.getSysConfig().getRandomAdminFilePathFile());
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -310,11 +308,6 @@ public class WebOperationsProvider implements OperationsProvider {
 	private List loadRandomFilePath() {
 		return impl.getRandomFilePath();
 	}
-	/////Nazanin
-	
-	private List loadRandomCookiePath() {
-		return impl.getRandomCookiePath();
-	}
 	
 	private List loadRandomAdminFilePath() {
 		return impl.getRandomAdminFilePath();
@@ -370,12 +363,16 @@ public class WebOperationsProvider implements OperationsProvider {
 		case "WeakEncryption":
 			return loadWeakCipherSuite();
 			
-		case "RandomCookiePath":
-			return loadRandomCookiePath();
+		default :
+			return _load(dataName);
 		}
-		return null;
+		
 	}
 
+
+	private List _load(String dataName) {
+		return impl._load(dataName);
+	}
 
 	@Override
 	public boolean notVisibleWithoutLoggingIn(String url) {

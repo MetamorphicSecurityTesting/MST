@@ -1137,9 +1137,8 @@ public class Operations {
 	}
 	
 	
-	@MRDataProvider
+	@MRDataProvider()
 	public static Object RandomCookiePath(int x){ 
-//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
 		return MR.CURRENT.getMRData("RandomCookiePath",x);
 	}
 
