@@ -1,0 +1,8 @@
+    Duplicate your repo. https://help.github.com/articles/duplicating-a-repository
+    Make the duplicated repo a private one on GitHub.
+    Clone the private repo to your machine
+    Add a remote to your public repo (git remote add public git@github.com:...)
+    Push branches with commits intended for your public repo to that new public remote. (make sure you don't accidentally commit private-only code)
+    You can bring in changes to your public repo using 'git fetch public' and then merge them locally and push to your private repo (origin remote).
+
+
