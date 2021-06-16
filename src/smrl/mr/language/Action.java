@@ -530,6 +530,11 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
+	public boolean setHostName(Object name) {
+		return true;
+		// FIXME : ADD CODE
+	}
+	
 }
 
 

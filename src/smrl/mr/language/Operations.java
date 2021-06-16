@@ -1155,6 +1155,17 @@ public class Operations {
 		return MR.CURRENT.getMRData("InvalidCookieTags",x);
 	}
 	
+	@MRDataProvider  
+	public static Object validHostName(){ 
+		return InvalidCookieTags(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static Object validHostName(int x){ 
+		return MR.CURRENT.getMRData("validHostName",x);
+	}
+	
 	
 	
 	
