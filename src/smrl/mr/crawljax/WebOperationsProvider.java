@@ -839,6 +839,12 @@ public class WebOperationsProvider implements OperationsProvider {
 	public boolean keepCache() {
 		return this.keepCache;
 	}
+
+	@Override
+	public boolean isResetPassword(Action action) {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 
 }

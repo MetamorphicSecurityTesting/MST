@@ -262,10 +262,12 @@ public abstract class Action implements Cloneable {
 	public boolean setParameterValue(int p, Object object){
 		List<Entry<String, String>> params = this.getParameters();
 		
+		
 		if(params==null || params.size()<=0 || p<0 || p>=params.size() ||
 				getUrl()==null || getUrl().isEmpty()){
 			return false;
 		}
+		
 		
 		boolean setResult = false;
 		
@@ -525,12 +527,18 @@ public abstract class Action implements Cloneable {
 	}
 	
 	
-	public String EncodeUrl(String url){
-		return "";
+	public boolean setHostName(Object name) {
+		return true;
 		// FIXME : ADD CODE
 	}
 	
-	public boolean setHostName(Object name) {
+	public boolean findParameterWithValue(Object password) {
+		return true;
+		// FIXME : ADD CODE
+	}
+	
+	
+	public boolean setPasswordValue(String str,Object password) {
 		return true;
 		// FIXME : ADD CODE
 	}

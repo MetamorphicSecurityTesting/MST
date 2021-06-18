@@ -1142,6 +1142,17 @@ public class Operations {
 		return MR.CURRENT.getMRData("RandomCookiePath",x);
 	}
 	
+	@MRDataProvider  
+	public static String EncodeUrl(String url){ 
+		return EncodeUrl(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static String EncodeUrl(int x){
+		return (String) MR.CURRENT.getMRData("validHostName",x);
+	}
+	
 	
 	
 	@MRDataProvider  
@@ -1167,7 +1178,9 @@ public class Operations {
 	}
 	
 	
-	
+	public static boolean isResetPassword(Action action) {
+		return MR.CURRENT.provider.isResetPassword(action);
+	}
 	
 
 }

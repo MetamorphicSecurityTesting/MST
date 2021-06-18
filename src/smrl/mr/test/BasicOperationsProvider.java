@@ -272,5 +272,12 @@ public class BasicOperationsProvider implements OperationsProvider {
 		return false;
 	}
 
+	
+	@Override
+	public boolean isResetPassword(Action action) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 
 }
