@@ -543,6 +543,17 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
+	public boolean setIPCertificate(Object certificate) {
+		return true;
+		// FIXME : ADD CODE
+	}
+	
+	public boolean networkSettings(Object packet) {
+		return true;
+		// FIXME : ADD CODE
+	}
+	
+	
 }
 
 

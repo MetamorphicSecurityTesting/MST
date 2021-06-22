@@ -1182,6 +1182,28 @@ public class Operations {
 		return MR.CURRENT.provider.isResetPassword(action);
 	}
 	
+	@MRDataProvider  
+	public static Object invalidCertificate(){ 
+		return invalidCertificate(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static Object invalidCertificate(int x){ 
+		return MR.CURRENT.getMRData("invalidCertificate",x);
+	}
+	
+	@MRDataProvider  
+	public static Object duplicatePacket(){ 
+		return duplicatePacket(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static Object duplicatePacket(int x){ 
+		return MR.CURRENT.getMRData("duplicatePacket",x);
+	}
+	
 
 }
 
