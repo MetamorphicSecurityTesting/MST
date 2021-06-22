@@ -538,8 +538,9 @@ public abstract class Action implements Cloneable {
 	}
 	
 	
-	public boolean setPasswordValue(String str,Object password) {
+	public boolean setValueForParametersOfType(String str,String password) {
 		return true;
+		//The method setValueForParametersOfType shall reset all the values for all the input form of a given type
 		// FIXME : ADD CODE
 	}
 	
