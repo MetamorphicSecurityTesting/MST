@@ -1212,6 +1212,16 @@ public class Operations {
 		return true;
 	}
 	
+	@MRDataProvider  
+	public static Object randomCookieElement(){ 
+		return randomCookieElement(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static Object randomCookieElement(int x){ 
+		return MR.CURRENT.getMRData("randomCookieElement",x);
+	}
 
 }
 
