@@ -1205,7 +1205,12 @@ public class Operations {
 	}
 	
 	
-	
+	public static boolean accessToSensitiveElement(Object user, Object file) {
+
+		//FIXME 
+		
+		return true;
+	}
 	
 
 }

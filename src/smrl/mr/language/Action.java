@@ -371,6 +371,8 @@ public abstract class Action implements Cloneable {
 	}
 	
 	public abstract boolean setUrl( String url );
+	
+	
 
 	public abstract boolean setMethod( String method );
 	
@@ -550,6 +552,11 @@ public abstract class Action implements Cloneable {
 	}
 	
 	public boolean networkSettings(Object packet) {
+		return true;
+		// FIXME : ADD CODE
+	}
+	public boolean setAccessibleUrlWithSensInfo() {
+		
 		return true;
 		// FIXME : ADD CODE
 	}
