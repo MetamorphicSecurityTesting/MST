@@ -1167,14 +1167,14 @@ public class Operations {
 	}
 	
 	@MRDataProvider  
-	public static Object validHostName(){ 
-		return InvalidCookieTags(1);
+	public static Object anotherHostName(){ 
+		return anotherHostName(1);
 	}
 	
 	
 	@MRDataProvider()
-	public static Object validHostName(int x){ 
-		return MR.CURRENT.getMRData("validHostName",x);
+	public static Object anotherHostName(int x){ 
+		return MR.CURRENT.getMRData("anotherHostName",x);
 	}
 	
 	
@@ -1223,5 +1223,16 @@ public class Operations {
 		return MR.CURRENT.getMRData("randomCookieElement",x);
 	}
 
+	
+	@MRDataProvider  
+	public static Object randomValue(){ 
+		return randomValue(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static Object randomValue(int x){ 
+		return MR.CURRENT.getMRData("randomValue",x);
+	}
 }
 

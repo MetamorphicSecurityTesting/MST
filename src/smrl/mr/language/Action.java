@@ -528,11 +528,10 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
-	public Object getCookie() {
-		return true;
-		// FIXME : ADD CODE
-	}
 	
+	public String getCookie(){
+		return "";
+	}
 	
 	public boolean setHostName(Object name) {
 		return true;
@@ -569,7 +568,12 @@ public abstract class Action implements Cloneable {
 		return true;
 		// FIXME : ADD CODE
 	}
-		
+	
+	public String  setValue(String  param,Object cookie) {
+		return "";
+		//The method setValueForParametersOfType shall reset all the values for all the input form of a given type
+		// FIXME : ADD CODE
+	}
 	
 }
 
