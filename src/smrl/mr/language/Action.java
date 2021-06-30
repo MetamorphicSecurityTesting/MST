@@ -575,6 +575,18 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
+	public String  getSpecialChars() {
+		return "";
+		//something like hash table for all special characters
+		// FIXME : ADD CODE
+	}
+	
+	public boolean  setInputValue(int  indx,Object input_value) {
+		return true;
+		//will return a modified version of the input value, which is combined by the special characters.
+		// FIXME : ADD CODE
+	}
+	
 }
 
 
