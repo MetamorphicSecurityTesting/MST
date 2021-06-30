@@ -587,6 +587,12 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
+	public Object userRole(String cookie) 
+	{
+		// FIXME : ADD CODE
+		return "";
+	}
+	
 }
 
 

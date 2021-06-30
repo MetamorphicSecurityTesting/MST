@@ -1234,5 +1234,18 @@ public class Operations {
 	public static Object randomValue(int x){ 
 		return MR.CURRENT.getMRData("randomValue",x);
 	}
+	
+	@MRDataProvider  
+	public static Object setUserRoleAdmin(Object role ,Object cookie){ 
+		return setUserRoleAdmin(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static Object setUserRoleAdmin(int x){ 
+		return MR.CURRENT.getMRData("setUserRoleAdmin",x);
+	}
+	
+	
 }
 
