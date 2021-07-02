@@ -599,6 +599,13 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
+	public boolean  retrieveCookiePassword(String cookie) {
+		return true;
+		//should not be able to read the password from cookie
+		// FIXME : ADD CODE
+	}
+	
+	
 	
 	
 }
