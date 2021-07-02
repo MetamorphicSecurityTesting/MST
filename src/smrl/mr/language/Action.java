@@ -593,6 +593,14 @@ public abstract class Action implements Cloneable {
 		return "";
 	}
 	
+	public boolean  readRegistryKey() {
+		return true;
+		//should not be able to read the readStringRegistryValue
+		// FIXME : ADD CODE
+	}
+	
+	
+	
 }
 
 
