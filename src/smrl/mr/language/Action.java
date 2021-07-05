@@ -605,6 +605,11 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
+	public boolean setPasswordAge(String str,int age) {
+		return true;
+		
+		// FIXME : ADD CODE
+	}
 	
 	
 	
