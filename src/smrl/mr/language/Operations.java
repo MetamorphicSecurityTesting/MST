@@ -1246,6 +1246,13 @@ public class Operations {
 		return MR.CURRENT.getMRData("setUserRoleAdmin",x);
 	}
 	
+	public static boolean isNotAccessibleWithoutLogin(Action action) {
+		//FIXME!
+		
+		return true;
+		//return _visibleWithoutLoggingIn(action.getUrl()); 
+	}
+	
 	
 }
 
