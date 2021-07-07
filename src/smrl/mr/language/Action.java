@@ -611,6 +611,11 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
+	public boolean setOtherSSLCertificate(String str,Object certificate) {
+		return true;
+		
+		// FIXME : ADD CODE
+	}
 	
 	
 }

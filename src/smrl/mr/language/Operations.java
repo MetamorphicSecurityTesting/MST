@@ -1252,6 +1252,16 @@ public class Operations {
 		return true;
 		//return _visibleWithoutLoggingIn(action.getUrl()); 
 	}
+	@MRDataProvider  
+	public static Object randomSSL(){ 
+		return randomSSL(1);
+	}
+	
+	
+	@MRDataProvider()
+	public static Object randomSSL(int x){ 
+		return MR.CURRENT.getMRData("randomSSL",x);
+	}
 	
 	
 }
