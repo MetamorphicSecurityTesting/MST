@@ -18,6 +18,8 @@ package smrl.mr.language;
 
 import static org.junit.Assert.fail;
 
+import java.io.OutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +33,8 @@ public abstract class MRBaseTest {
 
 	public void test(OperationsProvider provider, Class clazz){
 
-
+		System.setErr(new PrintStream(OutputStream.nullOutputStream()));
+		
 		//		Object[] testData = myProjectTestRule.getTestData();
 		List<String> fails = new ArrayList<>();
 
