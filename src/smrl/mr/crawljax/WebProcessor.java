@@ -98,6 +98,7 @@ public class WebProcessor {
 	private static final long PAGELOAD_TIMEOUT = 5000;			// in ms
 	private static final boolean setTimeouts = false;
 	private static final boolean storeDOMs = true;
+	
 	private List<Account> userList;
 	private List<WebInputCrawlJax> inputList;
 	private Iterator<WebInputCrawlJax> inputIter;
@@ -144,6 +145,7 @@ public class WebProcessor {
 	private boolean headless=DEFAULT_HEADLESS;
 	private boolean backToRightPageBeforeAction=true;
 	private boolean checkStatusCode=false;
+	private boolean longWaitPerformed;
 	
 	private static HashSet<String> visibleWithoutLogin;
 	
@@ -1108,12 +1110,7 @@ public class WebProcessor {
 				
 			case wait: 
 			{
-				realClickedElementText = "wait " + ((WaitAction)act).getMillis();
-				try {
-					Thread.sleep(((WaitAction)act).getMillis());
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+				realClickedElementText = executeWait(act);
 				doneAction = true;
 				System.out.println(" --> DONE");
 				break;
@@ -1416,7 +1413,50 @@ public class WebProcessor {
 		//reset the proxy (clear messages in the history, clear replacer rules)
 		resetProxy();
 		
+		if ( longWaitPerformed ) {
+			resetTime();
+		}
+		
 		return outputSequence;
+	}
+
+
+	private String executeWait(Action act) {
+		String realClickedElementText;
+		long waitTime = ((WaitAction)act).getMillis();
+		realClickedElementText = "wait " + waitTime;
+		
+		if ( waitTime <= sysConfig.getRealWaitThreshold() ) {
+			System.out.println(" --> SHORT WAIT "+waitTime);
+			try {
+				Thread.sleep(((WaitAction)act).getMillis());
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}
+		} else {
+			longWaitPerformed = true;
+		
+			System.out.println(" --> LONG WAIT SIMULATED "+waitTime);
+			
+			long currentTime = System.currentTimeMillis();
+			long future = currentTime + waitTime;
+			
+			setNewDateOnVM(future);
+			
+			
+		}
+		return realClickedElementText;
+	}
+
+
+	private void resetTime() {
+		setNewDateOnVM(System.currentTimeMillis());
+	}
+
+
+	private void setNewDateOnVM(long future) {
+		VMWrapper vmWrapper = new VMWrapper(sysConfig.getVMname(),sysConfig.getIP(),sysConfig.getVmAdmin());
+		vmWrapper.setNewDate( future );
 	}
 
 

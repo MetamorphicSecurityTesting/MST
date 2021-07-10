@@ -35,11 +35,11 @@ public abstract class Input extends MRData implements Cloneable {
 
 	public abstract List<Action> actions();
 
-	public abstract void copyActionTo(int x, int y);
+	public abstract boolean copyActionTo(int x, int y);
 	
-	public abstract void addAction(int pos, Action action);
+	public abstract boolean addAction(int pos, Action action);
 	
-	public abstract void addAction(Action action);
+	public abstract boolean addAction(Action action);
 	
 	public abstract int indexOf(Action action);
 

@@ -150,14 +150,15 @@ public class WebInputCrawlJax extends Input{
 	}
 
 	@Override
-	public void copyActionTo(int x, int y) {
+	public boolean copyActionTo(int x, int y) {
 		actions.add(y, actions.get(x));
+		return true;
 	}
 
 	@Override
-	public void addAction(int pos, Action action) {
+	public boolean addAction(int pos, Action action) {
 		if(pos<0 || pos>actions.size()){
-			return;
+			return false;
 		}
 		
 		Action a;
@@ -202,15 +203,17 @@ public class WebInputCrawlJax extends Input{
 			}
 			
 			actions.add( pos, a);
+			return true;
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
+		
 	}
 
 	@Override
-	public void addAction(Action action) {
-		addAction(actions.size(), action);
+	public boolean addAction(Action action) {
+		return addAction(actions.size(), action);
 	}
 	
 	@Override

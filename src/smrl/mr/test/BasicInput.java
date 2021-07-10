@@ -39,18 +39,19 @@ public class BasicInput extends Input {
 	List<Action> actions = new ArrayList<Action>();
 	
 	@Override
-	public void addAction(Action _basicAction) {
-		addAction(actions.size(), _basicAction);
+	public boolean addAction(Action _basicAction) {
+		return addAction(actions.size(), _basicAction);
 	}
 	
 	@Override
-	public void addAction(int pos, Action _basicAction) {
+	public boolean addAction(int pos, Action _basicAction) {
 		
 		Action basicAction;
 		try {
 			basicAction = (Action) _basicAction.clone();
 			basicAction.setInput(this);
 			actions.add( pos, basicAction);
+			return true;
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,8 +66,9 @@ public class BasicInput extends Input {
 	}
 
 	@Override
-	public void copyActionTo(int x, int y) {
+	public boolean copyActionTo(int x, int y) {
 		actions.add(y, actions.get(x));
+		return true;
 	}
 
 

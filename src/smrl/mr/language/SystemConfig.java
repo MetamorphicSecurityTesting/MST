@@ -60,6 +60,12 @@ public class SystemConfig {
 	private String actionsChangedUrlFileName;
 	private String randomCookiePathFile;
 	private JsonObject jsonConfig;
+	private String vmAdmin;
+	private String IP;
+	private String VMname;
+	private String VMadminPwd;
+	private int VMsshPort;
+	private long realWaitThreshold;
 	
 	
 	static final int DEFAULT_WAIT_TIME = 1000;
@@ -374,6 +380,51 @@ public class SystemConfig {
 			}
 			else{
 				this.actionsChangedUrlFileName = "";
+			}
+			
+			
+			if(jsonObject.keySet().contains("vmAdmin")){
+				this.vmAdmin = jsonObject.get("vmAdmin").getAsString().trim();
+			}
+			else{
+				this.vmAdmin = "";
+			}
+			
+			if(jsonObject.keySet().contains("VMadminPwd")){
+				this.VMadminPwd = jsonObject.get("VMadminPwd").getAsString().trim();
+			}
+			else{
+				this.VMadminPwd = "";
+			}
+			
+			if(jsonObject.keySet().contains("VMsshPort")){
+				this.VMsshPort = jsonObject.get("VMsshPort").getAsInt();
+			}
+			else{
+				this.VMsshPort = 22;
+			}
+			
+			
+			
+			if(jsonObject.keySet().contains("IP")){
+				this.IP = jsonObject.get("IP").getAsString().trim();
+			}
+			else{
+				this.IP = "";
+			}
+			
+			if(jsonObject.keySet().contains("VMname")){
+				this.VMname = jsonObject.get("VMname").getAsString().trim();
+			}
+			else{
+				this.VMname = "";
+			}
+			
+			if(jsonObject.keySet().contains("REAL_WAIT_THRESHOLD")){
+				this.realWaitThreshold = jsonObject.get("REAL_WAIT_THRESHOLD").getAsLong();
+			}
+			else{
+				this.realWaitThreshold = 5000;
 			}
 			
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
@@ -788,6 +839,54 @@ public class SystemConfig {
 		else{
 			throw new RuntimeException("Missing configuration: "+key);
 		}
+	}
+
+	public String getVmAdmin() {
+		return vmAdmin;
+	}
+
+	public void setVmAdmin(String vmAdmin) {
+		this.vmAdmin = vmAdmin;
+	}
+
+	public String getIP() {
+		return IP;
+	}
+
+	public void setIP(String iP) {
+		IP = iP;
+	}
+
+	public String getVMname() {
+		return VMname;
+	}
+
+	public void setVMname(String vMname) {
+		VMname = vMname;
+	}
+
+	public String getVMadminPwd() {
+		return VMadminPwd;
+	}
+
+	public void setVMadminPwd(String vMadminPwd) {
+		VMadminPwd = vMadminPwd;
+	}
+
+	public int getVMsshPort() {
+		return VMsshPort;
+	}
+
+	public void setVMsshPort(int vMsshPort) {
+		VMsshPort = vMsshPort;
+	}
+
+	public long getRealWaitThreshold() {
+		return realWaitThreshold;
+	}
+
+	public void setRealWaitThreshold(long realWaitThreshold) {
+		this.realWaitThreshold = realWaitThreshold;
 	}
 	
 }
