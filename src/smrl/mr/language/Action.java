@@ -617,6 +617,13 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 	
+	public boolean setRandomSession() {
+		return true;
+		
+		// FIXME : ADD CODE
+	}
+	
+	
 	
 }
 
