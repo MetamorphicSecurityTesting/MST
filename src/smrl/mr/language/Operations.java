@@ -1128,6 +1128,11 @@ public class Operations {
 	
 	
 	
+	public static Action RequestUrlAction(String URL) {
+		return MR.CURRENT.provider.newRequestUrlAction(URL);
+	}
+	
+	
 	///////////////////NAZANIN
 	
 	
@@ -1265,6 +1270,20 @@ public class Operations {
 		return MR.CURRENT.getMRData("randomSSL",x);
 	}
 	
+	
+//	/**
+//	 * Web-specific function.
+//	 * Returns true if a an action might be performed by a user through the GUI.
+//	 * The result depends on the data collected by the data collection method.
+//	 * It returns true if the same URL has bee
+//	 * @param user
+//	 * @param action
+//	 * @return	true if the user has performed that actions on the system
+//	 */
+//	public static boolean availableThroughGUI(Object user, Action action){
+//		//Fabrizio
+//		throw new RuntimeException("Not implemented yet");
+//	}
 	
 	
 	

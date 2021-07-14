@@ -279,5 +279,11 @@ public class BasicOperationsProvider implements OperationsProvider {
 		return false;
 	}
 
+	@Override
+	public Action newRequestUrlAction(String url) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

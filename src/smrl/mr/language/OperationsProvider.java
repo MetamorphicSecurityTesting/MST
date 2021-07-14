@@ -108,6 +108,8 @@ public interface OperationsProvider {
 	
 	boolean keepCache();
 	
+	Action newRequestUrlAction(String url);
+	
 	///Nazanin
 
 	boolean isResetPassword(Action action);

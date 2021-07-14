@@ -845,6 +845,12 @@ public class WebOperationsProvider implements OperationsProvider {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public Action newRequestUrlAction(String url) {
+		// TODO Auto-generated method stub
+		throw new RuntimeException("Not implemented");
+	}
 	
 
 }

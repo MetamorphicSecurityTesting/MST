@@ -143,7 +143,9 @@ public class WebProcessor {
 	public static boolean DEFAULT_HEADLESS = true;
 	
 	private boolean headless=DEFAULT_HEADLESS;
-	private boolean backToRightPageBeforeAction=true;
+	
+	public static boolean ensure_action_origin_url_is_the_same=true;
+	
 	private boolean checkStatusCode=false;
 	private boolean longWaitPerformed;
 	
@@ -824,7 +826,7 @@ public class WebProcessor {
 				//If this action is the POST one, 
 				// check if the current URL (from browser) is similar with the currentURL
 				// if not -> go back to the currentURL before execute the action
-				if(backToRightPageBeforeAction) {
+				if(ensure_action_origin_url_is_the_same) {
 //					if(act.getMethod().toLowerCase().trim().equals("post")){
 						String actCurrentURL = ((StandardAction)act).getCurrentURL();
 						if(actCurrentURL!=null 
