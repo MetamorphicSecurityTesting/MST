@@ -1270,6 +1270,13 @@ public class Operations {
 		return MR.CURRENT.getMRData("randomSSL",x);
 	}
 	
+public static boolean inValid( Object session ){
+	///FIXME!!!!
+	// if the value is invalid then return True.
+	return true; 
+	}
+	
+	
 	
 //	/**
 //	 * Web-specific function.
