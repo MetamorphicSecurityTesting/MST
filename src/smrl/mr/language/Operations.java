@@ -45,7 +45,7 @@ public class Operations {
 	 * @return !a || b
 	 */
 	public static boolean IMPLIES( boolean a, boolean b ){ return !a || b; }
-	
+
 	/**
 	 * SMRL boolean operator.
 	 * @param a
@@ -53,7 +53,7 @@ public class Operations {
 	 * @return a && b
 	 */
 	public static boolean AND( boolean a, boolean b ){ return a && b; }
-	
+
 	/**
 	 * SMRL boolean operator.
 	 * @param a
@@ -61,43 +61,43 @@ public class Operations {
 	 * @return a||b
 	 */
 	public static boolean OR( boolean a, boolean b ){ return a || b; }
-	
-//	public static boolean XOR( boolean a, boolean b ){ throw new RuntimeException("Not expected to be called. This is replaced by the xtext compiler."); }
-	
+
+	//	public static boolean XOR( boolean a, boolean b ){ throw new RuntimeException("Not expected to be called. This is replaced by the xtext compiler."); }
+
 	/**
 	 * SMRL boolean operator.
 	 * @param a
 	 * @return !a
 	 */
 	public static boolean NOT( boolean a ){ return false == a; }
-	
+
 	/**
 	 * SMRL boolean operator.
 	 * @param a
 	 * @return a==false
 	 */
 	public static boolean FALSE( boolean a ){ return false == a; }
-	
+
 	/**
 	 * SMRL boolean operator.
 	 * @param a
 	 * @return a==true
 	 */
 	public static boolean TRUE( boolean a ){ return true == a; }
-	
+
 	/**
 	 * @param a
 	 * @return a==null
 	 */
 	public static boolean NULL( Object a ){ return a == null; }
-	
+
 	/**
 	 * @param a
 	 * @param b
 	 * @return true if a equals b or when a can be assigned using the value of b; false if a does not equal b, or cannot assign b to a.
 	 */
 	public static boolean equal( Object a, Object b ){ return EQUAL(a, b); };
-	
+
 	/**
 	 * SMRL boolean operator.
 	 * @param a
@@ -107,19 +107,19 @@ public class Operations {
 	public static boolean EQUAL( Object a, Object b ){ 
 		MR.CURRENT.setLastEQUAL( a, b );
 		boolean eq =false;
-		
+
 		//Tracing: edited by Phu on 24/3/2020 to fix the error occurred when b is null
 		if(b!=null) {
-				eq = MR.CURRENT.equal(a, b);
+			eq = MR.CURRENT.equal(a, b);
 		}
-		
+
 		if ( ! eq ){
 			System.out.println("!!! NOT EQUAL: \n\t"+a+" \n\t"+b);
 		}
-		
+
 		return eq;
 	};
-	
+
 	/**
 	 * SMRL boolean operator.
 	 * @param a
@@ -127,13 +127,13 @@ public class Operations {
 	 * @return true if a is different b; false in opposite.
 	 */
 	public static boolean different( Object a, Object b ){ return MR.CURRENT.different(a, b); };
-	
+
 	/**
 	 * @param x
 	 * @return x
 	 */
 	public static int myint( int x ){ return x; };
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Returns the i-th input sequence.
@@ -145,7 +145,7 @@ public class Operations {
 	public static Input Input(int x){ 
 		return (smrl.mr.language.Input) MR.CURRENT.getMRData("Input",x);
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Return a new input sequence built from an array of actions.
@@ -156,7 +156,7 @@ public class Operations {
 	public static Input Input(Action... as){ 
 		return MR.CURRENT.provider.Input( as );
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Return a new input sequence built from a list of actions.
@@ -171,7 +171,7 @@ public class Operations {
 		}
 		return MR.CURRENT.provider.Input( allActions );
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Change credentials (if exist) in a input sequence.
@@ -183,7 +183,7 @@ public class Operations {
 	public static Input changeCredentials( Input input, Object user){
 		return MR.CURRENT.provider.changeCredentials(input,user);
 	}
-	
+
 	/**
 	 * Web-specific function. 
 	 * Add an action at the position pos in a input sequence.
@@ -197,7 +197,7 @@ public class Operations {
 		try {
 			Input clone = (smrl.mr.language.Input) input.clone();
 			clone.addAction( pos, action);
-			
+
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
@@ -205,8 +205,8 @@ public class Operations {
 		}
 		return null;
 	}
-	
-	
+
+
 	/**
 	 * Web-specific function. 
 	 * Copy the action at the position "from" to the position "to" in the input sequence.
@@ -220,7 +220,7 @@ public class Operations {
 		try {
 			Input clone = (smrl.mr.language.Input) input.clone();
 			clone.copyActionTo(from, to);
-			
+
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
@@ -228,7 +228,7 @@ public class Operations {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Web-specific function. 
 	 * Add an action at the end of the input sequence.
@@ -241,7 +241,7 @@ public class Operations {
 		try {
 			Input clone = (smrl.mr.language.Input) input.clone();
 			clone.addAction( action);
-			
+
 			return clone;
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
@@ -249,7 +249,7 @@ public class Operations {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Return the 1st user, with respect to the current data view.
@@ -260,7 +260,7 @@ public class Operations {
 	public static Object User(){
 		return User(1);
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Returns the i-th user.
@@ -272,7 +272,7 @@ public class Operations {
 	public static Object User(int i){
 		return MR.CURRENT.getMRData("User",i);
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Return the 1st weak encryption algorithm, with respect to the current data view.
@@ -283,7 +283,7 @@ public class Operations {
 	public static Object WeakEncryption() {
 		return MR.CURRENT.getMRData("WeakEncryption",1);
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Return the 1st action available without login, with respect to the current data view.
@@ -294,7 +294,7 @@ public class Operations {
 	public static Action ActionAvailableWithoutLogin() {
 		return (Action) MR.CURRENT.getMRData("ActionAvailableWithoutLogin",1);
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Return the i-th action available without login.
@@ -306,7 +306,7 @@ public class Operations {
 	public static Action ActionAvailableWithoutLogin(int i) {
 		return (Action) MR.CURRENT.getMRData("ActionAvailableWithoutLogin",i);
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Return a random value based on a pattern value.
@@ -320,7 +320,7 @@ public class Operations {
 		return RandomValue(type);
 		//TODO: basically the data provider should be populated with 100 random Integers, 100 random Doubles, 100 random Strings, 100 random Paths
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Return a random value of a specific class.
@@ -333,7 +333,7 @@ public class Operations {
 		MrDataDBRandom randomDB = (MrDataDBRandom) MR.CURRENT.getDataDB("RandomValue");
 		return randomDB.get(type,1);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Return the corresponding class of a value pattern.
@@ -355,7 +355,7 @@ public class Operations {
 				} 
 			}
 		}
-		
+
 		//default
 		return String.class;
 	}
@@ -370,7 +370,7 @@ public class Operations {
 	public static Object deriveRandomData(String value) {
 		return MR.CURRENT.provider.deriveRandomData(value);
 	}
-	
+
 
 	/**
 	 * Web-specific function.
@@ -382,7 +382,7 @@ public class Operations {
 	 * @return
 	 */
 	public static boolean userCanRetrieveContent(Object user, Object output) {
-//		return MR.CURRENT.provider.userCanRetrieveContent(user,output);
+		//		return MR.CURRENT.provider.userCanRetrieveContent(user,output);
 		MR.printCallerLog("start");
 		boolean ret = MR.CURRENT.provider.userCanRetrieveContent(user,output);
 		MR.printCallerLog("end");
@@ -399,7 +399,7 @@ public class Operations {
 	public static boolean notAnonymous(Object user) {
 		return MR.CURRENT.provider.notAnonymous(user);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check if the "action" is requested under an encrypted channel.
@@ -411,7 +411,7 @@ public class Operations {
 	public static boolean isEncrypted(Action action) {
 		return MR.CURRENT.provider.isEncrypted(action);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check whether the "action" is a successful login action.
@@ -423,7 +423,7 @@ public class Operations {
 	public static boolean isLogin(Action action) {
 		return MR.CURRENT.provider.isLogin(action);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check whether the "action" is a logout action. 
@@ -435,7 +435,7 @@ public class Operations {
 	public static boolean isLogout(Action action) {
 		return MR.CURRENT.provider.isLogout(action);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check whether the "action" will be executed after logging in.
@@ -446,7 +446,7 @@ public class Operations {
 	public static boolean afterLogin(Action action) {
 		return MR.CURRENT.provider.afterLogin(action);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Return the session at the x-th position in the input.
@@ -459,7 +459,7 @@ public class Operations {
 	public static Object Session(Input input, int x){
 		return MR.CURRENT.provider.Session(input,x);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * This method returns a DeleteCookies action.
@@ -469,7 +469,7 @@ public class Operations {
 	public static Action DeleteCookies(){
 		return MR.CURRENT.provider.DeleteCookies();
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check whether an action can be executed before logging in.
@@ -481,7 +481,7 @@ public class Operations {
 	public static boolean notAvailableWithoutLoggingIn(Action action) {
 		return MR.CURRENT.provider.notVisibleWithoutLoggingIn(action.getUrl()); 
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check whether an action is available before logging in.
@@ -493,7 +493,7 @@ public class Operations {
 	public static boolean availableWithoutLoggingIn(Action action) {
 		return _visibleWithoutLoggingIn(action.getUrl()); 
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check whether a URL is not available before logging in.
@@ -505,9 +505,9 @@ public class Operations {
 	public static boolean notVisibleWithoutLoggingIn(String url) {
 		return MR.CURRENT.provider.notVisibleWithoutLoggingIn(url);
 	}
-	
+
 	private static HashSet<String> visibleWithoutLogin;
-	
+
 	/**
 	 * 
 	 * Check whether a URL is not available before logging in.
@@ -519,7 +519,7 @@ public class Operations {
 	private static boolean _notVisibleWithoutLoggingIn(String url) {
 		return ! _visibleWithoutLoggingIn(url);
 	}
-	
+
 	/**
 	 * 
 	 * Check whether a URL is visible before logging in.
@@ -554,7 +554,7 @@ public class Operations {
 			return visibleWithoutLogin.contains(url);
 		}
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Returns arrays of indexes of parameters relevant to user group in the URL of an action.
@@ -565,7 +565,7 @@ public class Operations {
 	public static int[] extractUserGroupParameters(Action action1) {
 		return MR.CURRENT.provider.extractUserRoleParameters(action1 );
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check if the URL of the x-th action in the input sequence changes over multiple executions. 
@@ -577,7 +577,7 @@ public class Operations {
 	public static boolean urlOfActionChangesOverMultipleExecutions(Input input, int x) {
 		return _urlOfActionChangesInDifferentExecutions(input,x);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check if the URL of an action changes over multiple executions. 
@@ -588,9 +588,9 @@ public class Operations {
 	public static boolean urlOfActionChangesOverMultipleExecutions(Action a) {
 		return _urlOfActionChangesInDifferentExecutions(a.getInput(),a.getPosition());
 	}
-	
+
 	private static HashSet<Action> urlChangesOverMultipleExecutions;
-	
+
 	/**
 	 * 
 	 * Check if the URL of the action at the pos position in the input sequence changes over different executions. 
@@ -606,9 +606,9 @@ public class Operations {
 
 			if ( urlChangesOverMultipleExecutions == null ) {
 				urlChangesOverMultipleExecutions = new HashSet<Action>();
-				
+
 				HashMap<Action, String> actionsURLs = new HashMap<Action,String>();
-				
+
 				MrDataDB<Input> inputsDB = MR.CURRENT.inputsDB();
 				Iterator<smrl.mr.language.Input> it = inputsDB._it();
 
@@ -626,13 +626,13 @@ public class Operations {
 					}
 				}
 			}
-			
+
 			Action action = i.actions().get(pos);
 
 			return urlChangesOverMultipleExecutions.contains(action);
 		}
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Returns a LogoutInAnotherTab action.
@@ -642,7 +642,7 @@ public class Operations {
 	public static Action LogoutInAnotherTab() {
 		return MR.CURRENT.provider.LogoutInAnotherTab();
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Returns a wait action, which makes the framework sleep during the given time length "millis"
@@ -652,7 +652,7 @@ public class Operations {
 	public static Action Wait(long millis) {
 		return new WaitAction(millis);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Check whether the "action" is for reading an email
@@ -663,8 +663,8 @@ public class Operations {
 	public static boolean isReadEMailAction(Action action) {
 		return MR.CURRENT.provider.isReadEMailAction(action);
 	}
-	
-	
+
+
 	/**
 	 * Data Representation Function.
 	 * Return a file at the 1st file, with respect to the current data view.
@@ -675,7 +675,7 @@ public class Operations {
 	public static Object File() {
 		return MR.CURRENT.getMRData("File",1);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Checks whether the "user" cannot reach one of URL in a input sequence through his graphic user interface. 
@@ -687,7 +687,7 @@ public class Operations {
 	public static boolean cannotReachThroughGUI(Object user, Input lastURL){
 		return MR.CURRENT.provider.cannotReachThroughGUI(user,lastURL);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Returns true if a URL cannot be reached by the given user by exploring the user interface of the system (e.g., by traversing anchors).
@@ -699,14 +699,14 @@ public class Operations {
 	 */
 	public static boolean cannotReachThroughGUI(Object user, String URL){
 		boolean res = MR.CURRENT.provider.cannotReachThroughGUI(user, URL);
-		
-//		if ( res ){
-//			System.out.println("!!!!Cannot reach (" + user + ", "+URL +")"); 
-//		}
-		
+
+		//		if ( res ){
+		//			System.out.println("!!!!Cannot reach (" + user + ", "+URL +")"); 
+		//		}
+
 		return res;
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Returns the output of the i-th element of an input sequence
@@ -731,7 +731,7 @@ public class Operations {
 		MR.CURRENT.setLastInputProcessed( input,  -1 );
 		return MR.CURRENT.provider.Output(input);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Returns the output produced by the last action in an input sequence
@@ -746,7 +746,7 @@ public class Operations {
 		}
 		return seq;
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Returns a random file path.
@@ -756,10 +756,10 @@ public class Operations {
 	 */
 	@MRDataProvider
 	public static Object RandomFilePath(int x){ 
-//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
+		//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
 		return MR.CURRENT.getMRData("RandomFilePath",x);
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Returns a random file path related to the administrator.
@@ -769,10 +769,10 @@ public class Operations {
 	 */
 	@MRDataProvider
 	public static Object RandomAdminFilePath(int x){ 
-//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
+		//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
 		return MR.CURRENT.getMRData("RandomAdminFilePath",x);
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Returns a random HTTP method (GET, POST, PUT, HEAD,...)
@@ -783,7 +783,7 @@ public class Operations {
 	public static String HttpMethod(){ 
 		return RandomHttpMethod(1);
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Returns the 1st random HTTP method (GET, POST, PUT, HEAD,...), with respect to the current data view.
@@ -794,7 +794,7 @@ public class Operations {
 	public static String RandomHttpMethod(){ 
 		return RandomHttpMethod(1);
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Returns the 1-th random file path, with respect to the current data view.
@@ -805,7 +805,7 @@ public class Operations {
 	public static Object RandomFilePath(){ 
 		return RandomFilePath(1);
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Returns the 1-th random admin file path, with respect to the current data view.
@@ -816,7 +816,7 @@ public class Operations {
 	public static Object RandomAdminFilePath(){ 
 		return RandomAdminFilePath(1);
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Returns the x-th random HTTP method (GET, POST, PUT, HEAD,...), with respect to the current data view.
@@ -826,11 +826,11 @@ public class Operations {
 	 */
 	@MRDataProvider
 	public static String RandomHttpMethod(int x){ 
-//		return (String) MR.CURRENT.getMRData("RandomHttpMethod",x);
+		//		return (String) MR.CURRENT.getMRData("RandomHttpMethod",x);
 		return (String) MR.CURRENT.getMRData("HttpMethod",x);
 	}
-	
-	
+
+
 	/**
 	 * Web-specific function.
 	 * Changes the protocol in the URL of the action a.
@@ -845,10 +845,10 @@ public class Operations {
 				return false;
 			}
 			a.setUrl(a.getUrl().replace("https:",protocol));
-			
+
 			return true;
 		}
-		
+
 		if ( protocol.equalsIgnoreCase("HTTPS") ){
 			if ( ! a.getUrl().startsWith("https://") ){
 				return false;
@@ -856,10 +856,10 @@ public class Operations {
 			a.setUrl(a.getUrl().replace("http:",protocol));
 			return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Checks whether the parameter at the parpos position of the action a is for user.
@@ -872,8 +872,8 @@ public class Operations {
 	public static boolean isUserIdParameter( Action a, int parpos, Object user ){
 		return MR.CURRENT.provider.isUserIdParameter(a,parpos,user);
 	}
-	
-	
+
+
 	/**
 	 * Web-specific function.
 	 * Returns a Login action with the given credential "user"
@@ -913,11 +913,11 @@ public class Operations {
 						formInput.get("type").getAsString().equals("hidden"))){
 			return false;
 		}
-		
+
 		JsonArray valueArray = new JsonArray();
 		if (value instanceof Boolean) {
 			valueArray.add((Boolean) value);
-			
+
 		}
 		else if (value instanceof String) {
 			valueArray.add((String) value);
@@ -925,7 +925,7 @@ public class Operations {
 		else if (value instanceof Number) {
 			valueArray.add((Number) value);
 		}
-		
+
 		if(valueArray.size()>0){
 			formInput.add("values", valueArray);
 			MR.CURRENT.setConsiderParameters();
@@ -945,16 +945,16 @@ public class Operations {
 		if(url==null){
 			return null;
 		}
-		
+
 		if(addedPath==null || addedPath.isEmpty()){
 			return url;
 		}
-		
+
 		String res = url;
-		
+
 		try {
 			URI uri = new URI(url);
-			
+
 			String query = uri.getQuery();
 			if(query!=null && !query.isEmpty())
 			{
@@ -963,7 +963,7 @@ public class Operations {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-		
+
 		if(!res.endsWith("/")){
 			res += "/";
 		}
@@ -971,16 +971,16 @@ public class Operations {
 		if(aPath.startsWith("/")){
 			aPath = aPath.substring(1);
 		}
-		
+
 		res += aPath;
-		
+
 		return res;
 	}
-	
+
 	static HashMap<String,HashSet<String>> triedInputs = new HashMap<String,HashSet<String>>();
-	
-	
-	
+
+
+
 	/**
 	 * Web-specific function.
 	 * Checks whether a given user tried to access a given URL until the current execution period.
@@ -993,61 +993,61 @@ public class Operations {
 		if(!(user instanceof Account)) {
 			return true;
 		}
-		
+
 		String username = ((Account)user).getUsername();
-		
+
 		HashSet<String> setOfInputs = triedInputs.get(username);
-		
+
 		if ( setOfInputs == null ) {
 			setOfInputs = new HashSet<String>();
 			triedInputs.put( username, setOfInputs );
 		}
-		
+
 		if ( setOfInputs.contains(url) ) {
 			return false;
 		}
-		
+
 		setOfInputs.add(url);
-		
+
 		return true;
 	}
-	
+
 	public static boolean notTried(Object user, Object... others) {
 		if(!(user instanceof Account)) {
 			return true;
 		}
-		
+
 		if(others.length<1) {
 			return false;
 		}
-		
+
 		String username = ((Account)user).getUsername();
-		
+
 		HashSet<String> setOfInputs = triedInputs.get(username);
-		
+
 		if ( setOfInputs == null ) {
 			setOfInputs = new HashSet<String>();
 			triedInputs.put( username, setOfInputs );
 		}
-		
+
 		String checkedString = "";
 		for(Object str:others) {
 			checkedString += str + "_";
 		}
-		
+
 		if(checkedString.endsWith("_")) {
 			checkedString = checkedString.substring(0, checkedString.length()-1);
 		}
-		
+
 		if ( setOfInputs.contains(checkedString) ) {
 			return false;
 		}
-		
+
 		setOfInputs.add(checkedString);
-		
+
 		return true;
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Checks whether a given user is an administrator.
@@ -1059,7 +1059,7 @@ public class Operations {
 	public static boolean isAdmin( Object user) {
 		return MR.CURRENT.provider.isAdmin( user );
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Checks if a form input is for a file path. 
@@ -1071,7 +1071,7 @@ public class Operations {
 	public static boolean isFormInputForFilePath(Object formInput) {
 		return MR.CURRENT.provider.isFormInputForFilePath(formInput);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Checks if user1 is a supervisor of user2.
@@ -1083,7 +1083,7 @@ public class Operations {
 	public static boolean isSupervisorOf(Object user1, Object user2) {
 		return MR.CURRENT.provider.isSupervisorOf(user1, user2);
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Checks whether the output contains an error message (e.g., HTTP 404)
@@ -1106,156 +1106,156 @@ public class Operations {
 		if (dbName==null) {
 			return null;
 		}
-		
+
 		//check if the mrDatabase contains dbName
-		
+
 		if(MR.CURRENT.getDataDB(dbName)==null) {
 			return null;
 		}
-		
+
 		return MR.CURRENT.getMRData(dbName,1).toString();
 	}
-	
+
 	public static Object randomFilePath(int x){ 
-//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
+		//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
 		return MR.CURRENT.getMRData("RandomFilePath",x);
 	}
-	
+
 	public static int randomFilePathSize(){ 
-//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
+		//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
 		return MR.CURRENT.getMRDataSize("RandomFilePath");
 	}
-	
-	
-	
+
+
+
 	public static Action RequestUrlAction(String URL) {
 		return MR.CURRENT.provider.newRequestUrlAction(URL);
 	}
-	
-	
+
+
 	///////////////////NAZANIN
-	
-	
+
+
 	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
 	public static Object RandomCookiePath(){ 
 		return RandomCookiePath(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object RandomCookiePath(int x){ 
 		return MR.CURRENT.getMRData("RandomCookiePath",x);
 	}
-	
+
 	@MRDataProvider  
 	public static String EncodeUrl(String url){ 
 		return EncodeUrl(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static String EncodeUrl(int x){
 		return (String) MR.CURRENT.getMRData("validHostName",x);
 	}
-	
-	
-	
+
+
+
 	@MRDataProvider  
 	public static Object InvalidCookieTags(){ 
 		return InvalidCookieTags(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object InvalidCookieTags(int x){ 
 		return MR.CURRENT.getMRData("InvalidCookieTags",x);
 	}
-	
+
 	@MRDataProvider  
 	public static Object anotherHostName(){ 
 		return anotherHostName(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object anotherHostName(int x){ 
 		return MR.CURRENT.getMRData("anotherHostName",x);
 	}
-	
-	
+
+
 	public static boolean isResetPassword(Action action) {
 		return MR.CURRENT.provider.isResetPassword(action);
 	}
-	
+
 	@MRDataProvider  
 	public static Object invalidCertificate(){ 
 		return invalidCertificate(1);
-		
+
 		// check the date of certificate to be expired as well
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object invalidCertificate(int x){ 
 		return MR.CURRENT.getMRData("invalidCertificate",x);
 	}
-	
+
 	@MRDataProvider  
 	public static Object duplicatePacket(){ 
 		return duplicatePacket(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object duplicatePacket(int x){ 
 		return MR.CURRENT.getMRData("duplicatePacket",x);
 	}
-	
-	
+
+
 	public static boolean accessToSensitiveElement(Object user, Object file) {
 
 		//FIXME 
-		
+
 		return true;
 	}
-	
+
 	@MRDataProvider  
 	public static Object randomCookieElement(){ 
 		return randomCookieElement(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object randomCookieElement(int x){ 
 		return MR.CURRENT.getMRData("randomCookieElement",x);
 	}
 
-	
+
 	@MRDataProvider  
 	public static Object randomValue(){ 
 		return randomValue(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object randomValue(int x){ 
 		return MR.CURRENT.getMRData("randomValue",x);
 	}
-	
+
 	@MRDataProvider  
 	public static Object setUserRoleAdmin(Object role ,Object cookie){ 
 		return setUserRoleAdmin(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object setUserRoleAdmin(int x){ 
 		return MR.CURRENT.getMRData("setUserRoleAdmin",x);
 	}
-	
+
 	public static boolean isNotAccessibleWithoutLogin(Action action) {
 		//FIXME!
-		
+
 		return true;
 		//return _visibleWithoutLoggingIn(action.getUrl()); 
 	}
@@ -1263,36 +1263,48 @@ public class Operations {
 	public static Object randomSSL(){ 
 		return randomSSL(1);
 	}
-	
-	
+
+
 	@MRDataProvider()
 	public static Object randomSSL(int x){ 
 		return MR.CURRENT.getMRData("randomSSL",x);
 	}
-	
-public static boolean inValid( Object session ){
-	///FIXME!!!!
-	// if the value is invalid then return True.
-	return true; 
+
+	public static boolean inValid( Object session ){
+		///FIXME!!!!
+		// if the value is invalid then return True.
+		return true; 
 	}
-	
-	
-	
-//	/**
-//	 * Web-specific function.
-//	 * Returns true if a an action might be performed by a user through the GUI.
-//	 * The result depends on the data collected by the data collection method.
-//	 * It returns true if the same URL has bee
-//	 * @param user
-//	 * @param action
-//	 * @return	true if the user has performed that actions on the system
-//	 */
-//	public static boolean availableThroughGUI(Object user, Action action){
-//		//Fabrizio
-//		throw new RuntimeException("Not implemented yet");
-//	}
-	
-	
-	
+	@MRDataProvider  
+	public static Object SpecialSQLChars(){ 
+		return SpecialSQLChars(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object SpecialSQLChars(int x){ 
+		return MR.CURRENT.getMRData("SpecialSQLChars",x);
+	}
+
+
+
+
+
+	//	/**
+	//	 * Web-specific function.
+	//	 * Returns true if a an action might be performed by a user through the GUI.
+	//	 * The result depends on the data collected by the data collection method.
+	//	 * It returns true if the same URL has bee
+	//	 * @param user
+	//	 * @param action
+	//	 * @return	true if the user has performed that actions on the system
+	//	 */
+	//	public static boolean availableThroughGUI(Object user, Action action){
+	//		//Fabrizio
+	//		throw new RuntimeException("Not implemented yet");
+	//	}
+
+
+
 }
 
