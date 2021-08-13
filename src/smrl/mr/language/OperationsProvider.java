@@ -113,6 +113,8 @@ public interface OperationsProvider {
 	///Nazanin
 
 	boolean isResetPassword(Action action);
+
+	void setResetBrowserBetweenSourceInputs(boolean value);
 	
 	
 

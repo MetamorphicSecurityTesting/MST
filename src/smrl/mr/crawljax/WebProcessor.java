@@ -606,6 +606,9 @@ public class WebProcessor {
 		return output(input, false);
 	}
 	
+	
+	
+	ChromeDriver driver = null;
 	public WebOutputSequence output(WebInputCrawlJax input, boolean checkDownloadedObjects) {
 		if(input==null) {
 			return null;
@@ -624,7 +627,7 @@ public class WebProcessor {
 		}
 		
 		System.setProperty("webdriver.chrome.driver", exePath);
-		ChromeDriver driver = null;
+		
 		
 		LoggingPreferences logPrefs = new LoggingPreferences();
 		logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
@@ -661,8 +664,14 @@ public class WebProcessor {
 		
 		setCipherSuite(chOptions, input);
 		
-		driver = new ChromeDriver(chOptions);
-		
+		if ( Operations.getResetBrowserBetweenInputs() ) {
+			if ( driver != null ) {
+				driver.quit();
+				driver = null;
+			}
+			driver = new ChromeDriver(chOptions);
+	    }
+	
 		if(setTimeouts) {
 			driver.manage().timeouts().implicitlyWait(SEARCH_ELEMENT_TIMEOUT, TimeUnit.MILLISECONDS);
 			driver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.MILLISECONDS);
@@ -1407,7 +1416,14 @@ public class WebProcessor {
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		}
-		driver.quit();
+		
+		
+		if ( Operations.getResetBrowserBetweenInputs() ) {
+			driver.quit();
+		} else {
+			//do nothing
+		}
+		
 //		driver.close();
 		
 		System.out.println("\tTimes of automatic confirmation: "+timeOfConfirm);

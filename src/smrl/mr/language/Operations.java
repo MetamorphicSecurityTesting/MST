@@ -978,6 +978,7 @@ public class Operations {
 	}
 	
 	static HashMap<String,HashSet<String>> triedInputs = new HashMap<String,HashSet<String>>();
+	private static boolean resetBrowserBetweenInputs;
 	
 	
 	
@@ -1133,9 +1134,19 @@ public class Operations {
 	}
 	
 	
+	public static void setResetBrowserBetweenInputs( boolean value ) {
+		resetBrowserBetweenInputs = value ;
+	}
+	
+
+	public static boolean getResetBrowserBetweenInputs() {
+		return resetBrowserBetweenInputs;
+	}
+	
 	///////////////////NAZANIN
 	
 	
+
 	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
 	public static Object RandomCookiePath(){ 
 		return RandomCookiePath(1);

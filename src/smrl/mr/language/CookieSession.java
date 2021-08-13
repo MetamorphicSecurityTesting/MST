@@ -149,6 +149,11 @@ public class CookieSession implements Session {
 		}
 		return res;
 	}
+
+	@Override
+	public boolean isInvalid() {
+		throw new RuntimeException("Not implemented");
+	}
 	
 	
 

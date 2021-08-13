@@ -25,4 +25,6 @@ public interface Session {
 
 	public void update(Object session);
 	
+	public boolean isInvalid();
+	
 }
