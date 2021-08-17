@@ -1285,20 +1285,20 @@ public class Operations {
 		return true; 
 	}
 	@MRDataProvider  
-	public static Object SpecialSQLChars(){ 
-		return SpecialSQLChars(1);
+	public static Object SQLInjectionString(){ 
+		return SQLInjectionString(1);
 	}
 
 
 	@MRDataProvider()
-	public static Object SpecialSQLChars(int x){ 
-		return MR.CURRENT.getMRData("SpecialSQLChars",x);
+	public static Object SQLInjectionString(int x){ 
+		return MR.CURRENT.getMRData("SQLInjectionString",x);
 	}
 	
 	
 	@MRDataProvider  
 	public static Object EvalInjectionString(){ 
-		return SpecialSQLChars(1);
+		return EvalInjectionString(1);
 	}
 
 
@@ -1307,6 +1307,8 @@ public class Operations {
 		return MR.CURRENT.getMRData("EvalInjectionString",x);
 	}
 
+	
+	
 
 
 
