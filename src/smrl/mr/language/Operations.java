@@ -978,7 +978,7 @@ public class Operations {
 	}
 
 	static HashMap<String,HashSet<String>> triedInputs = new HashMap<String,HashSet<String>>();
-	private static boolean resetBrowserBetweenInputs;
+	private static boolean resetBrowserBetweenInputs = true;
 	
 	/**
 	 * Web-specific function.
