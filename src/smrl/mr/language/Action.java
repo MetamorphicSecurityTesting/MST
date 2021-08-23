@@ -627,8 +627,12 @@ public abstract class Action implements Cloneable {
 		
 		// FIXME : ADD CODE
 	}
-	
-	
+
+	public boolean setCertificate(Object certificate) {
+		return true;
+		
+		// FIXME : ADD CODE
+	}
 }
 
 

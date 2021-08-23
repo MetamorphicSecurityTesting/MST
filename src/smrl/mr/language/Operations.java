@@ -1306,7 +1306,17 @@ public class Operations {
 	public static Object EvalInjectionString(int x){ 
 		return MR.CURRENT.getMRData("EvalInjectionString",x);
 	}
+	
+	@MRDataProvider  
+	public static Object InvalidCertificate(){ 
+		return InvalidCertificate(1);
+	}
 
+
+	@MRDataProvider()
+	public static Object InvalidCertificate(int x){ 
+		return MR.CURRENT.getMRData("InvalidCertificate",x);
+	}
 	
 	
 
