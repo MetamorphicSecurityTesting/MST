@@ -1318,6 +1318,17 @@ public class Operations {
 		return MR.CURRENT.getMRData("InvalidCertificate",x);
 	}
 	
+	@MRDataProvider  
+	public static Object StaticInjectionString(){ 
+		return StaticInjectionString(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object StaticInjectionString(int x){ 
+		return MR.CURRENT.getMRData("StaticInjectionString",x);
+	}
+	
 	
 
 
