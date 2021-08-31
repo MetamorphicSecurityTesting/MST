@@ -1329,9 +1329,35 @@ public class Operations {
 		return MR.CURRENT.getMRData("StaticInjectionString",x);
 	}
 	
+	@MRDataProvider  
+	public static String WeakPassword(){ 
+		return WeakPassword(1);
+	}
+
+
+	@MRDataProvider()
+	public static String WeakPassword(int x){ 
+		return (String) MR.CURRENT.getMRData("WeakPassword",x);
+	}
+	
+	public static boolean isFile(Object parameter) {
+	//FIXME! 	return MR.CURRENT.provider.isFile(action);
+		return true;
+	}
+	
+	@MRDataProvider  
+	public static String FileWithInvalidType(){ 
+		return FileWithInvalidType(1);
+	}
+
+
+	@MRDataProvider()
+	public static String FileWithInvalidType(int x){ 
+		return (String) MR.CURRENT.getMRData("FileWithInvalidType",x);
+	}
 	
 
-
+	 
 
 
 	//	/**
