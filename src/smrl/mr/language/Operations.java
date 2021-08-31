@@ -1356,6 +1356,31 @@ public class Operations {
 		return (String) MR.CURRENT.getMRData("FileWithInvalidType",x);
 	}
 	
+	
+	@MRDataProvider  
+	public static String CRLFspecialChars(){ 
+		return CRLFspecialChars(1);
+	}
+
+
+	@MRDataProvider()
+	public static String CRLFspecialChars(int x){ 
+		return (String) MR.CURRENT.getMRData("CRLFspecialChars",x);
+	}
+	
+	@MRDataProvider  
+	public static String XSSinjection(){ 
+		return XSSinjection(1);
+	}
+
+
+	@MRDataProvider()
+	public static String XSSinjection(int x){ 
+		return (String) MR.CURRENT.getMRData("XSSinjection",x);
+	}
+	
+	
+	
 
 	 
 
