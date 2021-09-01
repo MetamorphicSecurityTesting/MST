@@ -1379,6 +1379,12 @@ public class Operations {
 		return (String) MR.CURRENT.getMRData("XSSinjection",x);
 	}
 	
+	@MRDataProvider 
+	public static boolean isDeltaLogDifferent(Object output1, Object output2) {
+		//FIXME!!
+		return true;
+	}
+
 	
 	
 
