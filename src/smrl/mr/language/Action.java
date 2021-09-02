@@ -633,6 +633,19 @@ public abstract class Action implements Cloneable {
 		
 		// FIXME : ADD CODE
 	}
+	
+	public boolean setWeakEncryptionAlgorithm() {
+		return true;
+		
+		// FIXME : ADD CODE
+	}
+	
+	public boolean 	removeCertificate() {
+		return true;
+		
+		// FIXME : ADD CODE
+	}
+
 }
 
 

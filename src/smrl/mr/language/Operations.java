@@ -1307,16 +1307,7 @@ public class Operations {
 		return MR.CURRENT.getMRData("EvalInjectionString",x);
 	}
 	
-	@MRDataProvider  
-	public static Object InvalidCertificate(){ 
-		return InvalidCertificate(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object InvalidCertificate(int x){ 
-		return MR.CURRENT.getMRData("InvalidCertificate",x);
-	}
+	
 	
 	@MRDataProvider  
 	public static Object StaticInjectionString(){ 
@@ -1384,6 +1375,23 @@ public class Operations {
 		//FIXME!!
 		return true;
 	}
+	
+	
+	public static boolean isFormInput(Object formInput) {
+		return MR.CURRENT.provider.isFormInputForFilePath(formInput);
+	}
+	
+	@MRDataProvider  
+	public static Object  randomXMLFile(){ 
+		return  randomXMLFile(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object  randomXMLFile(int x){ 
+		return MR.CURRENT.getMRData(" randomXMLFile",x);
+	}
+	
 
 	
 	
