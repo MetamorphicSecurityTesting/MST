@@ -1392,6 +1392,17 @@ public class Operations {
 		return MR.CURRENT.getMRData(" randomXMLFile",x);
 	}
 	
+	@MRDataProvider  
+	public static Object LDAPQueryString(){ 
+		return LDAPQueryString(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object LDAPQueryString(int x){ 
+		return MR.CURRENT.getMRData("LDAPQueryString",x);
+	}
+	
 
 	
 	
