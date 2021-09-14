@@ -610,6 +610,8 @@ public class WebProcessor {
 	
 	ChromeDriver driver = null;
 	public WebOutputSequence output(WebInputCrawlJax input, boolean checkDownloadedObjects) {
+		System.out.println("HERE");
+		System.out.flush();
 		if(input==null) {
 			return null;
 		}
