@@ -616,14 +616,23 @@ public class WebProcessor {
 		
 		WebOutputSequence outputSequence = new WebOutputSequence();
 		
+		String exePath = sysConfig.getChromeDriverPath();
+		
 		//call web browser
-		String exePath = "/usr/local/bin/chromedriver";
+		if (exePath == null ) {
+			exePath = "/usr/local/bin/chromedriver";
+		}
+		
 		
 		File exeFile = new File ( exePath );
+		
+		System.out.println("CHROMEDRIVER: "+exeFile.getAbsolutePath());
+		
 		if ( ! exeFile.exists() ) {
 			exeFile = new File (Paths.get(".").toFile(),"chromedriver.exe");
 			exePath = exeFile.getAbsolutePath();
-			System.out.println("CHROMEDRIVER: "+exePath);
+			System.out.println("CHROMEDRIVER RESET TO: "+exePath);
+			System.out.println("CHROMEDRIVER: "+exeFile.getAbsolutePath());
 		}
 		
 		System.setProperty("webdriver.chrome.driver", exePath);

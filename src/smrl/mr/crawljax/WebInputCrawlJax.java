@@ -43,6 +43,9 @@ public class WebInputCrawlJax extends Input{
 			if(jsonAct!= null){
 				Action act = Action.newAction(jsonAct);
 				if (act!=null){
+					
+					
+					
 					act.setInput(this);
 					
 					//Check if the next is an inner input

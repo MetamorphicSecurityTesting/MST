@@ -66,6 +66,7 @@ public class SystemConfig {
 	private String VMadminPwd;
 	private int VMsshPort;
 	private long realWaitThreshold;
+	private String chromeDriverPath;
 	
 	
 	static final int DEFAULT_WAIT_TIME = 1000;
@@ -138,6 +139,14 @@ public class SystemConfig {
 				this.outputFile = "";
 			}
 			
+			
+			if(jsonObject.keySet().contains("chromeDriverPath")){
+				this.chromeDriverPath = jsonObject.get("chromeDriverPath").getAsString().trim();
+			}
+			else{
+				this.chromeDriverPath = null;
+			}	
+				
 			if(jsonObject.keySet().contains("outputStore")){
 				this.outputStore = jsonObject.get("outputStore").getAsString().trim();
 			}
@@ -430,6 +439,10 @@ public class SystemConfig {
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getChromeDriverPath() {
+		return chromeDriverPath;
 	}
 
 	public String getSUT() {
