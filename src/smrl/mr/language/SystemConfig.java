@@ -67,6 +67,7 @@ public class SystemConfig {
 	private int VMsshPort;
 	private long realWaitThreshold;
 	private String chromeDriverPath;
+	private String serverSideLanguage;
 	
 	
 	static final int DEFAULT_WAIT_TIME = 1000;
@@ -436,9 +437,20 @@ public class SystemConfig {
 				this.realWaitThreshold = 5000;
 			}
 			
+			if(jsonObject.keySet().contains("serverSideLanguage")){
+				this.serverSideLanguage = jsonObject.get("serverSideLanguage").getAsString().trim();
+			}
+			else{
+				this.serverSideLanguage = "PHP";
+			}
+			
 		} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public String getServerSideLanguage() {
+		return serverSideLanguage;
 	}
 
 	public String getChromeDriverPath() {
