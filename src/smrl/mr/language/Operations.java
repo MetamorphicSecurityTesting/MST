@@ -1143,7 +1143,7 @@ public class Operations {
 	}
 	
 
-	///////////////////NAZANIN
+	//// Nazanin's Implementation Start Point
 
 	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
 	public static Object RandomCookiePath(){ 
@@ -1153,7 +1153,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static Object RandomCookiePath(int x){ 
-		return MR.CURRENT.getMRData("RandomCookiePath",x);
+		return MR.CURRENT.getMRData("RandomCookiePath",x); // let's see if this works
 	}
 
 	@MRDataProvider  
@@ -1220,13 +1220,6 @@ public class Operations {
 		return MR.CURRENT.getMRData("duplicatePacket",x);
 	}
 
-
-	public static boolean accessToSensitiveElement(Object user, Object file) {
-
-		//FIXME 
-
-		return true;
-	}
 
 	@MRDataProvider  
 	public static Object randomCookieElement(){ 
@@ -1397,16 +1390,49 @@ public class Operations {
 		return LDAPQueryString(1);
 	}
 
-
 	@MRDataProvider()
 	public static Object LDAPQueryString(int x){ 
 		return MR.CURRENT.getMRData("LDAPQueryString",x);
 	}
 	
+	public static boolean URLContainProtocol( String url ){
+		///FIXME!!!!
+		// if the value is invalid then return True.
+		return true; 
+	}
+	
+	@MRDataProvider  
+	public static String XQueryInjection(){ 
+		return XQueryInjection(1);
+	}
 
+	@MRDataProvider()
+	public static String XQueryInjection(int x){ 
+		return (String) MR.CURRENT.getMRData("XQueryInjection",x);
+	}
+	
+	@MRDataProvider  
+	public static String IncorrectPWD(){ 
+		return IncorrectPWD(1);
+	}
+
+	@MRDataProvider()
+	public static String IncorrectPWD(int x){ 
+		return (String) MR.CURRENT.getMRData("IncorrectPWD",x);
+	}
+	@MRDataProvider  
+	public static Object XMLInjectedFile(){ 
+		return XMLInjectedFile(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object XMLInjectedFile(int x){ 
+		return MR.CURRENT.getMRData("XMLInjectedFile",x);
+	}
 	
 	
-
+	
 	 
 
 

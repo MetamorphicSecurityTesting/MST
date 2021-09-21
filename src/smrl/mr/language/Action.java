@@ -34,6 +34,7 @@ import smrl.mr.language.actions.IndexAction;
 import smrl.mr.language.actions.InnerAction;
 import smrl.mr.language.actions.StandardAction;
 import smrl.mr.language.actions.WaitAction;
+import smrl.mr.language.CookieSession;
 import smrl.mr.utils.URLUtil;
 
 import com.google.gson.JsonArray;
