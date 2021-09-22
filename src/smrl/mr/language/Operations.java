@@ -995,6 +995,16 @@ public class Operations {
 
 		String username = ((Account)user).getUsername();
 
+		return _notTried(username, url);
+	}
+
+	/**
+	 * 
+	 * @param username if null, means any user
+	 * @param url
+	 * @return
+	 */
+	private static boolean _notTried(String username, String url) {
 		HashSet<String> setOfInputs = triedInputs.get(username);
 
 		if ( setOfInputs == null ) {
@@ -1010,6 +1020,19 @@ public class Operations {
 
 		return true;
 	}
+	
+	
+	/**
+	 * Web-specific function.
+	 * Checks whether a given URL was ever tried (with any user).
+	 *  
+	 * @param url The URL to be checked.
+	 * @return true if the "url" was never accessed.
+	 */
+	public static boolean notTried(String url) {
+		return _notTried(null,url);
+	}
+	
 
 	public static boolean notTried(Object user, Object... others) {
 		if(!(user instanceof Account)) {
