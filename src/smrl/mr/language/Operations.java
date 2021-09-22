@@ -1289,7 +1289,7 @@ public class Operations {
 	}
 	
 	
-	@MRDataProvider  
+	/*@MRDataProvider  
 	public static Object EvalInjectionString(){ 
 		return EvalInjectionString(1);
 	}
@@ -1299,11 +1299,11 @@ public class Operations {
 	public static Object EvalInjectionString(int x){ 
 		return MR.CURRENT.getMRData("EvalInjectionString",x);
 	}
-	
+	*/
 	
 	@MRDataProvider  
-	public static Object CodeInjectionString(){ 
-		return EvalInjectionString(1);
+	public static Object CodeInjectionString(){ // it contains EVAL injection as well
+		return CodeInjectionString(1);
 	}
 	
 	@MRDataProvider()
@@ -1321,7 +1321,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static Object StaticInjectionString(int x){ 
-		return MR.CURRENT.getMRData("StaticInjectionString",x);
+		return MR.CURRENT.getMRData("StaticInjectionString"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 	
 	@MRDataProvider  
@@ -1403,7 +1403,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static Object LDAPQueryString(int x){ 
-		return MR.CURRENT.getMRData("LDAPQueryString",x);
+		return MR.CURRENT.getMRData("LDAPQueryString"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 	
 	public static boolean URLContainProtocol( String url ){
@@ -1419,7 +1419,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String XQueryInjection(int x){ 
-		return (String) MR.CURRENT.getMRData("XQueryInjection",x);
+		return (String) MR.CURRENT.getMRData("XQueryInjection"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 	
 	@MRDataProvider  
@@ -1439,7 +1439,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static Object XMLInjectedFile(int x){ 
-		return MR.CURRENT.getMRData("XMLInjectedFile",x);
+		return MR.CURRENT.getMRData("XMLInjectedFile"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 	
 	
