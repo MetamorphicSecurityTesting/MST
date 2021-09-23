@@ -1465,8 +1465,15 @@ public class Operations {
 		return MR.CURRENT.getMRData("XMLInjectedFile"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 	
+	@MRDataProvider()
+	public static String CRLFAttackString() {
+		return CRLFAttackString(1);
+	}
 	
-	
+	@MRDataProvider()
+	public static String CRLFAttackString(int x) {
+		return (String) MR.CURRENT.getMRData("CRLFAttackString",x);
+	}
 	 
 
 
