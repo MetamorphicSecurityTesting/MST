@@ -989,13 +989,19 @@ public class Operations {
 	 * @return true if the "user" did not try to access "url".
 	 */
 	public static boolean notTried(Object user, String url) {
-		if(!(user instanceof Account)) {
-			return true;
+		String key = null;
+		if ( user != null ) {
+			if( user instanceof Account ) {
+				key = ((Account)user).getUsername();
+			}
+			if( ! ( user instanceof String ) ) {
+				key = user.toString();
+			} else {
+				key = (String)user;
+			}
 		}
-
-		String username = ((Account)user).getUsername();
-
-		return _notTried(username, url);
+		
+		return _notTried(key, url);
 	}
 
 	/**
