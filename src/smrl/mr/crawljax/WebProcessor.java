@@ -2886,20 +2886,20 @@ public class WebProcessor {
 	
 	public void loadRandomAdminFilePath(String randomFilePathCatalogFile ) throws IOException {
 		randomAdminFilePath = new ArrayList<String>();
-		_loadRandomFilePath(randomFilePathCatalogFile, randomAdminFilePath);
+		_loadFileContentFromPath(randomFilePathCatalogFile, randomAdminFilePath);
 	}
 
 	public void loadRandomFilePath(String randomFilePathCatalogFile ) throws IOException {
 		randomFilePath = new ArrayList<String>();
-		_loadRandomFilePath(randomFilePathCatalogFile, randomFilePath);
+		_loadFileContentFromPath(randomFilePathCatalogFile, randomFilePath);
 	}
 	
 	public void loadAdminRandomFilePath(String randomAdminFilePathCatalogFile ) throws IOException {
 		randomAdminFilePath = new ArrayList<String>();
-		_loadRandomFilePath(randomAdminFilePathCatalogFile, randomAdminFilePath);
+		_loadFileContentFromPath(randomAdminFilePathCatalogFile, randomAdminFilePath);
 	}
 	
-	public void _loadRandomFilePath(String randomFilePathCatalogFile, List<String> randomFilePath ) throws IOException {
+	public void _loadFileContentFromPath(String randomFilePathCatalogFile, List<String> randomFilePath ) throws IOException {
 		if(randomFilePathCatalogFile==null || randomFilePathCatalogFile.isEmpty()){
 			return;
 		}
@@ -3169,7 +3169,7 @@ public class WebProcessor {
  		ArrayList<String> list = new ArrayList<String>();
  		
 		try {
-			_loadRandomFilePath(sysConfig.getConfigStringValue(dataName), list);
+			_loadFileContentFromPath(sysConfig.getConfigStringValue(dataName), list);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
