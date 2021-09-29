@@ -540,11 +540,7 @@ public abstract class Action implements Cloneable {
 		return cookies.getCookies();
 	}
 
-	public boolean setHostName(Object name) {
-		return true;
-		// FIXME : ADD CODE
-	}
-
+	
 
 	public boolean setValueForParametersOfType(String str,String val) {
 	
