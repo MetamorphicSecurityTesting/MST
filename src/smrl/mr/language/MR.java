@@ -130,7 +130,7 @@ public abstract class MR {
 				
 				MrDataDB db = new MrDataDB(dataName);
 				dataDBs.put(dataName, db);
-				db.load(provider.load(dataName));
+				db.load(provider.load(dataName));  //  loads data using a provider
 				sortedDBs.add(db);
 			}
 			

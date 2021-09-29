@@ -1307,8 +1307,13 @@ public class Operations {
 
 
 	@MRDataProvider()
-	public static Object SQLInjectionString(int x){ 
-		return MR.CURRENT.getMRData("SQLInjectionString",x);
+	public static Object SQLInjectionString(int x){
+		//FIXME! 
+		// return a complete list of sql injection strings
+		return MR.CURRENT.getMRData("SQLnjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		
+	//	String[] SQLInjectionList = {"1==1","hi = hi"};
+	//	return SQLInjectionList[x];
 	}
 	
 	
@@ -1325,6 +1330,16 @@ public class Operations {
 	*/
 	
 	@MRDataProvider  
+	public static Object CRLFAttackString(){ // it contains EVAL injection as well
+		return CRLFAttackString(1);
+	}
+	
+	@MRDataProvider()
+	public static Object CRLFAttackString(int x){ 
+		return MR.CURRENT.getMRData("CRLFAttackString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+	}
+	
+	@MRDataProvider  
 	public static Object CodeInjectionString(){ // it contains EVAL injection as well
 		return CodeInjectionString(1);
 	}
@@ -1333,6 +1348,17 @@ public class Operations {
 	public static Object CodeInjectionString(int x){ 
 		return MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
+	
+	@MRDataProvider  
+	public static String  XSSInjectionString(){ // it contains EVAL injection as well
+		return  XSSInjectionString(1);
+	}
+	
+	@MRDataProvider()
+	public static String  XSSInjectionString(int x){ 
+		return (String) MR.CURRENT.getMRData(" XSSInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+	}
+	
 	
 	
 	
@@ -1344,7 +1370,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static Object StaticInjectionString(int x){ 
-		return MR.CURRENT.getMRData("StaticInjectionString"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return MR.CURRENT.getMRData("StaticInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 	
 	@MRDataProvider  
@@ -1386,6 +1412,18 @@ public class Operations {
 		return (String) MR.CURRENT.getMRData("CRLFspecialChars",x);
 	}
 	
+	
+	@MRDataProvider  
+	public static String SpecialCharacters(){ 
+		return SpecialCharacters(1);
+	}
+
+
+	@MRDataProvider()
+	public static String SpecialCharacters(int x){ 
+		return (String) MR.CURRENT.getMRData("SpecialCharacters",x);
+	}
+	
 	@MRDataProvider  
 	public static String XSSinjection(){ 
 		return XSSinjection(1);
@@ -1416,7 +1454,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static Object  randomXMLFile(int x){ 
-		return MR.CURRENT.getMRData(" randomXMLFile",x);
+		return MR.CURRENT.getMRData("randomXMLFile",x);
 	}
 	
 	@MRDataProvider  
@@ -1426,7 +1464,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static Object LDAPQueryString(int x){ 
-		return MR.CURRENT.getMRData("LDAPQueryString"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return MR.CURRENT.getMRData("LDAPQueryString",x);
 	}
 	
 	public static boolean URLContainProtocol( String url ){
@@ -1447,6 +1485,8 @@ public class Operations {
 	
 	@MRDataProvider  
 	public static String IncorrectPWD(){ 
+		//FIXME!!
+		// retrieve the password value and then add a random string to it.
 		return IncorrectPWD(1);
 	}
 
@@ -1454,6 +1494,7 @@ public class Operations {
 	public static String IncorrectPWD(int x){ 
 		return (String) MR.CURRENT.getMRData("IncorrectPWD",x);
 	}
+	
 	@MRDataProvider  
 	public static Object XMLInjectedFile(){ 
 		return XMLInjectedFile(1);
@@ -1462,7 +1503,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static Object XMLInjectedFile(int x){ 
-		return MR.CURRENT.getMRData("XMLInjectedFile"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return MR.CURRENT.getMRData("XMLInjectedFile",x);
 	}
 	
 	
@@ -1486,5 +1527,5 @@ public class Operations {
 
 
 
-}
+}//29
 
