@@ -53,8 +53,12 @@ public abstract class Action implements Cloneable {
 	protected Account user;		//User executing this current action
 	protected List<InnerAction> innerActions; 
 
-	protected Session session;
-	protected CookieSession cookies;
+//	protected Session session;
+	protected CookieSession session;
+
+	public Session getSession() {
+		return session;
+	}
 
 	public static StandardAction standard(JsonObject standardAction){
 		if(standardAction.keySet().contains("eventType")){
@@ -294,7 +298,7 @@ public abstract class Action implements Cloneable {
 		return setResult;
 	}
 
-	public abstract Session getSession();
+	
 
 	public String getChannel(){
 		String url = getUrl();
@@ -531,7 +535,7 @@ public abstract class Action implements Cloneable {
 
 	
 	public boolean setSession(CookieSession cookie) {
-		this.cookies = cookie ;
+		this.session = cookie ;
 		return true;
 	
 		//to actuate it, at runtime Output shall do the following
@@ -546,7 +550,7 @@ public abstract class Action implements Cloneable {
 
 
 	public Set<Cookie> getCookie(){
-		return cookies.getCookies();
+		return session.getCookies();
 	}
 
 	
@@ -648,8 +652,7 @@ public abstract class Action implements Cloneable {
 	}*/
 
 	public boolean setSession(Session NewSession) {
-
-		this.session = NewSession;
+		this.session = (CookieSession) NewSession;
 		return true;
 		// FIXME : ADD CODE
 	}
