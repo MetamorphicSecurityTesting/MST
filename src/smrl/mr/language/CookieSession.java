@@ -53,9 +53,28 @@ public class CookieSession implements Session {
 		return null;
 	}
 
-	public void setCookies(Set<Cookie> cookies) {
+	public boolean setCookies(Set<Cookie> cookies) {
 		this.cookies.clear();
-		this.cookies.addAll(cookies);
+		return this.cookies.addAll(cookies);
+//		for(Cookie ck:cookies){
+//			this.cookies.add(ck);
+//		}
+	}
+	
+	public boolean deleteCookie(String name){
+		Cookie del = null;
+		for(Cookie ck:cookies){
+			if(ck.getName().equals(name)){
+				del = ck;
+			}
+		}
+		
+		return cookies.remove(del);
+	}
+	
+	public boolean setCookie(Cookie cookie) {
+		deleteCookie( cookie.getName() );
+		return this.cookies.add(cookie);
 //		for(Cookie ck:cookies){
 //			this.cookies.add(ck);
 //		}

@@ -529,10 +529,19 @@ public abstract class Action implements Cloneable {
 	}
 
 
-	public boolean setCookie(Object cookie) {
-		this.cookies = (CookieSession) cookie;
+	
+	public boolean setSession(CookieSession cookie) {
+		this.cookies = cookie ;
 		return true;
-		// FIXME : ADD CODE
+	
+		//to actuate it, at runtime Output shall do the following
+		/*
+		 * Cookie cookie = webDriver.manage().getCookieNamed("cookie_name");
+		 * webDriver.manage().deleteCookie(cookie); webDriver.manage().addCookie( new
+		 * Cookie.Builder(cookie.getName(), cookie.getValue() + "abc")
+		 * .domain(cookie.getDomain()) .expiresOn(cookie.getExpiry())
+		 * .path(cookie.getPath()) .isSecure(cookie.isSecure()) .build() );
+		 */
 	}
 
 
@@ -663,6 +672,7 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 
+	
 }
 
 //17 new functions
