@@ -16,7 +16,9 @@
  *******************************************************************************/
 package smrl.mr.language;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.openqa.selenium.Cookie;
@@ -153,6 +155,17 @@ public class CookieSession implements Session {
 	@Override
 	public boolean isInvalid() {
 		throw new RuntimeException("Not implemented");
+	}
+
+	@Override
+	public Map<String, String> getKeyValueMappings() {
+		
+		HashMap<String, String> map = new HashMap<String, String>();
+		for(Cookie ck:cookies){
+			map.put(ck.getName(),ck.getValue());
+		}
+		
+		return map;
 	}
 	
 	
