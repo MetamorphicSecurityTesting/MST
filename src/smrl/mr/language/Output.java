@@ -49,6 +49,7 @@ public interface Output {
 	
 	public String getChannel();
 	
+	
 	public Session getSession();	// get the last session status
 	
 	public Session getSession(int pos);	//get the session status after executing the action at the pos position 

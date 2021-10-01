@@ -523,10 +523,7 @@ public abstract class Action implements Cloneable {
 
 
 
-	public boolean setCookiePath(Object path) {
-		return true;
-		// FIXME : ADD CODE
-	}
+	
 
 
 	public boolean setCookie(Object cookie) {
@@ -576,31 +573,33 @@ public abstract class Action implements Cloneable {
 
 		return setResult;
 
-
-
 	}
+	
+	public boolean setSession(Session NewSession) {
 
-	public boolean setIPCertificate(Object certificate) {
+		this.session = NewSession;
 		return true;
 		// FIXME : ADD CODE
 	}
+	
+	public boolean setCookiePath(Object path) { 
+		return true;
+		// FIXME : ADD CODE
+	}
+
+	
 
 	public boolean networkSettings(Object packet) {
 		return true;
 		// FIXME : ADD CODE
 	}
-	public boolean setAccessibleUrlWithSensInfo() {
-
-		return true;
-		// FIXME : ADD CODE
-	}
+	
+	
+	
 	public boolean setValidIpNode() {
 		return true;
 		// FIXME : ADD CODE
 	}
-
-	
-	
 
 	public Object userRole(Set<Cookie> cookie) 
 	{
@@ -638,12 +637,7 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}*/
 
-	public boolean setSession(Session NewSession) {
-
-		this.session = NewSession;
-		return true;
-		// FIXME : ADD CODE
-	}
+	
 
 	public boolean setCertificate(Object certificate) {
 		return true;
@@ -665,7 +659,8 @@ public abstract class Action implements Cloneable {
 
 }
 
-//17 new functions
+//15 new functions
+// 4 implemented
 
 
 

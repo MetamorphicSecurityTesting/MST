@@ -979,7 +979,7 @@ public class Operations {
 
 	static HashMap<String,HashSet<String>> triedInputs = new HashMap<String,HashSet<String>>();
 	private static boolean resetBrowserBetweenInputs = true;
-	
+
 	/**
 	 * Web-specific function.
 	 * Checks whether a given user tried to access a given URL until the current execution period.
@@ -1000,7 +1000,7 @@ public class Operations {
 				key = (String)user;
 			}
 		}
-		
+
 		return _notTried(key, url);
 	}
 
@@ -1026,8 +1026,8 @@ public class Operations {
 
 		return true;
 	}
-	
-	
+
+
 	/**
 	 * Web-specific function.
 	 * Checks whether a given URL was ever tried (with any user).
@@ -1038,7 +1038,7 @@ public class Operations {
 	public static boolean notTried(String url) {
 		return _notTried(null,url);
 	}
-	
+
 
 	public static boolean notTried(Object user, Object... others) {
 		if(!(user instanceof Account)) {
@@ -1160,17 +1160,17 @@ public class Operations {
 		return MR.CURRENT.provider.newRequestUrlAction(URL);
 	}
 
-	
-	
+
+
 	public static void setResetBrowserBetweenInputs( boolean value ) {
 		resetBrowserBetweenInputs = value ;
 	}
-	
+
 
 	public static boolean getResetBrowserBetweenInputs() {
 		return resetBrowserBetweenInputs;
 	}
-	
+
 
 	//// Nazanin's Implementation Start Point
 
@@ -1317,12 +1317,12 @@ public class Operations {
 		//FIXME! 
 		// return a complete list of sql injection strings
 		return MR.CURRENT.getMRData("SQLnjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
-		
-	//	String[] SQLInjectionList = {"1==1","hi = hi"};
-	//	return SQLInjectionList[x];
+
+		//	String[] SQLInjectionList = {"1==1","hi = hi"};
+		//	return SQLInjectionList[x];
 	}
-	
-	
+
+
 	/*@MRDataProvider  
 	public static Object EvalInjectionString(){ 
 		return EvalInjectionString(1);
@@ -1333,41 +1333,41 @@ public class Operations {
 	public static Object EvalInjectionString(int x){ 
 		return MR.CURRENT.getMRData("EvalInjectionString",x);
 	}
-	*/
-	
+	 */
+
 	@MRDataProvider  
 	public static Object CRLFAttackString(){ // it contains EVAL injection as well
 		return CRLFAttackString(1);
 	}
-	
+
 	@MRDataProvider()
 	public static Object CRLFAttackString(int x){ 
 		return MR.CURRENT.getMRData("CRLFAttackString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-	
+
 	@MRDataProvider  
 	public static Object CodeInjectionString(){ // it contains EVAL injection as well
 		return CodeInjectionString(1);
 	}
-	
+
 	@MRDataProvider()
 	public static Object CodeInjectionString(int x){ 
 		return MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-	
+
 	@MRDataProvider  
 	public static String  XSSInjectionString(){ // it contains EVAL injection as well
 		return  XSSInjectionString(1);
 	}
-	
+
 	@MRDataProvider()
 	public static String  XSSInjectionString(int x){ 
 		return (String) MR.CURRENT.getMRData(" XSSInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-	
-	
-	
-	
+
+
+
+
 	@MRDataProvider  
 	public static Object StaticInjectionString(){ 
 		return StaticInjectionString(1);
@@ -1378,7 +1378,7 @@ public class Operations {
 	public static Object StaticInjectionString(int x){ 
 		return MR.CURRENT.getMRData("StaticInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-	
+
 	@MRDataProvider  
 	public static String WeakPassword(){ 
 		return WeakPassword(1);
@@ -1389,12 +1389,12 @@ public class Operations {
 	public static String WeakPassword(int x){ 
 		return (String) MR.CURRENT.getMRData("WeakPassword",x);
 	}
-	
+
 	public static boolean isFile(Object parameter) {
-	//FIXME! 	return MR.CURRENT.provider.isFile(action);
+		//FIXME! 	return MR.CURRENT.provider.isFile(action);
 		return true;
 	}
-	
+
 	@MRDataProvider  
 	public static String FileWithInvalidType(){ 
 		return FileWithInvalidType(1);
@@ -1405,8 +1405,8 @@ public class Operations {
 	public static String FileWithInvalidType(int x){ 
 		return (String) MR.CURRENT.getMRData("FileWithInvalidType",x);
 	}
-	
-	
+
+
 	@MRDataProvider  
 	public static String CRLFspecialChars(){ 
 		return CRLFspecialChars(1);
@@ -1417,8 +1417,8 @@ public class Operations {
 	public static String CRLFspecialChars(int x){ 
 		return (String) MR.CURRENT.getMRData("CRLFspecialChars",x);
 	}
-	
-	
+
+
 	@MRDataProvider  
 	public static String SpecialCharacters(){ 
 		return SpecialCharacters(1);
@@ -1429,7 +1429,7 @@ public class Operations {
 	public static String SpecialCharacters(int x){ 
 		return (String) MR.CURRENT.getMRData("SpecialCharacters",x);
 	}
-	
+
 	@MRDataProvider  
 	public static String XSSinjection(){ 
 		return XSSinjection(1);
@@ -1440,18 +1440,18 @@ public class Operations {
 	public static String XSSinjection(int x){ 
 		return (String) MR.CURRENT.getMRData("XSSinjection",x);
 	}
-	
+
 	@MRDataProvider 
 	public static boolean isDeltaLogDifferent(Object output1, Object output2) {
 		//FIXME!!
 		return true;
 	}
-	
-	
+
+
 	public static boolean isFormInput(Object formInput) {
 		return MR.CURRENT.provider.isFormInputForFilePath(formInput);
 	}
-	
+
 	@MRDataProvider  
 	public static Object  randomXMLFile(){ 
 		return  randomXMLFile(1);
@@ -1462,7 +1462,7 @@ public class Operations {
 	public static Object  randomXMLFile(int x){ 
 		return MR.CURRENT.getMRData("randomXMLFile",x);
 	}
-	
+
 	@MRDataProvider  
 	public static Object LDAPQueryString(){ 
 		return LDAPQueryString(1);
@@ -1472,13 +1472,13 @@ public class Operations {
 	public static Object LDAPQueryString(int x){ 
 		return MR.CURRENT.getMRData("LDAPQueryString",x);
 	}
-	
+
 	public static boolean URLContainProtocol( String url ){
 		///FIXME!!!!
 		// if the value is invalid then return True.
 		return true; 
 	}
-	
+
 	@MRDataProvider  
 	public static String XQueryInjection(){ 
 		return XQueryInjection(1);
@@ -1488,7 +1488,19 @@ public class Operations {
 	public static String XQueryInjection(int x){ 
 		return (String) MR.CURRENT.getMRData("XQueryInjection"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-	
+
+	@MRDataProvider  
+	public static String CommandInjection(){ 
+		return CommandInjection(1);
+	}
+
+	@MRDataProvider()
+	public static String CommandInjection(int x){ 
+		return (String) MR.CURRENT.getMRData("CommandInjection"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+	}
+
+
+
 	@MRDataProvider  
 	public static String IncorrectPWD(){ 
 		//FIXME!!
@@ -1500,7 +1512,7 @@ public class Operations {
 	public static String IncorrectPWD(int x){ 
 		return (String) MR.CURRENT.getMRData("IncorrectPWD",x);
 	}
-	
+
 	@MRDataProvider  
 	public static Object XMLInjectedFile(){ 
 		return XMLInjectedFile(1);
@@ -1511,8 +1523,8 @@ public class Operations {
 	public static Object XMLInjectedFile(int x){ 
 		return MR.CURRENT.getMRData("XMLInjectedFile",x);
 	}
-	
-	
+
+
 
 
 	//	/**
@@ -1531,5 +1543,5 @@ public class Operations {
 
 
 
-}//29
+}//30
 
