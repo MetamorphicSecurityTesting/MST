@@ -52,6 +52,7 @@ import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
@@ -753,6 +754,14 @@ public class WebProcessor {
 			String redirectURL = "";
 			
 			
+			CookieSession session = (CookieSession) act.getSession();
+			if ( session != null ) {
+				for (Cookie ck : session.getCookies() ) {
+					setCookieInDriver(ck);
+				}
+			}
+			
+			
 			
 			//create replace rule
 			String ruleChannelDescription = ""; 
@@ -792,6 +801,9 @@ public class WebProcessor {
 			
 			String realRequestedUrl = aURL;
 			String realClickedElementText = null;
+			
+			
+			
 			
 			//Start to process request following the type of action (index, click, ...)
 			switch (type){
@@ -1447,6 +1459,20 @@ public class WebProcessor {
 		}
 		
 		return outputSequence;
+	}
+
+
+	private void setCookieInDriver(Cookie ck) {
+		Cookie cookie = driver.manage().getCookieNamed(ck.getName());
+		driver.manage().deleteCookie(cookie);
+		driver.manage().addCookie(
+		  new Cookie.Builder(cookie.getName(), ck.getValue())
+		    .domain(cookie.getDomain())
+		    .expiresOn(cookie.getExpiry())
+		    .path(cookie.getPath())
+		    .isSecure(cookie.isSecure())
+		    .build()
+		);
 	}
 
 

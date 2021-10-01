@@ -16,6 +16,8 @@
  *******************************************************************************/
 package smrl.mr.language;
 
+import java.util.Map;
+
 public interface Session {
 
 	/**
@@ -26,5 +28,7 @@ public interface Session {
 	public void update(Object session);
 	
 	public boolean isInvalid();
+	
+	public Map<String,String> getKeyValueMappings();
 	
 }

@@ -53,8 +53,12 @@ public abstract class Action implements Cloneable {
 	protected Account user;		//User executing this current action
 	protected List<InnerAction> innerActions; 
 
-	protected Session session;
-	protected CookieSession cookies;
+//	protected Session session;
+	protected CookieSession session;
+
+	public Session getSession() {
+		return session;
+	}
 
 	public static StandardAction standard(JsonObject standardAction){
 		if(standardAction.keySet().contains("eventType")){
@@ -294,7 +298,7 @@ public abstract class Action implements Cloneable {
 		return setResult;
 	}
 
-	public abstract Session getSession();
+	
 
 	public String getChannel(){
 		String url = getUrl();
@@ -518,23 +522,37 @@ public abstract class Action implements Cloneable {
 	}
 
 	public abstract boolean isMethodChanged();
+	
+	
 
 	///// Nazanin's implementation start point
 
 
 
-	
-
-
-	public boolean setCookie(Object cookie) {
-		this.cookies = (CookieSession) cookie;
+	public boolean setCookiePath(Object path) {
 		return true;
 		// FIXME : ADD CODE
 	}
 
 
+	
+	public boolean setSession(CookieSession cookie) {
+		this.session = cookie ;
+		return true;
+	
+		//to actuate it, at runtime Output shall do the following
+		/*
+		 * Cookie cookie = webDriver.manage().getCookieNamed("cookie_name");
+		 * webDriver.manage().deleteCookie(cookie); webDriver.manage().addCookie( new
+		 * Cookie.Builder(cookie.getName(), cookie.getValue() + "abc")
+		 * .domain(cookie.getDomain()) .expiresOn(cookie.getExpiry())
+		 * .path(cookie.getPath()) .isSecure(cookie.isSecure()) .build() );
+		 */
+	}
+
+
 	public Set<Cookie> getCookie(){
-		return cookies.getCookies();
+		return session.getCookies();
 	}
 
 	
@@ -573,33 +591,31 @@ public abstract class Action implements Cloneable {
 
 		return setResult;
 
-	}
-	
-	public boolean setSession(Session NewSession) {
 
-		this.session = NewSession;
+
+	}
+
+	public boolean setIPCertificate(Object certificate) {
 		return true;
 		// FIXME : ADD CODE
 	}
-	
-	public boolean setCookiePath(Object path) { 
-		return true;
-		// FIXME : ADD CODE
-	}
-
-	
 
 	public boolean networkSettings(Object packet) {
 		return true;
 		// FIXME : ADD CODE
 	}
-	
-	
-	
+	public boolean setAccessibleUrlWithSensInfo() {
+
+		return true;
+		// FIXME : ADD CODE
+	}
 	public boolean setValidIpNode() {
 		return true;
 		// FIXME : ADD CODE
 	}
+
+	
+	
 
 	public Object userRole(Set<Cookie> cookie) 
 	{
@@ -633,11 +649,14 @@ public abstract class Action implements Cloneable {
 
 	/*public boolean setRandomSession() {
 		return true;
-
 		// FIXME : ADD CODE
 	}*/
 
-	
+	public boolean setSession(Session NewSession) {
+		this.session = (CookieSession) NewSession;
+		return true;
+		// FIXME : ADD CODE
+	}
 
 	public boolean setCertificate(Object certificate) {
 		return true;
@@ -657,7 +676,10 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 
+	
 }
+
+//17 new functions
 
 //15 new functions
 // 4 implemented
