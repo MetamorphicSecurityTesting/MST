@@ -152,20 +152,6 @@ public class WebProcessor {
 	
 	private static HashSet<String> visibleWithoutLogin;
 	
-	
-	/// Nazanin's Implementation start point
-	
-	private ArrayList<String> SQLnjectionString_;
-	private ArrayList<String> CRLFAttackString_;
-	private ArrayList<String> CodeInjectionString_;
-	private ArrayList<String> XSSInjectionString_;
-	private ArrayList<String> StaticInjectionString_;
-	private ArrayList<String> WeakPassword_;
-	
-	/// Nazanin's Implementation end point
-	
-	
-	
 	public WebProcessor() {
 		this.userList = new ArrayList<Account>();
 		this.setInputList(new ArrayList<WebInputCrawlJax>());
@@ -3218,36 +3204,10 @@ public class WebProcessor {
 	}
  	
  	
- 	
- 	
- 	
- 	/// Nazanin's implementation start point
- 	
- 	public List getSQLnjectionString() {
-		return SQLnjectionString_;
-	}
- 	
- 	public List getCRLFAttackString() {
-		return CRLFAttackString_;
-	}
- 	
- 	public List getCodeInjectionString() {
-		return CodeInjectionString_;
-	}
- 	
- 	public List getXSSInjectionString() {
-		return XSSInjectionString_;
-	}
- 	
- 	public List getStaticInjectionString() {
-		return StaticInjectionString_;
-	}
- 	
- 	public List getWeakPassword() {
-		return WeakPassword_;
-	}
- 	
- 	
- 	/// Nazanin's implementation end point
-	
 }
+
+
+
+
+
+

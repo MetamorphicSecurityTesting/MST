@@ -1184,7 +1184,7 @@ public class Operations {
 	public static Object SQLInjectionString(int x){
 		
 		// return a complete list of sql injection strings
-		return MR.CURRENT.getMRData("SQLnjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return MR.CURRENT.getMRData("SQLInjectionString",x);
 
 		//	String[] SQLInjectionList = {"1==1","hi = hi"};
 		//	return SQLInjectionList[x];
@@ -1242,6 +1242,17 @@ public class Operations {
 	public static String WeakPassword(int x){ 
 		return (String) MR.CURRENT.getMRData("WeakPassword_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
+	
+	@MRDataProvider  
+	public static String CRLFspecialChars(){ 
+		return CRLFspecialChars(1);
+	}
+
+
+	@MRDataProvider()
+	public static String CRLFspecialChars(int x){ 
+		return (String) MR.CURRENT.getMRData("CRLFspecialChars_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+	}
 
 	
 	
@@ -1287,16 +1298,7 @@ public class Operations {
 	}
 	
 	
-	@MRDataProvider  
-	public static Object randomSSL(){ 
-		return randomSSL(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object randomSSL(int x){ 
-		return MR.CURRENT.getMRData("randomSSL",x);
-	}
+	
 
 	
 	
@@ -1316,34 +1318,9 @@ public class Operations {
 
 
 	
-	public static boolean isFile(Object parameter) {
-		//FIXME! 	return MR.CURRENT.provider.isFile(action);
-		return true;
-	}
-
-	@MRDataProvider  
-	public static String FileWithInvalidType(){ 
-		return FileWithInvalidType(1);
-	}
 
 
-	@MRDataProvider()
-	public static String FileWithInvalidType(int x){ 
-		return (String) MR.CURRENT.getMRData("FileWithInvalidType",x);
-	}
-
-
-	@MRDataProvider  
-	public static String CRLFspecialChars(){ 
-		return CRLFspecialChars(1);
-	}
-
-
-	@MRDataProvider()
-	public static String CRLFspecialChars(int x){ 
-		return (String) MR.CURRENT.getMRData("CRLFspecialChars",x);
-	}
-
+	
 
 	@MRDataProvider  
 	public static String SpecialCharacters(){ 
@@ -1468,6 +1445,22 @@ public class Operations {
 			randomizedCharacter += (char) (random.nextInt(26) + 'a');
 		}
 		return randomizedCharacter;
+	}
+
+	public static boolean isFile(Object parameter) {
+		//FIXME! 	return MR.CURRENT.provider.isFile(action);
+		return true;
+	}
+
+	@MRDataProvider  
+	public static String FileWithInvalidType(){ 
+		return FileWithInvalidType(1);
+	}
+
+
+	@MRDataProvider()
+	public static String FileWithInvalidType(int x){ 
+		return (String) MR.CURRENT.getMRData("FileWithInvalidType",x);
 	}
 
 
