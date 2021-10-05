@@ -153,6 +153,18 @@ public class WebProcessor {
 	private static HashSet<String> visibleWithoutLogin;
 	
 	
+	/// Nazanin's Implementation start point
+	
+	private ArrayList<String> SQLnjectionString_;
+	private ArrayList<String> CRLFAttackString_;
+	private ArrayList<String> CodeInjectionString_;
+	private ArrayList<String> XSSInjectionString_;
+	private ArrayList<String> StaticInjectionString_;
+	private ArrayList<String> WeakPassword_;
+	
+	/// Nazanin's Implementation end point
+	
+	
 	
 	public WebProcessor() {
 		this.userList = new ArrayList<Account>();
@@ -2909,7 +2921,6 @@ public class WebProcessor {
 		return this.randomFilePath;
 	}
 	
-	
 	public void loadRandomAdminFilePath(String randomFilePathCatalogFile ) throws IOException {
 		randomAdminFilePath = new ArrayList<String>();
 		_loadFileContentFromPath(randomFilePathCatalogFile, randomAdminFilePath);
@@ -2982,6 +2993,9 @@ public class WebProcessor {
 	public List getRandomAdminFilePath() {
 		return randomAdminFilePath;
 	}
+	
+	
+	
 	
 	/**
 	 * Check if the user_1 covers all URLs dedicated to user_2
@@ -3202,5 +3216,38 @@ public class WebProcessor {
 		
 		return list;
 	}
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	/// Nazanin's implementation start point
+ 	
+ 	public List getSQLnjectionString() {
+		return SQLnjectionString_;
+	}
+ 	
+ 	public List getCRLFAttackString() {
+		return CRLFAttackString_;
+	}
+ 	
+ 	public List getCodeInjectionString() {
+		return CodeInjectionString_;
+	}
+ 	
+ 	public List getXSSInjectionString() {
+		return XSSInjectionString_;
+	}
+ 	
+ 	public List getStaticInjectionString() {
+		return StaticInjectionString_;
+	}
+ 	
+ 	public List getWeakPassword() {
+		return WeakPassword_;
+	}
+ 	
+ 	
+ 	/// Nazanin's implementation end point
 	
 }

@@ -26,6 +26,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -1173,167 +1174,21 @@ public class Operations {
 
 
 	//// Nazanin's Implementation Start Point
-
-	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
-	public static Object RandomCookiePath(){ 
-		return RandomCookiePath(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object RandomCookiePath(int x){ 
-		return MR.CURRENT.getMRData("RandomCookiePath",x); // let's see if this works
-	}
-
-	@MRDataProvider  
-	public static String EncodeUrl(String url){ 
-		return EncodeUrl(1);
-	}
-
-
-	@MRDataProvider()
-	public static String EncodeUrl(int x){
-		return (String) MR.CURRENT.getMRData("validHostName",x);
-	}
-
-
-
-	@MRDataProvider  
-	public static Object InvalidCookieTags(){ 
-		return InvalidCookieTags(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object InvalidCookieTags(int x){ 
-		return MR.CURRENT.getMRData("InvalidCookieTags",x);
-	}
-
-	@MRDataProvider  
-	public static Object anotherHostName(){ 
-		return anotherHostName(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object anotherHostName(int x){ 
-		return MR.CURRENT.getMRData("anotherHostName",x);
-	}
-
-
-	public static boolean isResetPassword(Action action) {
-		return MR.CURRENT.provider.isResetPassword(action);
-	}
-
-	@MRDataProvider  
-	public static Object invalidCertificate(){ 
-		return invalidCertificate(1);
-
-		// check the date of certificate to be expired as well
-	}
-
-
-	@MRDataProvider()
-	public static Object invalidCertificate(int x){ 
-		return MR.CURRENT.getMRData("invalidCertificate",x);
-	}
-
-	@MRDataProvider  
-	public static Object duplicatePacket(){ 
-		return duplicatePacket(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object duplicatePacket(int x){ 
-		return MR.CURRENT.getMRData("duplicatePacket",x);
-	}
-
-
-	@MRDataProvider  
-	public static Object randomCookieElement(){ 
-		return randomCookieElement(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object randomCookieElement(int x){ 
-		return MR.CURRENT.getMRData("randomCookieElement",x);
-	}
-
-
-	@MRDataProvider  
-	public static Object randomValue(){ 
-		return randomValue(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object randomValue(int x){ 
-		return MR.CURRENT.getMRData("randomValue",x);
-	}
-
-	@MRDataProvider  
-	public static Object setUserRoleAdmin(Object role ,Object cookie){ 
-		return setUserRoleAdmin(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object setUserRoleAdmin(int x){ 
-		return MR.CURRENT.getMRData("setUserRoleAdmin",x);
-	}
-
-	public static boolean isNotAccessibleWithoutLogin(Action action) {
-		//FIXME!
-
-		return true;
-		//return _visibleWithoutLoggingIn(action.getUrl()); 
-	}
-	@MRDataProvider  
-	public static Object randomSSL(){ 
-		return randomSSL(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object randomSSL(int x){ 
-		return MR.CURRENT.getMRData("randomSSL",x);
-	}
-
-	public static boolean inValid( Object session ){
-		///FIXME!!!!
-		// if the value is invalid then return True.
-		return true; 
-	}
+	
 	@MRDataProvider  
 	public static Object SQLInjectionString(){ 
 		return SQLInjectionString(1);
 	}
 
-
 	@MRDataProvider()
 	public static Object SQLInjectionString(int x){
-		//FIXME! 
+		
 		// return a complete list of sql injection strings
 		return MR.CURRENT.getMRData("SQLnjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 
 		//	String[] SQLInjectionList = {"1==1","hi = hi"};
 		//	return SQLInjectionList[x];
 	}
-
-
-	/*@MRDataProvider  
-	public static Object EvalInjectionString(){ 
-		return EvalInjectionString(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object EvalInjectionString(int x){ 
-		return MR.CURRENT.getMRData("EvalInjectionString",x);
-	}
-	 */
 
 	@MRDataProvider  
 	public static Object CRLFAttackString(){ // it contains EVAL injection as well
@@ -1354,7 +1209,7 @@ public class Operations {
 	public static Object CodeInjectionString(int x){ 
 		return MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-
+	
 	@MRDataProvider  
 	public static String  XSSInjectionString(){ // it contains EVAL injection as well
 		return  XSSInjectionString(1);
@@ -1362,11 +1217,9 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String  XSSInjectionString(int x){ 
-		return (String) MR.CURRENT.getMRData(" XSSInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return (String) MR.CURRENT.getMRData("XSSInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-
-
-
+    
 
 	@MRDataProvider  
 	public static Object StaticInjectionString(){ 
@@ -1378,7 +1231,7 @@ public class Operations {
 	public static Object StaticInjectionString(int x){ 
 		return MR.CURRENT.getMRData("StaticInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-
+	
 	@MRDataProvider  
 	public static String WeakPassword(){ 
 		return WeakPassword(1);
@@ -1387,9 +1240,82 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String WeakPassword(int x){ 
-		return (String) MR.CURRENT.getMRData("WeakPassword",x);
+		return (String) MR.CURRENT.getMRData("WeakPassword_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 
+	
+	
+	///not completed
+
+	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
+	public static Object RandomCookiePath(){ 
+		return RandomCookiePath(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object RandomCookiePath(int x){ 
+		return MR.CURRENT.getMRData("RandomCookiePath",x); // let's see if this works
+	}
+
+	@MRDataProvider  
+	public static String EncodeUrl(String url){ 
+		return EncodeUrl(1);
+	}
+
+
+	@MRDataProvider()
+	public static String EncodeUrl(int x){
+		return (String) MR.CURRENT.getMRData("EncodedURL",x);
+	}
+
+	public static boolean isResetPassword(Action action) {
+		return MR.CURRENT.provider.isResetPassword(action);
+	}
+
+	@MRDataProvider  
+	public static Object invalidCertificate(){ 
+		return invalidCertificate(1);
+
+		// check the date of certificate to be expired as well
+	}
+
+
+	@MRDataProvider()
+	public static Object invalidCertificate(int x){ 
+		return MR.CURRENT.getMRData("invalidCertificate",x);
+	}
+	
+	
+	@MRDataProvider  
+	public static Object randomSSL(){ 
+		return randomSSL(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object randomSSL(int x){ 
+		return MR.CURRENT.getMRData("randomSSL",x);
+	}
+
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+	
+
+	
+
+
+
+
+	
 	public static boolean isFile(Object parameter) {
 		//FIXME! 	return MR.CURRENT.provider.isFile(action);
 		return true;
@@ -1525,6 +1451,24 @@ public class Operations {
 	}
 
 
+	@MRDataProvider()
+	public static boolean isValidIpNode(String url) {
+	    
+		return true;
+		// FIXME : ADD CODE
+	}
+	
+	@MRDataProvider()
+	public static String randomString(int limit) {
+		String randomizedCharacter="";
+
+		Random random = new Random();
+		for (int i = 0; i<200; i++)
+		{
+			randomizedCharacter += (char) (random.nextInt(26) + 'a');
+		}
+		return randomizedCharacter;
+	}
 
 
 	//	/**

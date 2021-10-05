@@ -124,7 +124,58 @@ public abstract class MR {
 				if ( dataName.equals("parameterValueUsedByOtherUsers") ) {
 					//This should be loaded after loading Input list
 					continue;
+				}
+				
+				
+				/// Nazanin's implementation Start point
+				
+				/// comment: which db should they refer to?
+				
+				if ( dataName.equals("SQLnjectionString_") ) {
+					MrDataDB db = new MrDataDB(dataName);
+					dataDBs.put(dataName, db);
+					sortedDBs.add(db);
+					continue;
 				} 
+				
+				if ( dataName.equals("CRLFAttackString_") ) {
+					MrDataDB db = new MrDataDB(dataName);
+					dataDBs.put(dataName, db);
+					sortedDBs.add(db);
+					continue;
+				} 
+				
+				if ( dataName.equals("CodeInjectionString_") ) {
+					MrDataDB db = new MrDataDB(dataName);
+					dataDBs.put(dataName, db);
+					sortedDBs.add(db);
+					continue;
+				} 
+				
+				if ( dataName.equals("XSSInjectionString_") ) {
+					MrDataDB db = new MrDataDB(dataName);
+					dataDBs.put(dataName, db);
+					sortedDBs.add(db);
+					continue;
+				} 
+				
+				if ( dataName.equals("StaticInjectionString_") ) {
+					MrDataDB db = new MrDataDB(dataName);
+					dataDBs.put(dataName, db);
+					sortedDBs.add(db);
+					continue;
+				} 
+				
+				if ( dataName.equals("WeakPassword_") ) {
+					MrDataDB db = new MrDataDB(dataName);
+					dataDBs.put(dataName, db);
+					sortedDBs.add(db);
+					continue;
+				} 
+				
+				
+				
+				/// Nazanin's implementation end point
 				
 				
 				

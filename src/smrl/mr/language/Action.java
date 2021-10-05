@@ -22,6 +22,7 @@ import java.net.URLDecoder;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -53,7 +54,7 @@ public abstract class Action implements Cloneable {
 	protected Account user;		//User executing this current action
 	protected List<InnerAction> innerActions; 
 
-//	protected Session session;
+	//	protected Session session;
 	protected CookieSession session;
 
 	public Session getSession() {
@@ -298,7 +299,7 @@ public abstract class Action implements Cloneable {
 		return setResult;
 	}
 
-	
+
 
 	public String getChannel(){
 		String url = getUrl();
@@ -522,24 +523,18 @@ public abstract class Action implements Cloneable {
 	}
 
 	public abstract boolean isMethodChanged();
-	
-	
+
+
 
 	///// Nazanin's implementation start point
 
 
 
-	public boolean setCookiePath(Object path) {
-		return true;
-		// FIXME : ADD CODE
-	}
 
-
-	
 	public boolean setSession(CookieSession cookie) {
 		this.session = cookie ;
 		return true;
-	
+
 		//to actuate it, at runtime Output shall do the following
 		/*
 		 * Cookie cookie = webDriver.manage().getCookieNamed("cookie_name");
@@ -555,14 +550,15 @@ public abstract class Action implements Cloneable {
 		return session.getCookies();
 	}
 
-	
+
+
 
 	public boolean setValueForParametersOfType(String str,String val) {
-	
+
 		//The method setValueForParametersOfType shall reset all the values for all the input form of a given type
-	
+
 		List<Entry<String, String>> params = this.getParameters();
-	
+
 		if(params==null || params.size()<=0 || getUrl()==null || getUrl().isEmpty()){
 			return false;
 		}
@@ -570,12 +566,12 @@ public abstract class Action implements Cloneable {
 		boolean setResult = false;
 
 		for(int i=0; i<params.size(); i++){
-			
+
 			if( params.get(i).getKey()== str )
 				params.get(i).setValue((String) val);		// Update value
-			
+
 		}
-	
+
 
 		try {
 			URIBuilder ub = new URIBuilder(getUrl());
@@ -595,62 +591,7 @@ public abstract class Action implements Cloneable {
 
 	}
 
-	public boolean setIPCertificate(Object certificate) {
-		return true;
-		// FIXME : ADD CODE
-	}
 
-	public boolean networkSettings(Object packet) {
-		return true;
-		// FIXME : ADD CODE
-	}
-	public boolean setAccessibleUrlWithSensInfo() {
-
-		return true;
-		// FIXME : ADD CODE
-	}
-	public boolean setValidIpNode() {
-		return true;
-		// FIXME : ADD CODE
-	}
-
-	
-	
-
-	public Object userRole(Set<Cookie> cookie) 
-	{
-		// FIXME : ADD CODE
-		return "";
-	}
-
-	public boolean  readRegistryKey() {
-		return true;
-		//should not be able to read the readStringRegistryValue
-		// FIXME : ADD CODE
-	}
-
-	public boolean  retrieveCookiePassword(Set<Cookie> cookie) {
-		return true;
-		//should not be able to read the password from cookie
-		// FIXME : ADD CODE
-	}
-
-	public boolean setPasswordAge(String str,int age) {
-		return true;
-
-		// FIXME : ADD CODE
-	}
-
-	public boolean setOtherSSLCertificate(String str,Object certificate) {
-		return true;
-
-		// FIXME : ADD CODE
-	}
-
-	/*public boolean setRandomSession() {
-		return true;
-		// FIXME : ADD CODE
-	}*/
 
 	public boolean setSession(Session NewSession) {
 		this.session = (CookieSession) NewSession;
@@ -658,17 +599,18 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 
+
+
+
+
+
+
 	public boolean setCertificate(Object certificate) {
 		return true;
 
 		// FIXME : ADD CODE
 	}
 
-	public boolean setWeakEncryptionAlgorithm() {
-		return true;
-
-		// FIXME : ADD CODE
-	}
 
 	public boolean 	removeCertificate() {
 		return true;
@@ -677,12 +619,20 @@ public abstract class Action implements Cloneable {
 	}
 
 	
+
+
+
+	//*************************************************************To be deleted:
+
+
+	public boolean setWeakEncryptionAlgorithm() {
+		return true;
+
+		// FIXME : ADD CODE
+	}
+	
 }
 
-//17 new functions
-
-//15 new functions
-// 4 implemented
 
 
 

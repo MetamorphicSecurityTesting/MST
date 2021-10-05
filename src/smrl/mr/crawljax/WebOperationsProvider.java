@@ -317,6 +317,38 @@ public class WebOperationsProvider implements OperationsProvider {
 		return CipherSuites.weakCipherSuite();
 	}
 	
+	///Nazanin's implementation start point
+	
+	private List  loadSQLnjectionString() {
+		return impl.getSQLnjectionString();
+	}
+	
+	private List  loadCRLFAttackString() {
+		return impl.getCRLFAttackString();
+	}
+	
+	private List  loadCodeInjectionString() {
+		return impl.getCodeInjectionString();
+	}
+	
+	private List  loadXSSInjectionString() {
+		return impl.getXSSInjectionString();
+	}
+	
+	private List  loadStaticInjectionString() {
+		return impl.getStaticInjectionString();
+	}
+	
+	private List  loadWeakPassword() {
+		return impl.getWeakPassword();
+	}
+	
+	
+	
+	
+	
+	///Nazanin's implementation end point
+	
 
 	@Override
 	public smrl.mr.language.Input changeCredentials(smrl.mr.language.Input input, Object user) {
@@ -362,6 +394,32 @@ public class WebOperationsProvider implements OperationsProvider {
 			return loadRandomAdminFilePath();
 		case "WeakEncryption":
 			return loadWeakCipherSuite();
+			
+		/// Nazanin's implementation start point
+		case "SQLnjectionString_":
+			return loadSQLnjectionString();
+			
+		case "CRLFAttackString_":
+			return loadSQLnjectionString();
+			
+		case "CodeInjectionString_":
+			return loadSQLnjectionString();
+			
+		case "XSSInjectionString_":
+			return loadXSSInjectionString();
+		
+		case "StaticInjectionString_":
+			return loadStaticInjectionString();
+		
+		case "WeakPassword_":
+			return loadWeakPassword();
+			
+			
+			
+	   /// Nazanin's implementation end point
+			
+			
+			
 			
 		default :
 			return _load(dataName);
