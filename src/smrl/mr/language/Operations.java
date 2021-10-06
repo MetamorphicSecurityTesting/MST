@@ -16,8 +16,11 @@
  *******************************************************************************/
 package smrl.mr.language;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1175,6 +1178,13 @@ public class Operations {
 
 	//// Nazanin's Implementation Start Point
 	
+	public static boolean isFormInput(Object formInput) {
+		return MR.CURRENT.provider.isFormInputForFilePath(formInput);
+	}
+	public static boolean isResetPassword(Action action) {
+		return MR.CURRENT.provider.isResetPassword(action);
+	}
+	
 	@MRDataProvider  
 	public static Object SQLInjectionString(){ 
 		return SQLInjectionString(1);
@@ -1190,18 +1200,9 @@ public class Operations {
 		//	return SQLInjectionList[x];
 	}
 
+	
 	@MRDataProvider  
-	public static Object CRLFAttackString(){ // it contains EVAL injection as well
-		return CRLFAttackString(1);
-	}
-
-	@MRDataProvider()
-	public static Object CRLFAttackString(int x){ 
-		return MR.CURRENT.getMRData("CRLFAttackString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
-	}
-
-	@MRDataProvider  
-	public static Object CodeInjectionString(){ // it contains EVAL injection as well
+	public static Object CodeInjectionString(){
 		return CodeInjectionString(1);
 	}
 
@@ -1211,7 +1212,7 @@ public class Operations {
 	}
 	
 	@MRDataProvider  
-	public static String  XSSInjectionString(){ // it contains EVAL injection as well
+	public static String  XSSInjectionString(){
 		return  XSSInjectionString(1);
 	}
 
@@ -1243,83 +1244,6 @@ public class Operations {
 		return (String) MR.CURRENT.getMRData("WeakPassword_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 	
-	@MRDataProvider  
-	public static String CRLFspecialChars(){ 
-		return CRLFspecialChars(1);
-	}
-
-
-	@MRDataProvider()
-	public static String CRLFspecialChars(int x){ 
-		return (String) MR.CURRENT.getMRData("CRLFspecialChars_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
-	}
-
-	
-	
-	///not completed
-
-	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
-	public static Object RandomCookiePath(){ 
-		return RandomCookiePath(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object RandomCookiePath(int x){ 
-		return MR.CURRENT.getMRData("RandomCookiePath",x); // let's see if this works
-	}
-
-	@MRDataProvider  
-	public static String EncodeUrl(String url){ 
-		return EncodeUrl(1);
-	}
-
-
-	@MRDataProvider()
-	public static String EncodeUrl(int x){
-		return (String) MR.CURRENT.getMRData("EncodedURL",x);
-	}
-
-	public static boolean isResetPassword(Action action) {
-		return MR.CURRENT.provider.isResetPassword(action);
-	}
-
-	@MRDataProvider  
-	public static Object invalidCertificate(){ 
-		return invalidCertificate(1);
-
-		// check the date of certificate to be expired as well
-	}
-
-
-	@MRDataProvider()
-	public static Object invalidCertificate(int x){ 
-		return MR.CURRENT.getMRData("invalidCertificate",x);
-	}
-	
-	
-	
-
-	
-	
-
-	
-	
-	
-	
-	
-	
-	
-	
-
-	
-
-
-
-
-	
-
-
 	
 
 	@MRDataProvider  
@@ -1333,55 +1257,17 @@ public class Operations {
 		return (String) MR.CURRENT.getMRData("SpecialCharacters",x);
 	}
 
+	
 	@MRDataProvider  
-	public static String XSSinjection(){ 
-		return XSSinjection(1);
-	}
-
-
-	@MRDataProvider()
-	public static String XSSinjection(int x){ 
-		return (String) MR.CURRENT.getMRData("XSSinjection",x);
-	}
-
-	@MRDataProvider 
-	public static boolean isDeltaLogDifferent(Object output1, Object output2) {
-		//FIXME!!
-		return true;
-	}
-
-
-	public static boolean isFormInput(Object formInput) {
-		return MR.CURRENT.provider.isFormInputForFilePath(formInput);
-	}
-
-	@MRDataProvider  
-	public static Object  randomXMLFile(){ 
-		return  randomXMLFile(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object  randomXMLFile(int x){ 
-		return MR.CURRENT.getMRData("randomXMLFile",x);
-	}
-
-	@MRDataProvider  
-	public static Object LDAPQueryString(){ 
-		return LDAPQueryString(1);
+	public static Object LDAPInjectionString(){ 
+		return LDAPInjectionString(1);
 	}
 
 	@MRDataProvider()
-	public static Object LDAPQueryString(int x){ 
-		return MR.CURRENT.getMRData("LDAPQueryString",x);
+	public static Object LDAPInjectionString(int x){ 
+		return MR.CURRENT.getMRData("LDAPInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-
-	public static boolean URLContainProtocol( String url ){
-		///FIXME!!!!
-		// if the value is invalid then return True.
-		return true; 
-	}
-
+	
 	@MRDataProvider  
 	public static String XQueryInjection(){ 
 		return XQueryInjection(1);
@@ -1401,40 +1287,6 @@ public class Operations {
 	public static String CommandInjection(int x){ 
 		return (String) MR.CURRENT.getMRData("CommandInjection"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-
-
-
-	@MRDataProvider  
-	public static String IncorrectPWD(){ 
-		//FIXME!!
-		// retrieve the password value and then add a random string to it.
-		return IncorrectPWD(1);
-	}
-
-	@MRDataProvider()
-	public static String IncorrectPWD(int x){ 
-		return (String) MR.CURRENT.getMRData("IncorrectPWD",x);
-	}
-
-	@MRDataProvider  
-	public static Object XMLInjectedFile(){ 
-		return XMLInjectedFile(1);
-	}
-
-
-	@MRDataProvider()
-	public static Object XMLInjectedFile(int x){ 
-		return MR.CURRENT.getMRData("XMLInjectedFile",x);
-	}
-
-
-	@MRDataProvider()
-	public static boolean isValidIpNode(String url) {
-	    
-		return true;
-		// FIXME : ADD CODE
-	}
-	
 	@MRDataProvider()
 	public static String randomString(int limit) {
 		String randomizedCharacter="";
@@ -1447,11 +1299,55 @@ public class Operations {
 		return randomizedCharacter;
 	}
 
-	public static boolean isFile(Object parameter) {
-		//FIXME! 	return MR.CURRENT.provider.isFile(action);
-		return true;
+	
+	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
+	public static Object CookiePath(){ 
+		return CookiePath(1);
 	}
 
+
+	@MRDataProvider()
+	public static Object  CookiePath(int x){ 
+		return MR.CURRENT.getMRData(" CookiePath",x); // let's see if this works
+	}
+	
+	@MRDataProvider  
+	public static Object CRLFAttackString(){ // it contains EVAL injection as well
+		return CRLFAttackString(1);
+	}
+
+	@MRDataProvider()
+	public static Object CRLFAttackString(int x){ 
+		return MR.CURRENT.getMRData("CRLFAttackString",x);
+	}
+
+
+	
+	
+	//14
+	////////not completed
+	@MRDataProvider  
+	public static String EncodeUrl(String url){  // i get error
+		if(url==null){
+			return null;
+		}
+		
+		 try {
+	            return URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+	        } catch (UnsupportedEncodingException ex) {
+	            throw new RuntimeException(ex.getCause());
+	        }
+		/* try {  
+             String encodeURL = URLEncoder.encode( url, "UTF-8" );  
+             return encodeURL;  
+        } catch (UnsupportedEncodingException e) {  
+             return "Issue while encoding" +e.getMessage();  
+        }  */
+		 
+		
+		
+	}
+	
 	@MRDataProvider  
 	public static String FileWithInvalidType(){ 
 		return FileWithInvalidType(1);
@@ -1463,6 +1359,57 @@ public class Operations {
 		return (String) MR.CURRENT.getMRData("FileWithInvalidType",x);
 	}
 
+	
+
+	@MRDataProvider  
+	public static Object XMLInjectedFile(){ 
+		return XMLInjectedFile(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object XMLInjectedFile(int x){ 
+		return MR.CURRENT.getMRData("XMLInjectedFile",x);
+	}
+	
+	public static boolean URLContainProtocol( String url ){
+		///FIXME!!!!
+		// if the value is invalid then return True.
+		return true; 
+	}
+	
+	
+	
+	@MRDataProvider  
+	public static Object invalidCertificate(){ 
+		return invalidCertificate(1);
+
+		// check the date of certificate to be expired as well
+	}
+
+
+	@MRDataProvider()
+	public static Object invalidCertificate(int x){ 
+		return MR.CURRENT.getMRData("invalidCertificate",x);
+	}
+	
+
+	@MRDataProvider 
+	public static boolean isDeltaLogDifferent(Object output1, Object output2) {
+		//FIXME!!
+		return true;
+	}
+
+
+	@MRDataProvider()
+	public static boolean isValidIpNode(String url) {
+	    
+		return true;
+		// FIXME : ADD CODE
+	}
+	
+	
+	
 
 	//	/**
 	//	 * Web-specific function.
@@ -1480,5 +1427,11 @@ public class Operations {
 
 
 
-}//30
+}
 
+//Completed:14
+//21
+
+
+
+//total: 21 + 6 = 27    completed: 14 + 4 = 18     rate: 18/27 = 67% 
