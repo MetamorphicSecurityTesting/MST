@@ -492,7 +492,9 @@ public class WebOutputSequence implements Output {
 
 
 
-	
+	public List<Object> values(){
+		return seq;
+	}
 
 	
 }

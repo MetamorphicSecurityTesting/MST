@@ -60,4 +60,6 @@ public interface Output {
 	
 	public CollectionOfConcepts listOfTags(String key); //get the list of tags with "key" name from the output
 
+	public List<Object> values();
+
 }

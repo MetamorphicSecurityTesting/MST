@@ -17,6 +17,7 @@
 package smrl.mr.test;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -109,6 +110,10 @@ public class BasicOutput implements Output {
 	}
 
 	
-
+	@Override
+	public List<Object> values(){
+		ArrayList<Object> al = new ArrayList<Object>();
+		return al;
+	}
 	
 }
