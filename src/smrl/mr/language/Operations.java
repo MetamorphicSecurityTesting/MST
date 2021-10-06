@@ -1434,4 +1434,4 @@ public class Operations {
 
 
 
-//total: 21 + 6 = 27    completed: 14 + 4 = 18     rate: 18/27 = 67% 
+//total: 21 + 7 = 28    completed: 14 + 5 = 19     rate: 19/28 = 68% 

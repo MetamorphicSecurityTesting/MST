@@ -598,6 +598,12 @@ public abstract class Action implements Cloneable {
 		return true;
 		// FIXME : ADD CODE
 	}
+	
+	public boolean setCookie(Set<Cookie> NewCookie) {
+		this.session = (CookieSession) NewCookie;
+		return true;
+		// FIXME : ADD CODE
+	}
 
 
 
@@ -632,8 +638,8 @@ public abstract class Action implements Cloneable {
 	}
 	
 }
-//completed:4
-//6
+//completed:5
+//7
 
 
 
