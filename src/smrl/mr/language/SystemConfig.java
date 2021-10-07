@@ -68,6 +68,7 @@ public class SystemConfig {
 	private long realWaitThreshold;
 	private String chromeDriverPath;
 	private String serverSideLanguage;
+	private String firefoxDriverPath;
 	
 	
 	static final int DEFAULT_WAIT_TIME = 1000;
@@ -146,6 +147,13 @@ public class SystemConfig {
 			}
 			else{
 				this.chromeDriverPath = null;
+			}	
+			
+			if(jsonObject.keySet().contains("firefoxDriverPath")){
+				this.firefoxDriverPath = jsonObject.get("firefoxDriverPath").getAsString().trim();
+			}
+			else{
+				this.firefoxDriverPath = null;
 			}	
 				
 			if(jsonObject.keySet().contains("outputStore")){
@@ -912,6 +920,10 @@ public class SystemConfig {
 
 	public void setRealWaitThreshold(long realWaitThreshold) {
 		this.realWaitThreshold = realWaitThreshold;
+	}
+
+	public String getFirefoxDriverPath() {
+		return this.firefoxDriverPath;
 	}
 	
 }

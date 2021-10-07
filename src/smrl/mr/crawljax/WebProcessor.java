@@ -60,6 +60,10 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.ProfilesIni;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
@@ -99,7 +103,7 @@ public class WebProcessor {
 	private static final long PAGELOAD_TIMEOUT = 5000;			// in ms
 	private static final boolean setTimeouts = false;
 	private static final boolean storeDOMs = true;
-	
+
 	private List<Account> userList;
 	private List<WebInputCrawlJax> inputList;
 	private Iterator<WebInputCrawlJax> inputIter;
@@ -115,14 +119,14 @@ public class WebProcessor {
 	private boolean waitBeforeEachAction=false;	// was true
 	private WebInputCrawlJax actionsChangedUrl;
 	ArrayList<String> proxyReplacerRules;
-	
+
 	private String[] ignoredObjects = {".js", ".css", ".woff", ".ttf", ".otf", ".eot"};
-	
+
 	//updateUrlMap contains action IDs: 
 	//- first one is the action should check
 	//- second one is the action has the url which will be updated (from the first one)
 	private HashMap<Long, Long> updateUrlMap;	
-	
+
 
 	HashMap<String,HashSet<String>> urlsAccessedByUsers = new HashMap<String, HashSet<String>>();
 	private static String WRONG_USERNAME = "wrong";
@@ -131,34 +135,34 @@ public class WebProcessor {
 	private boolean autoDetectConfirmation = true;
 	private boolean alwaysConfirm = true;
 	private boolean prioritizeButton=true;
-//	private String[] confirmationTexts = {"You must use POST method to trigger builds", 
-//	"The URL you're trying to access requires that requests be sent using POST (like a form submission)"};
+	//	private String[] confirmationTexts = {"You must use POST method to trigger builds", 
+	//	"The URL you're trying to access requires that requests be sent using POST (like a form submission)"};
 
-	
+
 	private static String ADMIN_USERNAME = "admin";
-	
+
 	private Account admin;
 	private ArrayList<String> randomAdminFilePath;
-//	private boolean headless=false;
-	
+	//	private boolean headless=false;
+
 	public static boolean DEFAULT_HEADLESS = true;
-	
+
 	private boolean headless=DEFAULT_HEADLESS;
-	
+
 	public static boolean ensure_action_origin_url_is_the_same=true;
-	
+
 	private boolean checkStatusCode=false;
 	private boolean longWaitPerformed;
-	
+
 	private static HashSet<String> visibleWithoutLogin;
-	
+
 	public WebProcessor() {
 		this.userList = new ArrayList<Account>();
 		this.setInputList(new ArrayList<WebInputCrawlJax>());
 		this.inputIter = this.getInputList().iterator();
 		this.randomFilePath = new ArrayList<String>();
-	
-		
+
+
 		this.latestUrl = "";
 		this.currentUsername = "";
 		this.changedUsername = "";
@@ -166,12 +170,12 @@ public class WebProcessor {
 		sysConfig = new SystemConfig();
 		this.proxyApi = null;
 		this.cleanUpDom = true;
-//		configDownloadFolder("./Downloads");
+		//		configDownloadFolder("./Downloads");
 		this.updateUrlMap = new HashMap<Long, Long>();
 		this.actionsChangedUrl = null;
 		this.proxyReplacerRules = new ArrayList<String>();
 	}
-	
+
 
 	public boolean isHeadless() {
 		return headless;
@@ -197,7 +201,7 @@ public class WebProcessor {
 		return prioritizeButton;
 	}
 
-	
+
 
 	public HashMap<Long, Long> getUpdateUrlMap() {
 		return updateUrlMap;
@@ -207,7 +211,7 @@ public class WebProcessor {
 	public void resetUpdateUrlMap(){
 		this.updateUrlMap.clear();
 	}
-	
+
 	public ClientApi getProxyApi() {
 		return proxyApi;
 	}
@@ -262,14 +266,14 @@ public class WebProcessor {
 		if(!outFolder.exists()){
 			outFolder.mkdirs();
 		}
-		
+
 		this.outputFile = new File(outFile);
-//		try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.outputFile))) {
-//			bw.write("Testing result:\n");
-//			bw.close( );
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		//		try (BufferedWriter bw = new BufferedWriter(new FileWriter(this.outputFile))) {
+		//			bw.write("Testing result:\n");
+		//			bw.close( );
+		//		} catch (IOException e) {
+		//			e.printStackTrace();
+		//		}
 
 		//clear folder doms
 		File folder = new File(this.outputFile.getParent()+"/doms");
@@ -297,20 +301,20 @@ public class WebProcessor {
 		}
 		return actionsChangedUrl;
 	}
-	
+
 	public void loadActionsChangedUrl() throws JsonSyntaxException, JsonIOException, FileNotFoundException {
 		if(sysConfig==null ||
-			sysConfig.getActionsChangedUrlFileName()==null ||
-			sysConfig.getActionsChangedUrlFileName().isEmpty() ||
-			!FileUtil.exist(sysConfig.getActionsChangedUrlFileName())){
+				sysConfig.getActionsChangedUrlFileName()==null ||
+				sysConfig.getActionsChangedUrlFileName().isEmpty() ||
+				!FileUtil.exist(sysConfig.getActionsChangedUrlFileName())){
 			return;
 		}
-		
+
 		String fileName = sysConfig.getActionsChangedUrlFileName();
-		 
+
 		Gson gson = new Gson();
 		File jsonFile = Paths.get(fileName).toFile();
-		
+
 		JsonArray jsonInput = gson.fromJson(new FileReader(jsonFile), JsonArray.class);
 
 		if(jsonInput!= null && jsonInput.size()>0){
@@ -322,71 +326,71 @@ public class WebProcessor {
 		if (user==null || input == null){
 			throw new IllegalStateException();
 		}
-		
+
 		Set<String> urlsAccessedByUser = retrieveURLsAcessedByUser(user);
-		
+
 		for(Action acc:input.actions()){
 			String url = acc.getUrl();
-//			System.out.println("!!!LOOKING FOR "+url);
+			//			System.out.println("!!!LOOKING FOR "+url);
 			if(url!= null){
 				url = url.trim();
 				if(!url.isEmpty()){
 					if ( ! urlsAccessedByUser.contains(url) ){
-//						System.out.println("!!!NOT THERE ");
+						//						System.out.println("!!!NOT THERE ");
 						return true;
 					}
 				}
 			}
 		}
-		
-//		System.out.println("!!!All URLs found : "+user+" "+input);
+
+		//		System.out.println("!!!All URLs found : "+user+" "+input);
 		return false;
 	}
-	
-	
+
+
 	/**
 	 * @param user
 	 * @return
 	 */
 	private Set<String> retrieveURLsAcessedByEveryUser() {
-		
+
 		HashSet<String> urlsAccessedByUser = new HashSet<String>();
 
 		for(WebInputCrawlJax i: this.inputList){
-			
-				for(Action acc:i.actions()){
-					if ( isLogin(acc) ) {
-						break;
-					}
-					if ( acc.getUrl() != null ){
-						String url_ = acc.getUrl().trim();
-						if ( url_.endsWith("#") ) {
-							url_ = url_.substring(0, url_.length()-1);
-						}
-						if ( url_.endsWith("/") ) {
-							url_ = url_.substring(0, url_.length()-1);
-						}
-						urlsAccessedByUser.add(url_);
-					}
-						
-//						urlsAccessedByUser.add(acc.getUrl().trim());
-//					}
+
+			for(Action acc:i.actions()){
+				if ( isLogin(acc) ) {
+					break;
 				}
-			
+				if ( acc.getUrl() != null ){
+					String url_ = acc.getUrl().trim();
+					if ( url_.endsWith("#") ) {
+						url_ = url_.substring(0, url_.length()-1);
+					}
+					if ( url_.endsWith("/") ) {
+						url_ = url_.substring(0, url_.length()-1);
+					}
+					urlsAccessedByUser.add(url_);
+				}
+
+				//						urlsAccessedByUser.add(acc.getUrl().trim());
+				//					}
+			}
+
 		}
 
-		
+
 
 		return urlsAccessedByUser;
 	}
-	
-	
+
+
 
 	public void setAutoDetectConfirmation(boolean autoDetectConfirmation) {
 		this.autoDetectConfirmation = autoDetectConfirmation;
 	}
-	
-	
+
+
 
 	public void setAlwaysConfirm(boolean alwaysConfirm) {
 		this.alwaysConfirm = alwaysConfirm;
@@ -422,9 +426,9 @@ public class WebProcessor {
 						}
 						urlsAccessedByUser.add(url_);
 					}
-						
-//						urlsAccessedByUser.add(acc.getUrl().trim());
-//					}
+
+					//						urlsAccessedByUser.add(acc.getUrl().trim());
+					//					}
 				}
 			}
 		}
@@ -433,22 +437,22 @@ public class WebProcessor {
 
 		return urlsAccessedByUser;
 	}
-	
+
 	public boolean guiNotContain(Account user, String url){
 		if (user==null || url == null ){
 			return true;
 		}
-		
+
 		if ( inputList.isEmpty() ){
 			return true;
 		}
-		
+
 		if ( URLsAcessedByEveryUser == null ) {
 			URLsAcessedByEveryUser = retrieveURLsAcessedByEveryUser();
 		}
-	
+
 		Set<String> urlsAccessedByUser = retrieveURLsAcessedByUser(user);
-		
+
 		url = url.trim();
 		if(!url.isEmpty()){
 			if ( url.endsWith("#") ) {
@@ -457,19 +461,19 @@ public class WebProcessor {
 			if ( url.endsWith("/") ) {
 				url = url.substring(0, url.length()-1);
 			}
-			
+
 			if ( URLsAcessedByEveryUser.contains(url) ){
 				//						System.out.println("!!!NOT THERE ");
 				return false;
 			}
-			
+
 			if ( ! urlsAccessedByUser.contains(url) ){
 				//						System.out.println("!!!NOT THERE ");
 				return true;
 			}
 		}
-		
-//		System.out.println("!!!NOT THERE "+url);
+
+		//		System.out.println("!!!NOT THERE "+url);
 
 		return false;
 	}
@@ -479,26 +483,26 @@ public class WebProcessor {
 				user2==null) {
 			return null;
 		}
-		
+
 		String userParam = user2.getUsernameParam();
 		String passParam = user2.getPasswordParam();
 		if(userParam.isEmpty() || passParam.isEmpty()){
 			System.out.println("Information of account parameters is missing");
 			return null;
-//			return _input;
+			//			return _input;
 		}
-		
+
 		WebInputCrawlJax input;
 		try {
 			input = _input.clone();
 		} catch (CloneNotSupportedException e) {
 			return null;
 		}
-		
+
 		List<Action> actions = input.actions();
 		//get the username before changing it
 		for(Action act:actions){
-//			boolean gotten = false;
+			//			boolean gotten = false;
 			if(containCredential(act)) {
 				Account usedAccount = (Account) act.getUser();
 				if(usedAccount!=null && usedAccount.getUsername()!=null) {
@@ -510,33 +514,33 @@ public class WebProcessor {
 				this.changedUsername = user2.getUsername();
 				break;
 			}
-				
-//			if(act.containCredential(user2)){
-//				//get info
-//				JsonArray fInputs = ((StandardAction)act).getFormInputs();
-//				for(int i = 0; i<fInputs.size(); i++){
-//					JsonObject fi = fInputs.get(i).getAsJsonObject();
-//					if(fi.keySet().contains("identification") && fi.keySet().contains("values")){
-//						JsonObject iden = fi.get("identification").getAsJsonObject();
-//						JsonArray fiValues = fi.get("values").getAsJsonArray();
-//
-//						if(iden.keySet().contains("value") && fiValues.size()>=1){
-//							String idenKey = iden.get("value").getAsString().trim();
-//							if(idenKey.equals(user2.getUsernameParam())){
-//								this.currentUsername = fiValues.get(0).getAsString().trim();
-//								this.changedUsername = user2.getUsername();
-//								gotten = true;
-//								break;
-//							}
-//						}
-//					}
-//				}
-//			}
-//			if(gotten){
-//				break;
-//			}
+
+			//			if(act.containCredential(user2)){
+			//				//get info
+			//				JsonArray fInputs = ((StandardAction)act).getFormInputs();
+			//				for(int i = 0; i<fInputs.size(); i++){
+			//					JsonObject fi = fInputs.get(i).getAsJsonObject();
+			//					if(fi.keySet().contains("identification") && fi.keySet().contains("values")){
+			//						JsonObject iden = fi.get("identification").getAsJsonObject();
+			//						JsonArray fiValues = fi.get("values").getAsJsonArray();
+			//
+			//						if(iden.keySet().contains("value") && fiValues.size()>=1){
+			//							String idenKey = iden.get("value").getAsString().trim();
+			//							if(idenKey.equals(user2.getUsernameParam())){
+			//								this.currentUsername = fiValues.get(0).getAsString().trim();
+			//								this.changedUsername = user2.getUsername();
+			//								gotten = true;
+			//								break;
+			//							}
+			//						}
+			//					}
+			//				}
+			//			}
+			//			if(gotten){
+			//				break;
+			//			}
 		}
-		
+
 		//get the last URL in the input
 		boolean gotURL = false;
 		for(int i=actions.size()-1; i>=0; i--){
@@ -560,7 +564,7 @@ public class WebProcessor {
 		if(this.userList==null || this.userList.isEmpty()) {
 			return false;
 		}
-		
+
 		for(Account u:this.userList) {
 			if(act.containCredential(u)) {
 				return true;
@@ -571,8 +575,8 @@ public class WebProcessor {
 
 
 	public void loadInput(String fileName) throws FileNotFoundException,
-			IOException {
-		
+	IOException {
+
 		//1. Load input from json file
 		Gson gson = new Gson();
 		File jsonFile = Paths.get(fileName).toFile();
@@ -580,22 +584,22 @@ public class WebProcessor {
 			System.out.println("Input file not found: " + fileName);
 			return;
 		}
-		
+
 		JsonObject jsonObject = gson.fromJson(new FileReader(jsonFile), JsonObject.class);
-		
+
 		for(String key:jsonObject.keySet()){
 			JsonArray jsonInput = jsonObject.get(key).getAsJsonArray();
 			if(jsonInput!= null){
 				if(jsonInput.size()>0){
 					WebInputCrawlJax input = new WebInputCrawlJax(jsonInput);
 					input.identifyUsers(this);
-					
+
 					this.inputList.add(input);
 				}
 			}
-			
+
 		} 
-		
+
 		// Update inputIter
 		this.inputIter = this.getInputList().iterator();
 	}
@@ -604,9 +608,9 @@ public class WebProcessor {
 	public WebOutputSequence output(WebInputCrawlJax input) {
 		return output(input, false);
 	}
-	
-	
-	
+
+
+
 	ChromeDriver driver = null;
 	public WebOutputSequence output(WebInputCrawlJax input, boolean checkDownloadedObjects) {
 		System.out.println("HERE");
@@ -614,97 +618,37 @@ public class WebProcessor {
 		if(input==null) {
 			return null;
 		}
-		
-		WebOutputSequence outputSequence = new WebOutputSequence();
-		
-		String exePath = sysConfig.getChromeDriverPath();
-		
-		//call web browser
-		if (exePath == null ) {
-			exePath = "/usr/local/bin/chromedriver";
-		}
-		
-		
-		File exeFile = new File ( exePath );
-		
-		System.out.println("CHROMEDRIVER: "+exeFile.getAbsolutePath());
-		
-		if ( ! exeFile.exists() ) {
-			exeFile = new File (Paths.get(".").toFile(),"chromedriver.exe");
-			exePath = exeFile.getAbsolutePath();
-			System.out.println("CHROMEDRIVER RESET TO: "+exePath);
-			System.out.println("CHROMEDRIVER: "+exeFile.getAbsolutePath());
-		}
-		
-		System.setProperty("webdriver.chrome.driver", exePath);
-		
-		
-		LoggingPreferences logPrefs = new LoggingPreferences();
-		logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
-		
-		HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
-		chromePrefs.put("profile.default_content_settings.popups", 0);
-		chromePrefs.put("download.default_directory", this.downloadFilePath);
-		
-//		System.out.println("Download file path: " + this.downloadFilePath);
 
-		ChromeOptions chOptions = new ChromeOptions();
-		chOptions.setExperimentalOption("prefs", chromePrefs);
-		chOptions.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
-		
-		if(sysConfig.isUsedProxy()){
-			String proxyAP = sysConfig.getProxyAddress().trim() + 
-					":" + sysConfig.getProxyPort();
-			Proxy proxy = new Proxy();
-			proxy.setHttpProxy(proxyAP).setSslProxy(proxyAP);
-			
-			chOptions.setProxy(proxy);
-			
+		WebOutputSequence outputSequence = new WebOutputSequence();
+
+		if ( input.isUseWeakEncryption() ) {
+			loadUnsafeDriver(input);
+		} else {
+			loadDefaultDriver(input);	
 		}
-		
-		//To accept all SSL certificates, even insecure certificates, and ignore certificate errors
-		chOptions.addArguments("--ignore-certificate-errors");
-		chOptions.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-		chOptions.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
-		//TODO: add certificate to driver if needed
-		
-		if(headless) {
-			chOptions.addArguments("headless");
-		}
-		
-		setCipherSuite(chOptions, input);
-		
-		if ( Operations.getResetBrowserBetweenInputs() ) {
-			if ( driver != null ) {
-				driver.quit();
-				driver = null;
-			}
-			driver = new ChromeDriver(chOptions);
-	    }
-	
-		if(setTimeouts) {
-			driver.manage().timeouts().implicitlyWait(SEARCH_ELEMENT_TIMEOUT, TimeUnit.MILLISECONDS);
-			driver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.MILLISECONDS);
-		}
-		
+
+
+
+
+
 		List<Action> actions = input.actions();
-		
+
 		HashMap<Long,String> actionUrls = new HashMap<Long, String>();
-		
+
 		int timeOfConfirm=0;
 		for(int i=0; i<actions.size(); i++){
 			Action act = actions.get(i);
 			String text = "index";
 			String aURL = act.getUrl();
-			
+
 			if(act.getUrl()!=null && 
 					!act.getUrl().trim().isEmpty() && 
 					!actionUrls.containsKey(act.getActionID())) {
 				actionUrls.put(act.getActionID(), act.getUrl());
 			}
-			
+
 			ActionType type = act.getEventType();
-			
+
 			//Get text and URL
 			switch (type){
 			case index: 
@@ -731,36 +675,36 @@ public class WebProcessor {
 			default:
 				break;
 			}
-			
+
 			if(Operations.isLogin(act) && act.getUser()!=null) {
 				text = "log in with " + ((Account)act.getUser()).getUsername();
 			}
-			
+
 			System.out.print("\t- Action " + act.getActionID() + " : " + text + " (" + aURL + ")");
-			
+
 			if(waitBeforeEachAction){
 				try {
-//					Thread.sleep(1000);
+					//					Thread.sleep(1000);
 					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			// process the action (depend on type of action)
 			boolean doneAction = false;
 			String redirectURL = "";
-			
-			
+
+
 			CookieSession session = (CookieSession) act.getSession();
 			if ( session != null ) {
 				for (Cookie ck : session.getCookies() ) {
 					setCookieInDriver(ck);
 				}
 			}
-			
-			
-			
+
+
+
 			//create replace rule
 			String ruleChannelDescription = ""; 
 			if ( act.isChannelChanged() && proxyApi!=null){
@@ -775,7 +719,7 @@ public class WebProcessor {
 					e.printStackTrace();
 				}
 			}
-			
+
 			//Replace HTTP method using the proxy replacer
 			String ruleMethodDescription = "";
 			if(act.isMethodChanged() && proxyApi!=null) {
@@ -790,19 +734,19 @@ public class WebProcessor {
 					e.printStackTrace();
 				}
 			}
-			
+
 			//The max id of message in the proxy
 			int maxId = 0;
 			if(checkDownloadedObjects){
 				maxId = getMaxIdFromProxy();
 			}
-			
+
 			String realRequestedUrl = aURL;
 			String realClickedElementText = null;
-			
-			
-			
-			
+
+
+
+
 			//Start to process request following the type of action (index, click, ...)
 			switch (type){
 			case index:
@@ -816,11 +760,11 @@ public class WebProcessor {
 					catch(WebDriverException e){
 						System.out.println("!!! Could not access the index");
 						driver.quit();
-//						driver.close();
+						//						driver.close();
 						e.printStackTrace();
 						return outputSequence;
 					}
-					
+
 					if(doneAction){
 						//get redirect URL
 						redirectURL = getRedirectUrl(driver, aURL);
@@ -833,13 +777,13 @@ public class WebProcessor {
 				else{
 					System.out.println("!!! The index URL should NOT be empty");
 					driver.quit();
-//					driver.close();
+					//					driver.close();
 					return outputSequence;
 				}
 				System.out.println(" --> DONE");
 				break;
 			}
-			
+
 			case alert:
 			{
 				closeAlertAndGetItsText(driver, ((AlertAction)act).getAccept());
@@ -848,35 +792,35 @@ public class WebProcessor {
 				redirectURL = getRedirectUrl(driver, aURL);
 				break;
 			}
-			
+
 			case click: 
 			{
 				text = ((StandardAction)act).getText();
-				
+
 				//If this action is the POST one, 
 				// check if the current URL (from browser) is similar with the currentURL
 				// if not -> go back to the currentURL before execute the action
 				if(ensure_action_origin_url_is_the_same) {
-//					if(act.getMethod().toLowerCase().trim().equals("post")){
-						String actCurrentURL = ((StandardAction)act).getCurrentURL();
-						if(actCurrentURL!=null 
-//								&& !actCurrentURL.isEmpty() &&
-//								!actCurrentURL.trim().equals("/")
-								){
-							String browserURL = driver.getCurrentUrl().trim();
-							if(!actCurrentURL.equals(browserURL)){
-								
-								actCurrentURL = processUrlBeforeRequest(driver, actCurrentURL);
-								
-								if(actCurrentURL!=null) {
-									//go back to the actCurrentURL
-									driver.get(actCurrentURL);
-								}
+					//					if(act.getMethod().toLowerCase().trim().equals("post")){
+					String actCurrentURL = ((StandardAction)act).getCurrentURL();
+					if(actCurrentURL!=null 
+							//								&& !actCurrentURL.isEmpty() &&
+							//								!actCurrentURL.trim().equals("/")
+							){
+						String browserURL = driver.getCurrentUrl().trim();
+						if(!actCurrentURL.equals(browserURL)){
+
+							actCurrentURL = processUrlBeforeRequest(driver, actCurrentURL);
+
+							if(actCurrentURL!=null) {
+								//go back to the actCurrentURL
+								driver.get(actCurrentURL);
 							}
 						}
-//					}
+					}
+					//					}
 				}
-				
+
 				//Filling inputs in form
 				JsonArray formInputs = ((StandardAction)act).getFormInputs();
 				if(formInputs!=null && formInputs.size()>0){
@@ -885,12 +829,12 @@ public class WebProcessor {
 						if(fInput.get("values").getAsJsonArray().size() <1){
 							continue;
 						}
-						
+
 						String idHow = fInput.get("identification").getAsJsonObject().get("how").getAsString();
 						String idValue = fInput.get("identification").getAsJsonObject().get("value").getAsString();
-						
+
 						By by = getByType(idHow, idValue);
-						
+
 						//If cannot find any element in the current page by using the "by", go to next form input
 						if(by==null ){
 							continue;
@@ -906,23 +850,23 @@ public class WebProcessor {
 								continue;
 							}
 						}
-						
+
 						JsonArray values = fInput.get("values").getAsJsonArray();
 						if(values.size()<1){
 							continue;
 						}
-						
+
 						String formType = fInput.get("type").getAsString().toLowerCase();
 						if(formType.startsWith("text") 
 								|| formType.equals("password") 
 								|| formType.equals("hidden")
 								|| formType.equals("file")){
-							
+
 							String valueToSend = "";
 							if(values.size() >0){
 								valueToSend = values.get(0).getAsString().trim();
 							}
-							
+
 							//Process the case in which this action is a signup action
 							if(isSignup(act)){
 								//If this form is username in the signup page
@@ -944,20 +888,20 @@ public class WebProcessor {
 									}
 								}
 							}
-							
+
 							if(!valueToSend.isEmpty()){
 								//clear available value
 								driver.findElement(by).clear();
-								
+
 								//send new value to the element
 								driver.findElement(by).sendKeys(valueToSend);
 							}
 						}
-						
+
 						else if (formType.equals("checkbox")){
 							boolean checkValue = values.get(0).getAsBoolean();
 							WebElement option = driver.findElement(by);
-							
+
 							if(checkValue){	//if the check box should be selected
 								if(!option.isSelected()){	//if the check box is current UNselected
 									option.click();
@@ -969,23 +913,23 @@ public class WebProcessor {
 								}
 							}
 						}
-						
+
 						else if (formType.equals("radio")){
 							//TODO: 
 						}
-						
+
 						else if (formType.equals("select")){
 							//TODO: 
 						}
 					}
 				}
-				
+
 				boolean clicked = false;
-				
+
 				//Click based on the information in "id" field (xpath)
 				String elementID = ((StandardAction)act).getId();
 				WebElement eleToClick = findElementMatchToAction(driver, (StandardAction)act);
-				
+
 				//Click on found element
 				if(eleToClick!=null){
 					//check the conformance between the xpath ID and URL
@@ -994,7 +938,7 @@ public class WebProcessor {
 					checkUpdateUrlMap(act, actionUrls, newURL);
 					realRequestedUrl = newURL;
 					realClickedElementText = eleToClick.getText();
-					
+
 					//Click on the found element
 					try{
 						eleToClick.click();
@@ -1005,22 +949,22 @@ public class WebProcessor {
 						t.printStackTrace();
 					}
 				}
-				
+
 				//follow URL if cannot find the element to click
 				if(!clicked){
 					System.out.println("\n\t\t!!! NOT FOUND: " + elementID);
 					if(!aURL.isEmpty()){
 						System.out.print("\t\t--> access directly the element URL (" + aURL + ")");
-						
+
 						String urlToGet = aURL;
 
 						//update urlToGet, if actionUrls contains the url of the action
 						if(actionUrls.containsKey(act.getActionID())) {
 							urlToGet = actionUrls.get(act.getActionID());
 						}
-						
+
 						urlToGet = processUrlBeforeRequest(driver, urlToGet);
-						
+
 						if(urlToGet!=null) {
 							realRequestedUrl = urlToGet;
 							realClickedElementText = "access url " + urlToGet;
@@ -1028,16 +972,16 @@ public class WebProcessor {
 							clicked = true;
 							System.out.println(" --> DONE");
 						}
-						
+
 					}
 				}
-				
+
 				if(!clicked){
 					System.out.println(" --> NOT DONE");
 				}
-				
+
 				doneAction = true;
-				
+
 				//get redirect URL
 				if(clicked){
 					redirectURL = getRedirectUrl(driver, aURL);
@@ -1045,10 +989,10 @@ public class WebProcessor {
 				else{
 					redirectURL = "";
 				}
-				
+
 				break;
 			}
-				
+
 			case hover: 
 			{
 				//TODO: update this type of action in needed cases
@@ -1058,7 +1002,7 @@ public class WebProcessor {
 				redirectURL = getRedirectUrl(driver, aURL);
 				break;
 			}
-				
+
 			case randomClickOnNewElement: 
 			{
 				String prevDom = "";
@@ -1070,9 +1014,9 @@ public class WebProcessor {
 				else if(i==1){
 					currentDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(0)).originalHtml;
 				}
-				
+
 				Elements newElements = getNewElements(prevDom, currentDom);
-				
+
 				if(newElements.size()>0){
 					//randomly choose an element to click
 					int randomIndex = ThreadLocalRandom.current().nextInt(0, newElements.size());
@@ -1080,35 +1024,35 @@ public class WebProcessor {
 
 					String tagName = executeEle.tagName().toLowerCase();
 					By elementBy = null;
-//					if(tagName.equals("a")){
-//						if(executeEle.attributes().hasKey("href")){
-//							 elementBy = getByType("linkText", executeEle.attr("href"));
-//						}
-//					}
-//					else if (tagName.equals("button")){
-//						if(executeEle.attributes().hasKey("id")){
-//							 elementBy = getByType("id", executeEle.attr("id"));
-//						}
-//					}
-					
+					//					if(tagName.equals("a")){
+					//						if(executeEle.attributes().hasKey("href")){
+					//							 elementBy = getByType("linkText", executeEle.attr("href"));
+					//						}
+					//					}
+					//					else if (tagName.equals("button")){
+					//						if(executeEle.attributes().hasKey("id")){
+					//							 elementBy = getByType("id", executeEle.attr("id"));
+					//						}
+					//					}
+
 					if(tagName.equals("a")){
 						if(executeEle.attributes().hasKey("href")){
 							String xpath = "//a[@href='" + executeEle.attr("href").trim() + "']";
 							elementBy = getByType("xpath", xpath);
-//							elementBy = getByType("linkText", executeEle.attr("href"));
+							//							elementBy = getByType("linkText", executeEle.attr("href"));
 						}
 					}
 					else if (tagName.equals("button")){
 						if(executeEle.attributes().hasKey("id")){
-							 elementBy = getByType("id", executeEle.attr("id"));
+							elementBy = getByType("id", executeEle.attr("id"));
 						}
 						else if(executeEle.text()!=null &&
 								!executeEle.text().isEmpty()){
 							elementBy = getByType("linkText", executeEle.text());
 						}
-						
+
 					}
-					
+
 					try{
 						List<WebElement> eles = driver.findElements(elementBy);
 
@@ -1134,12 +1078,12 @@ public class WebProcessor {
 					}catch( Throwable t ){
 						System.out.println("!!!Ignored (cannot find element): " + elementBy);
 					}
-					
+
 				}
 				doneAction = true;
 				break;
 			}
-				
+
 			case wait: 
 			{
 				realClickedElementText = executeWait(act);
@@ -1147,23 +1091,23 @@ public class WebProcessor {
 				System.out.println(" --> DONE");
 				break;
 			}
-				
+
 			default:
 				break;
 			}
-			
+
 			//Wait for loading page before executing next action
 			try {
 				Thread.sleep(sysConfig.getWaitTimeAfterAction());
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
-			
-			
+
+
+
 			if(autoDetectConfirmation){
 				boolean confirmed = false;
-				
+
 				//1. check if there is dialog
 				while(isDialogPresent(driver)){
 					Alert alert = driver.switchTo().alert();
@@ -1175,7 +1119,7 @@ public class WebProcessor {
 					}
 					else{
 						String alertText = alert.getText();
-						
+
 						if(containConfirmationText(alertText)){
 							alert.accept();
 							System.out.print("\n\t\t!!Confirmed dialog!");
@@ -1187,28 +1131,28 @@ public class WebProcessor {
 					}
 					confirmed = true;
 				}
-				
+
 				//2. check if the current page contains confirmation request
 				String newDom = driver.getPageSource();
 				Element executeEle = confirmationButton(newDom);
-				
+
 				if(executeEle==null && containConfirmationText(newDom)){
 					//FIXME: these following instructs should be reused from the case of randomClick
-					
+
 					String prevDom = "";
 					String currentDom = newDom;
 					if(i>=1){
 						prevDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(i-1)).originalHtml;
 					}
-					
+
 					Elements newElements = getNewElements(prevDom, currentDom);
-					
+
 					if(newElements.size()>0){
-						
+
 						//if we prioritize buttons and input_submits, filter newElements to get only buttons from there
 						if(prioritizeButton){
 							Elements onlyButtons = new Elements();
-							
+
 							for(int iEle=0; iEle<newElements.size(); iEle++){
 								Element elem = newElements.get(iEle);
 								if(elem.tagName().toLowerCase().equals("button") ||
@@ -1216,19 +1160,19 @@ public class WebProcessor {
 									onlyButtons.add(elem);
 								}
 							}
-							
+
 							if(onlyButtons.size()>0){
 								newElements = onlyButtons;
 							}
 						}
-						
+
 						//randomly choose an element to click
 						int randomIndex = ThreadLocalRandom.current().nextInt(0, newElements.size());
 						executeEle = newElements.get(randomIndex);
-						
+
 					}
 				}
-				
+
 				if(executeEle!=null) {
 					String tagName = executeEle.tagName().toLowerCase();
 					By elementBy = null;
@@ -1258,7 +1202,7 @@ public class WebProcessor {
 					try{
 						List<WebElement> eles = driver.findElements(elementBy);
 
-						
+
 
 						if(eles!=null && eles.size()>0){
 							String beforeUrl = driver.getCurrentUrl();
@@ -1279,23 +1223,23 @@ public class WebProcessor {
 									break;
 								}
 							}
-							
+
 							//Phu: just commented statements under (20/12/2019) to try another way to click on the element
-//							try {
-//								driver.findElement(elementBy).click();
-//							} catch ( Throwable t ){
-//								System.out.print("!!!Ignored (auto confirmation cannot click): "+elementURL);
-//
-//							}
-//							confirmed = true;
+							//							try {
+							//								driver.findElement(elementBy).click();
+							//							} catch ( Throwable t ){
+							//								System.out.print("!!!Ignored (auto confirmation cannot click): "+elementURL);
+							//
+							//							}
+							//							confirmed = true;
 							//end of commented
-							
+
 							aURL = elementURL;
 
 
 							//get redirect URL
 							redirectURL = getRedirectUrl(driver, beforeUrl, elementURL);
-//							redirectURL = getRedirectUrl(driver, elementURL);
+							//							redirectURL = getRedirectUrl(driver, elementURL);
 						}
 
 						//							System.out.println("\t\t" + executeEle);
@@ -1304,7 +1248,7 @@ public class WebProcessor {
 					}
 				}
 
-				
+
 				if(confirmed){
 					timeOfConfirm++;
 					System.out.println("\t\t!! automatically confirm --> DONE");
@@ -1315,20 +1259,20 @@ public class WebProcessor {
 					}
 				}
 			}
-				
+
 			//Add result to the outputSequence
 			if(doneAction){
 				latestUrl = driver.getCurrentUrl();
-//				if(redirectURL!=null && !redirectURL.isEmpty()) {
-//					System.out.println("\t\t!!! Redirect URL: " + redirectURL);
-//				}
-				
+				//				if(redirectURL!=null && !redirectURL.isEmpty()) {
+				//					System.out.println("\t\t!!! Redirect URL: " + redirectURL);
+				//				}
+
 				//Execute inner actions if they exist
 				executeInnerActions(driver, act);
-				
+
 				//get new dom
 				String newDom = "";
-				
+
 				try{
 					if(this.isDialogPresent(driver)){
 						//get alert text
@@ -1341,37 +1285,37 @@ public class WebProcessor {
 				} catch(Throwable t){
 					t.printStackTrace();
 				}
-				
+
 				if(newDom==null){
 					newDom = "";
 				}
-				
-				
+
+
 				//normalize the new dom
 				WebOutputCleaned outObj = cleanUpOutPut(newDom);
 				outObj.resultedUrl = driver.getCurrentUrl();
 				outObj.realRequestedUrl = realRequestedUrl;
 				outObj.realClickedElementText = realClickedElementText;
-				
+
 				if(checkStatusCode) {
 					outObj.statusCode = getStatusCode(driver);
 				}
-				
-				
+
+
 
 				File file = findNewDownloadedFile();
 				if ( file != null ){
 					String folderName = "OUTPUT_FILE_"+System.currentTimeMillis();
 					File outFolder = new File(outputFolder());
-					
+
 					File outFolderFile = new File( outFolder, folderName);
 					outFolderFile.mkdir();
-					
+
 					File newFile = new File( outFolderFile, file.getName() );
 					file.renameTo(newFile );
 					outObj.setDownloadedFile( newFile );
 				}
-				
+
 				//get list of relevant downloaded objects
 				if(checkDownloadedObjects){
 					outObj.downloadedObjects = getDownloadedObjectsFromProxy(maxId, aURL, redirectURL);
@@ -1379,10 +1323,10 @@ public class WebProcessor {
 				else{
 					outObj.downloadedObjects = null;
 				}
-				
+
 				outputSequence.add(outObj);
 				outputSequence.addRedirectURL(redirectURL);
-				
+
 				//get cookie
 				CookieSession currentSession = null;
 				if(!isDialogPresent(driver)){
@@ -1398,20 +1342,20 @@ public class WebProcessor {
 					}
 				}
 				outputSequence.addSession(currentSession);
-				
+
 				String inputID = input.getId();
 				String executionId = null;
-				
+
 				try{
 					executionId = MR.CURRENT.getCurrentExecutionId();
 				} catch(NullPointerException e){
-//					e.printStackTrace();
+					//					e.printStackTrace();
 				}
-				
+
 				if(executionId==null){
 					executionId = "";
 				}
-				
+
 				if(storeDOMs) {
 					String fileName = executionId+"_"+inputID+"_" + (standardText(text) + "_" + aURL).hashCode();
 					saveDomToFile(outObj.html, fileName);
@@ -1420,43 +1364,141 @@ public class WebProcessor {
 					saveDomToFile(outObj.text, fileName);
 				}
 			}
-			
+
 			//clear all replacer rule in the proxy
 			clearProxyReplacerRules();
-			
+
 			ruleChannelDescription = "";
 			ruleMethodDescription = "";
-			
-			
+
+
 			//Update URLs of following actions (if needed)
 			updateUrlsForNextActions(driver, act, input);
 		}
 
-//		try {
-//			Thread.sleep(1500);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-		
-		
+		//		try {
+		//			Thread.sleep(1500);
+		//		} catch (InterruptedException e) {
+		//			e.printStackTrace();
+		//		}
+
+
 		if ( Operations.getResetBrowserBetweenInputs() ) {
 			driver.quit();
 		} else {
 			//do nothing
 		}
-		
-//		driver.close();
-		
+
+		//		driver.close();
+
 		System.out.println("\tTimes of automatic confirmation: "+timeOfConfirm);
-		
+
 		//reset the proxy (clear messages in the history, clear replacer rules)
 		resetProxy();
-		
+
 		if ( longWaitPerformed ) {
 			resetTime();
 		}
-		
+
 		return outputSequence;
+	}
+
+
+	private void loadUnsafeDriver(WebInputCrawlJax input) {
+		//We assume a firefox browser with profile UnsafeEncryption exist
+		//The profile is configured to work with weak algorithms
+		//See class smrl.utils.ConfigureUnsafeFirefox to set it up
+		
+		String exePath = sysConfig.getFirefoxDriverPath();
+
+		//call web browser
+		if (exePath == null ) {
+			exePath = "/usr/local/bin/geckodriver";
+		}
+		
+		
+		ProfilesIni profile = new ProfilesIni();
+		FirefoxProfile myprofile = profile.getProfile("UnsafeEncryption");
+
+
+		FirefoxOptions options = new FirefoxOptions();
+		options.setProfile(myprofile);
+		WebDriver driver = new FirefoxDriver(options);
+
+		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+	}
+
+
+	private void loadDefaultDriver(WebInputCrawlJax input) {
+		String exePath = sysConfig.getChromeDriverPath();
+
+		//call web browser
+		if (exePath == null ) {
+			exePath = "/usr/local/bin/chromedriver";
+		}
+
+
+		File exeFile = new File ( exePath );
+
+		System.out.println("CHROMEDRIVER: "+exeFile.getAbsolutePath());
+
+		if ( ! exeFile.exists() ) {
+			exeFile = new File (Paths.get(".").toFile(),"chromedriver.exe");
+			exePath = exeFile.getAbsolutePath();
+			System.out.println("CHROMEDRIVER RESET TO: "+exePath);
+			System.out.println("CHROMEDRIVER: "+exeFile.getAbsolutePath());
+		}
+
+		System.setProperty("webdriver.chrome.driver", exePath);
+
+
+		LoggingPreferences logPrefs = new LoggingPreferences();
+		logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+
+		HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+		chromePrefs.put("profile.default_content_settings.popups", 0);
+		chromePrefs.put("download.default_directory", this.downloadFilePath);
+
+		//		System.out.println("Download file path: " + this.downloadFilePath);
+
+		ChromeOptions chOptions = new ChromeOptions();
+		chOptions.setExperimentalOption("prefs", chromePrefs);
+		chOptions.setCapability(CapabilityType.LOGGING_PREFS, logPrefs);
+
+		if(sysConfig.isUsedProxy()){
+			String proxyAP = sysConfig.getProxyAddress().trim() + 
+					":" + sysConfig.getProxyPort();
+			Proxy proxy = new Proxy();
+			proxy.setHttpProxy(proxyAP).setSslProxy(proxyAP);
+
+			chOptions.setProxy(proxy);
+
+		}
+
+		//To accept all SSL certificates, even insecure certificates, and ignore certificate errors
+		chOptions.addArguments("--ignore-certificate-errors");
+		chOptions.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+		chOptions.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
+		//TODO: add certificate to driver if needed
+
+		if(headless) {
+			chOptions.addArguments("headless");
+		}
+
+		setCipherSuite(chOptions, input);
+
+		if ( Operations.getResetBrowserBetweenInputs() ) {
+			if ( driver != null ) {
+				driver.quit();
+				driver = null;
+			}
+			driver = new ChromeDriver(chOptions);
+		}
+
+		if(setTimeouts) {
+			driver.manage().timeouts().implicitlyWait(SEARCH_ELEMENT_TIMEOUT, TimeUnit.MILLISECONDS);
+			driver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.MILLISECONDS);
+		}
 	}
 
 
@@ -1464,13 +1506,13 @@ public class WebProcessor {
 		Cookie cookie = driver.manage().getCookieNamed(ck.getName());
 		driver.manage().deleteCookie(cookie);
 		driver.manage().addCookie(
-		  new Cookie.Builder(cookie.getName(), ck.getValue())
-		    .domain(cookie.getDomain())
-		    .expiresOn(cookie.getExpiry())
-		    .path(cookie.getPath())
-		    .isSecure(cookie.isSecure())
-		    .build()
-		);
+				new Cookie.Builder(cookie.getName(), ck.getValue())
+				.domain(cookie.getDomain())
+				.expiresOn(cookie.getExpiry())
+				.path(cookie.getPath())
+				.isSecure(cookie.isSecure())
+				.build()
+				);
 	}
 
 
@@ -1478,7 +1520,7 @@ public class WebProcessor {
 		String realClickedElementText;
 		long waitTime = ((WaitAction)act).getMillis();
 		realClickedElementText = "wait " + waitTime;
-		
+
 		if ( waitTime <= sysConfig.getRealWaitThreshold() ) {
 			System.out.println(" --> SHORT WAIT "+waitTime);
 			try {
@@ -1488,15 +1530,15 @@ public class WebProcessor {
 			}
 		} else {
 			longWaitPerformed = true;
-		
+
 			System.out.println(" --> LONG WAIT SIMULATED "+waitTime);
-			
+
 			long currentTime = System.currentTimeMillis();
 			long future = currentTime + waitTime;
-			
+
 			setNewDateOnVM(future);
-			
-			
+
+
 		}
 		return realClickedElementText;
 	}
@@ -1518,20 +1560,20 @@ public class WebProcessor {
 				input.size()<1) {
 			return;
 		}
-		
+
 		if(chOptions==null) {
 			chOptions = new ChromeOptions();
 		}
-		
+
 		String cipherSuiteBlackList = null;
-		
+
 		for(Action act:input.actions()) {
 			if(act.getCipherSuite()!=null) {
 				cipherSuiteBlackList = act.getCipherSuite();
 				break;
 			}
 		}
-		
+
 		if(cipherSuiteBlackList!=null) {
 			chOptions.addArguments("--cipher-suite-blacklist="+cipherSuiteBlackList);
 		}
@@ -1542,7 +1584,7 @@ public class WebProcessor {
 		if(text==null) {
 			return "";
 		}
-		
+
 		return text.replaceAll(" ", "_").replaceAll(":", "").replaceAll("/", "_");
 	}
 
@@ -1556,13 +1598,13 @@ public class WebProcessor {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 		proxyReplacerRules.clear();
 	}
 
 
-	
+
 
 
 	private boolean matchElement(WebElement webElement, Element jsoupElement) {
@@ -1571,7 +1613,7 @@ public class WebProcessor {
 				!webElement.getTagName().equalsIgnoreCase(jsoupElement.tagName())) {
 			return false;
 		}
-		
+
 		Attributes allAttr = jsoupElement.attributes();
 		for(Attribute attr:allAttr) {
 			if(webElement.getAttribute(attr.getKey())==null ||
@@ -1587,53 +1629,53 @@ public class WebProcessor {
 	private int getStatusCode(ChromeDriver driver) {
 		int status = -1;
 		LogEntries logs = driver.manage().logs().get("performance");
-//				System.out.println("Per logs: " + logs);
+		//				System.out.println("Per logs: " + logs);
 
 		for (Iterator<LogEntry> it = logs.iterator(); it.hasNext();)
 		{
-		    LogEntry entry = it.next();
+			LogEntry entry = it.next();
 
-		    try
-		    {
-		        JSONObject json = new JSONObject(entry.getMessage());
+			try
+			{
+				JSONObject json = new JSONObject(entry.getMessage());
 
-//	                    System.out.println(json.toString());
+				//	                    System.out.println(json.toString());
 
-		        JSONObject message = json.getJSONObject("message");
-		        String method = message.getString("method");
+				JSONObject message = json.getJSONObject("message");
+				String method = message.getString("method");
 
-		        if (method != null
-		                && "Network.responseReceived".equals(method))
-		        {
-		            JSONObject params = message.getJSONObject("params");
+				if (method != null
+						&& "Network.responseReceived".equals(method))
+				{
+					JSONObject params = message.getJSONObject("params");
 
-		            JSONObject response = params.getJSONObject("response");
-		            String messageUrl = response.getString("url");
+					JSONObject response = params.getJSONObject("response");
+					String messageUrl = response.getString("url");
 
-		            if (driver.getCurrentUrl().equals(messageUrl))
-		            {
-		                status = response.getInt("status");
-		                break;
-		            }
-		        }
-		    } catch (JSONException e)
-		    {
-		    	System.out.println("To use this function of ");
-		        e.printStackTrace();
-		    }
+					if (driver.getCurrentUrl().equals(messageUrl))
+					{
+						status = response.getInt("status");
+						break;
+					}
+				}
+			} catch (JSONException e)
+			{
+				System.out.println("To use this function of ");
+				e.printStackTrace();
+			}
 		}
 
-//		System.out.println("\tstatus code: " + status);
+		//		System.out.println("\tstatus code: " + status);
 		return status;
 	}
-	
+
 	private String processUrlBeforeRequest(ChromeDriver driver, String urlToGet) {
 		if(urlToGet==null) {
 			return "";
 		}
-		
+
 		String tempUrl = driver.getCurrentUrl();
-		
+
 		if(tempUrl!=null && !tempUrl.isEmpty()) {
 			try {
 				URI uri = new URI(tempUrl);
@@ -1642,7 +1684,7 @@ public class WebProcessor {
 				e.printStackTrace();
 			}
 		}
-		
+
 		return null;
 	}
 
@@ -1659,7 +1701,7 @@ public class WebProcessor {
 		}
 		return false;
 	}
-	
+
 	private boolean containConfirmationButton(String dom) {
 		//If the current dom is empty, there is no button 
 		if (isEmptyHtml(dom) || 
@@ -1671,13 +1713,13 @@ public class WebProcessor {
 
 		//currentDOM is not null
 		Document currentDoc = Jsoup.parse(dom);
-		
+
 		//Get all elements of tags "button"
 		Elements buttonElements = currentDoc.getElementsByTag("button");
 		if(buttonElements.size()<=0) {
 			return false;
 		}
-		
+
 		for(Element button:buttonElements) {
 			String text = button.text();
 			if(text==null || text.trim().isEmpty()) {
@@ -1689,10 +1731,10 @@ public class WebProcessor {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	private Element confirmationButton(String dom) {
 		//If the current dom is empty, there is no button 
 		if (isEmptyHtml(dom) || 
@@ -1704,13 +1746,13 @@ public class WebProcessor {
 
 		//currentDOM is not null
 		Document currentDoc = Jsoup.parse(dom);
-		
+
 		//Get all elements of tags "button"
 		Elements buttonElements = currentDoc.getElementsByTag("button");
 		if(buttonElements.size()<=0) {
 			return null;
 		}
-		
+
 		for(Element button:buttonElements) {
 			String text = button.text();
 			if(text==null || text.trim().isEmpty()) {
@@ -1722,39 +1764,39 @@ public class WebProcessor {
 				}
 			}
 		}
-		
+
 		return null;
 	}
 
 	private HashMap<String, String> getDownloadedObjectsFromProxy(int startID, String lastURL, String redirectURL) {
 		HashMap<String,String> res = new HashMap<String,String>();	//url, method
-		
+
 		if(lastURL==null || lastURL.isEmpty()){
 			return res;
 		}
-		
+
 		try {
 			ApiResponseList allMsg = (ApiResponseList) this.proxyApi.core.messages(null, null, null);
-			
+
 			if(allMsg==null || allMsg.getItems().size()<=0){
 				return res;
 			}
-			
+
 			for(ApiResponse msg:allMsg.getItems()){
 				ApiResponseSet msgSet = (ApiResponseSet)msg;
-				
+
 				String headers = ((ApiResponseElement) msgSet.getValue("requestHeader")).getValue();
 				int id = Integer.parseInt(msgSet.getValue("id").toString());
 				String url = URLUtil.standardUrl(getURLFromRequestHeaders(headers));
 				String method = getHttpMethodFromRequestHeaders(headers).toLowerCase();
 				String responseBody = ((ApiResponseElement) msgSet.getValue("responseBody")).getValue();
-				
-				
+
+
 				if(id > startID &&
 						!URLUtil.hasTheSameUrl(url, lastURL) &&
 						(redirectURL.isEmpty() ||
 								(!redirectURL.isEmpty() && 
-								!URLUtil.hasTheSameUrl(url, redirectURL)) ) &&
+										!URLUtil.hasTheSameUrl(url, redirectURL)) ) &&
 						!res.keySet().contains(url) &&
 						isNotIgnoredURL(url) &&
 						responseBody!=null && !responseBody.isEmpty()
@@ -1762,11 +1804,11 @@ public class WebProcessor {
 					res.put(url, method);
 				}
 			}
-			
+
 		} catch (ClientApiException e) {
 			e.printStackTrace();
 		}
-		
+
 		return res;
 	}
 
@@ -1774,7 +1816,7 @@ public class WebProcessor {
 		if(url==null || url.isEmpty()) {
 			return false;
 		}
-		
+
 		for(int i=0; i<ignoredObjects.length; i++){
 			if(URLUtil.containExtension(url, ignoredObjects[i])) {
 				return false;
@@ -1791,7 +1833,7 @@ public class WebProcessor {
 		String url = requestLine.split(" ")[1];
 		return url;
 	}
-	
+
 	private String getHttpMethodFromRequestHeaders(String headers) {
 		if(headers ==null || headers.isEmpty()){
 			return null;
@@ -1806,19 +1848,19 @@ public class WebProcessor {
 			try {
 				ApiResponseList msgList = (ApiResponseList) this.proxyApi.core.messages(null, null, null);
 				int listSize = msgList.getItems().size();
-				
+
 				if(listSize<1){
 					return 0;
 				}
-				
+
 				ApiResponseSet lastMsg = (ApiResponseSet) msgList.getItems().get(listSize-1);
 				listSize--;
-				
+
 				while(lastMsg==null && listSize>0){
 					lastMsg = (ApiResponseSet) msgList.getItems().get(listSize-1);
 					listSize--;
 				}
-				
+
 				if(lastMsg!=null){
 					return Integer.parseInt(lastMsg.getValue("id").toString());
 				}
@@ -1831,7 +1873,7 @@ public class WebProcessor {
 
 	private WebElement findElementMatchToAction(RemoteWebDriver driver, StandardAction act) {
 		WebElement eleResult = null;
-		
+
 		String elementID = act.getId().trim();
 		if(elementID.split(" ").length !=2){
 			System.out.print("\t\t!!! Cannot get id for the action: " + act.getText());
@@ -1846,7 +1888,7 @@ public class WebProcessor {
 				eleResult = driver.findElement(elementBy); 
 			}
 		}
-		
+
 		//Click based on the information in "element" field
 		if(eleResult==null) {
 			//Try to find element by using information of "element" field in inputs
@@ -1860,15 +1902,15 @@ public class WebProcessor {
 					return null;
 				}
 			}
-			
+
 			//if eleToClick is still null, try to find element based on element text
-//			if(eleResult==null){
-//				//if did not click, try to find an element by text
-//				String textID = getInfoFromElement(elementInfo, "text");
-//				if(textID!=null && !textID.isEmpty()){
-//					eleResult = driver.findElementByPartialLinkText(textID);
-//				}
-//			}
+			//			if(eleResult==null){
+			//				//if did not click, try to find an element by text
+			//				String textID = getInfoFromElement(elementInfo, "text");
+			//				if(textID!=null && !textID.isEmpty()){
+			//					eleResult = driver.findElementByPartialLinkText(textID);
+			//				}
+			//			}
 		}
 		return eleResult;
 	}
@@ -1879,7 +1921,7 @@ public class WebProcessor {
 	 * @param input sequence of actions, which contains the currentAction
 	 */
 	private void updateUrlsForNextActions(RemoteWebDriver driver, Action currentAction, WebInputCrawlJax input) {
-//		System.out.println("\t  -- In updateUrlsForNextActions");
+		//		System.out.println("\t  -- In updateUrlsForNextActions");
 		if(currentAction==null ||
 				currentAction.getActionID()==null ||
 				input==null ||
@@ -1887,105 +1929,105 @@ public class WebProcessor {
 				!updateUrlMap.containsKey(currentAction.getActionID())){
 			return;
 		}
-		
+
 		//Get action to change its URL
 		Long actToChangeID = updateUrlMap.get(currentAction.getActionID());
-		
+
 		ArrayList<Action> listActToChange = new ArrayList<Action>();
 		for(Action a:input.actions()){
 			if(a.getActionID().equals(actToChangeID)){
 				listActToChange.add(a);
 			}
 		}
-		
+
 		if(listActToChange.isEmpty()) {
 			return;
 		}
-		
+
 		for(Action act:listActToChange) {
 			if(act==null ||
 					!act.getEventType().equals(Action.ActionType.click)){
 				return;
 			}
-			
+
 			if(act.getUrl()==null || act.getUrl().trim().isEmpty()){
 				return;
 			}
-			
+
 			WebElement eleToFind = findElementMatchToAction(driver, (StandardAction)act);
 			System.out.println("\t  -- element to change: " + eleToFind);
-			
+
 			//if cannot find the relevant element, do nothing
 			if(eleToFind==null){
 				return;
 			}
-			
+
 			//get URL of the eleToFind
 			String newURL = getElementURL(driver, eleToFind);
 			System.out.println("\t  ** New URL: " + newURL);
-			
+
 			//update the URL of the actToChange, if it changed
 			if(newURL!=null &&
 					!newURL.equals(act.getUrl())){
 				act.updateUrl(newURL);
 			}
 		}
-		
-		
-//		for(Action a:input.actions()){
-//			if(a.getActionID().equals(actToChangeID)){
-//				actToChange = a;
-//				break;
-//			}
-//		}
-//		
-//		if(actToChange==null ||
-//				!actToChange.getEventType().equals(Action.ActionType.click)){
-//			return;
-//		}
-//		
-//		if(actToChange.getUrl()==null || actToChange.getUrl().trim().isEmpty()){
-//			return;
-//		}
-//		
-//		WebElement eleToFind = findElementMatchToAction(driver, (StandardAction)actToChange);
-//		System.out.println("\t  -- element to change: " + eleToFind);
-//		
-//		//if cannot find the relevant element, do nothing
-//		if(eleToFind==null){
-//			return;
-//		}
-		
-//		//get URL of the eleToFind
-//		String newURL = getElementURL(driver, eleToFind);
-//		System.out.println("\t  ** New URL: " + newURL);
-//		
-//		//update the URL of the actToChange, if it changed
-//		if(newURL!=null &&
-//				!newURL.equals(actToChange.getUrl())){
-//			actToChange.updateUrl(newURL);
-//		}
+
+
+		//		for(Action a:input.actions()){
+		//			if(a.getActionID().equals(actToChangeID)){
+		//				actToChange = a;
+		//				break;
+		//			}
+		//		}
+		//		
+		//		if(actToChange==null ||
+		//				!actToChange.getEventType().equals(Action.ActionType.click)){
+		//			return;
+		//		}
+		//		
+		//		if(actToChange.getUrl()==null || actToChange.getUrl().trim().isEmpty()){
+		//			return;
+		//		}
+		//		
+		//		WebElement eleToFind = findElementMatchToAction(driver, (StandardAction)actToChange);
+		//		System.out.println("\t  -- element to change: " + eleToFind);
+		//		
+		//		//if cannot find the relevant element, do nothing
+		//		if(eleToFind==null){
+		//			return;
+		//		}
+
+		//		//get URL of the eleToFind
+		//		String newURL = getElementURL(driver, eleToFind);
+		//		System.out.println("\t  ** New URL: " + newURL);
+		//		
+		//		//update the URL of the actToChange, if it changed
+		//		if(newURL!=null &&
+		//				!newURL.equals(actToChange.getUrl())){
+		//			actToChange.updateUrl(newURL);
+		//		}
 	}
 
 	private String getElementURL(WebDriver driver, Element element) {
 		if(element==null){
 			return null;
 		}
-		
+
 		String res = "";
-	
+
 		//If the element (a, link tag) has the attribute "href"
 		if(element.attributes().hasKey("href")){
-			 res = element.attr("href").trim();
-			 return res;
+			res = element.attr("href").trim();
+			return res;
 		}
-		
+
 		if(element.attributes().hasKey("action")){
 			String act = element.attr("action").trim();
 			res = getCombinedURL(driver, act);
 			return res;
 		}
-		
+
 		String tagName = element.tagName().toLowerCase();
 
 		//If the element is a button
@@ -2002,11 +2044,11 @@ public class WebProcessor {
 		else if (tagName.equals("input")){
 			//TODO
 		}
-		
+
 		if(currentE!=null){
 			res = getUrlFromFormTag(driver, currentE);
 		}
-		
+
 		return res;
 	}
 
@@ -2014,9 +2056,9 @@ public class WebProcessor {
 		if(webElement==null || driver==null){
 			return null;
 		}
-		
+
 		String res = null;
-		
+
 		//If the element (a, link tag) has the attribute "href"
 		if(webElement.getAttribute("href") != null){
 			res = webElement.getAttribute("href").trim();
@@ -2029,11 +2071,11 @@ public class WebProcessor {
 			res = getCombinedURL(driver, act);
 			return res;
 		}
-		
+
 		if(isDialogPresent(driver)){
 			return null;
 		}
-		
+
 		String tagName = webElement.getTagName().toLowerCase();
 		Element currentE = null;
 		String source = driver.getPageSource();
@@ -2065,7 +2107,7 @@ public class WebProcessor {
 				(webElement.getAttribute("type").equals("submit") ||
 						webElement.getAttribute("type").equals("button"))){
 			String eValue = webElement.getAttribute("value");
-			
+
 			Elements possibleElements = null;
 			if(webElement.getAttribute("type").equals("submit")){
 				possibleElements = currentDoc.getElementsByAttributeValue("type", "submit");
@@ -2073,7 +2115,7 @@ public class WebProcessor {
 			else if(webElement.getAttribute("type").equals("button")){
 				possibleElements = currentDoc.getElementsByAttributeValue("type", "button");
 			}
-			
+
 			if(possibleElements!=null){
 				for(Element e:possibleElements){
 					if(e.tagName().equals("input") &&
@@ -2095,11 +2137,11 @@ public class WebProcessor {
 				}
 			}
 		}
-		
+
 		if(currentE!=null){
 			res = getUrlFromFormTag(driver, currentE);
 		}
-		
+
 		return res;
 	}
 
@@ -2146,15 +2188,15 @@ public class WebProcessor {
 					!updateUrlMap.containsValue(act.getActionID())){
 				//Update updateUrlMap
 				updateUrlMap.put(prevActID, act.getActionID());
-				
+
 				//Update actionUrls hashmap
 				actionUrls.put(act.getActionID(), newURL);
-				
+
 				System.out.println("\t  updateUrlMap: " + updateUrlMap);
 			}
 		}
 	}
-	
+
 	private void executeInnerActions(RemoteWebDriver driver, Action act) {
 		if(act==null ||
 				act.getInnerActions()==null ||
@@ -2178,7 +2220,7 @@ public class WebProcessor {
 			return alertText;
 		}
 		return "";
-	  }
+	}
 
 	public static String getInfoFromElement(String elementInfo, String field) {
 		//Example of elementInfo: "Element{node=[BUTTON: null], tag=BUTTON, text=log in, attributes={atusa=id1232306490_0, id=yui-gen1-button, tabindex=0, type=button}}"
@@ -2186,21 +2228,21 @@ public class WebProcessor {
 		if(elementInfo==null || field==null || elementInfo.isEmpty() || field.isEmpty()){
 			return res;
 		}
-		
+
 		String regex = "([\\s,\\{]" + field + "=)([^\\s,\\}]*)";
 		Pattern pattern = Pattern.compile(regex);
 		Matcher matcher = pattern.matcher(elementInfo);
-		
+
 		if(matcher.find()){
 			res = matcher.group(2);
 		}
-		
+
 		return res;
 	}
 
 	private String getFormInputValueFromParamName(JsonArray formInput, String parameter) {
 		String res = null;
-		
+
 		for(int iForm=0; iForm<formInput.size(); iForm++){
 			JsonObject fInput = formInput.get(iForm).getAsJsonObject();
 			String idValue = fInput.get("identification").getAsJsonObject().get("value").getAsString();
@@ -2209,7 +2251,7 @@ public class WebProcessor {
 					fInput.get("values").getAsJsonArray().size() <1){
 				continue;
 			}
-			
+
 			String formType = fInput.get("type").getAsString().toLowerCase();
 			if(formType.startsWith("text") 
 					|| formType.equals("password") 
@@ -2221,7 +2263,7 @@ public class WebProcessor {
 				}
 			}
 		}
-		
+
 		return res;
 	}
 
@@ -2237,15 +2279,15 @@ public class WebProcessor {
 	private File findNewDownloadedFile() {
 		//assume Download is empty
 		File downloads = new File(this.downloadFilePath);
-		
-//		System.out.println("Download folder: " + downloads.getAbsolutePath());
-		
+
+		//		System.out.println("Download folder: " + downloads.getAbsolutePath());
+
 		File[] filesD = downloads.listFiles();
 		if ( filesD.length == 0 ) {
-//			System.out.println("No file (findNewDownloadedFile)");
+			//			System.out.println("No file (findNewDownloadedFile)");
 			return null;
 		}
-//		System.out.println("HAVE file (findNewDownloadedFile) " + filesD[0]);
+		//		System.out.println("HAVE file (findNewDownloadedFile) " + filesD[0]);
 		return filesD[0];
 	}
 
@@ -2257,48 +2299,48 @@ public class WebProcessor {
 		else{
 			fullFileName += "/doms/";
 		}
-		
+
 		String onlyFileName = fileName;
 		if(onlyFileName.endsWith("/")){
 			onlyFileName = onlyFileName.substring(0, onlyFileName.length()-1);
 		}
 		onlyFileName = onlyFileName.replaceAll("/", "_").replaceAll(":", "").replaceAll(" ", "_");
-		
+
 		fullFileName += onlyFileName;
-		
+
 		int i=0;
 		File tmpFile = null;
-		
+
 		do{
 			String name = fullFileName + "_" + i + ".html";
 			tmpFile = new File(name);
 			i++;
 		}while(tmpFile.exists());
-		
+
 		fullFileName += "_" + (i-1) + ".html";
-		
+
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fullFileName, false))) {
 			bw.write(dom);
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
-	
+
 
 	private String getCombinedURL(WebDriver driver, String action) {
 		if(action.trim().contains("://")){
 			return action.trim();
 		}
 		String res = driver.getCurrentUrl();
-		
+
 		String newAct = action.trim();
 		if(newAct.isEmpty()){
 			return res;
 		}
-		
+
 		try {
 			URI oldUri = new URI(res);
 			URI resolved = oldUri.resolve(newAct);
@@ -2309,12 +2351,12 @@ public class WebProcessor {
 		return res;
 	}
 
-	
+
 	boolean isDialogPresent(WebDriver driver){
 		Alert alert = ExpectedConditions.alertIsPresent().apply(driver);
 		return (alert!=null);
 	}
-	
+
 	/**
 	 * @param driver
 	 * @param requestedURL
@@ -2322,27 +2364,27 @@ public class WebProcessor {
 	private String getRedirectUrl(WebDriver driver, String requestedURL) {
 		String res="";
 
-//		Set<String> h = driver.getWindowHandles();
+		//		Set<String> h = driver.getWindowHandles();
 		//For the case there is an alert on the browser
-//		Alert alert = driver.switchTo().alert();
+		//		Alert alert = driver.switchTo().alert();
 
 		if(isDialogPresent(driver) || requestedURL==null){
 			return res;
 		}
-		
+
 		String currentURL = driver.getCurrentUrl().trim();
 		while(currentURL.endsWith("/")) 
 		{
 			currentURL = currentURL.substring(0, currentURL.length()-1);
 		}
-		
+
 		String _requestedURL = requestedURL.trim();
 		while(_requestedURL.endsWith("/"))
 		{
 			_requestedURL = _requestedURL.substring(0, _requestedURL.length()-1);
 		}
-		
-		
+
+
 		if(currentURL.equals(_requestedURL)){
 			res = "";
 		}
@@ -2351,7 +2393,7 @@ public class WebProcessor {
 		}
 		return res;
 	}
-	
+
 	private String getRedirectUrl(ChromeDriver driver, String beforeUrl, String requestedURL) {
 		String tempRedirectUrl = getRedirectUrl(driver, requestedURL);
 		if(tempRedirectUrl!=null && !tempRedirectUrl.isEmpty() &&
@@ -2389,7 +2431,7 @@ public class WebProcessor {
 			System.out.println("There is no information of account parameters");
 			return;
 		}
-		
+
 		// visit inputs to get accounts
 		for(WebInputCrawlJax input:this.inputList){
 			if(input.size()>0){
@@ -2398,7 +2440,7 @@ public class WebProcessor {
 					for(int i=0; i<userParams.size(); i++){
 						String uParam = userParams.get(i);
 						String pParam = passParams.get(i);
-						
+
 						if(act.containCredential(uParam, pParam)){
 							//this means that the act is an instance of StandardAction
 							Account acc = ((StandardAction)act).getCredential(uParam, pParam);
@@ -2424,7 +2466,7 @@ public class WebProcessor {
 			}
 		}
 	}
-	
+
 	/**
 	 * Load users based on account parameters defining in sysConfig
 	 */
@@ -2433,10 +2475,10 @@ public class WebProcessor {
 		if(!this.sysConfig.hasAccountParameters()){
 			return;
 		}
-//		String userParam = this.sysConfig.getUserParameter();
-//		String passParam = this.sysConfig.getPasswordParameter();
+		//		String userParam = this.sysConfig.getUserParameter();
+		//		String passParam = this.sysConfig.getPasswordParameter();
 		ArrayList<LoginParam> allLoginParams = WebProcessor.sysConfig.getLoginParams();
-		
+
 		for(WebInputCrawlJax input:this.inputList){
 			if(input.size()>0){
 				for(Action act:input.actions()){
@@ -2444,12 +2486,12 @@ public class WebProcessor {
 					if(act instanceof StandardAction) {
 						usedLoginParam = ((StandardAction)act).usedLoginParam(allLoginParams);
 					}
-					
+
 					//try to find an account from each action
-//					if(act.containCredential(userParam, passParam)){
+					//					if(act.containCredential(userParam, passParam)){
 					if(usedLoginParam!=null) {
 						//this means that the act is an instance of StandardAction
-//						Account acc = ((StandardAction)act).getCredential(userParam, passParam);
+						//						Account acc = ((StandardAction)act).getCredential(userParam, passParam);
 						Account acc = ((StandardAction)act).getCredential(usedLoginParam.userParam, usedLoginParam.passwordParam);
 						if(acc!=null){
 							//if the current userList does not contain acc, add it to the list
@@ -2471,9 +2513,9 @@ public class WebProcessor {
 				}
 			}
 		}
-		
+
 	}
-	
+
 	private By getByType(String how, String id){
 		By elementBy = null;
 		if(how.equals("id")){
@@ -2494,41 +2536,41 @@ public class WebProcessor {
 		else if(how.equals("tagName")){
 			elementBy = By.tagName(id);
 		}
-		
+
 		return elementBy;
 	}
-	
+
 	private Elements getNewElements(String prevDom, String currentDom) {
 		Elements newElements = new Elements();
-		
+
 		//If the current dom is empty, there is no element 
 		if (isEmptyHtml(currentDom)){
 			return newElements;
 		}
-		
+
 		//currentDOM is not null
 		Document currentDoc = Jsoup.parse(currentDom);
-		
+
 		//Get all elements of tags "a" and "button"
 		Elements currentElements = currentDoc.getElementsByTag("a");
 		currentElements.addAll(currentDoc.getElementsByTag("button"));
-		
+
 		Elements currentInputElements = getSubmitInputElements(currentDoc);
 		if(currentInputElements!=null && currentInputElements.size()>0) {
 			currentElements.addAll(currentInputElements);
 		}
 		//currentElements.addAll(currentDoc.getElementsByTag("form"));
-		
+
 		//If the previous dom is empty, of the current dom has no element
 		if(isEmptyHtml(prevDom) || currentElements.size()<1){
 			return currentElements;
 		}
-		
+
 		//In the case both prevDom and currentDom are not empty
 		Document prevDoc = Jsoup.parse(prevDom);
 		Elements prevElements = prevDoc.getElementsByTag("a");
 		prevElements.addAll(prevDoc.getElementsByTag("button"));
-		
+
 		Elements prevInputElements = getSubmitInputElements(prevDoc);
 		if(prevInputElements!=null && prevInputElements.size()>0) {
 			prevElements.addAll(prevInputElements);
@@ -2576,7 +2618,7 @@ public class WebProcessor {
 						}
 					}
 				}
-				
+
 				if(cElement.attributes().hasKey("id") && (!contain)){
 					newElements.add(cElement);
 				}
@@ -2598,13 +2640,13 @@ public class WebProcessor {
 						}
 					}
 				}
-				
+
 				if(cElement.attributes().hasKey("value") && (!contain)){
 					newElements.add(cElement);
 				}
 			}
 		}
-		
+
 		return newElements;
 	}
 
@@ -2621,12 +2663,12 @@ public class WebProcessor {
 		}
 		return result;
 	}
-	
+
 	private boolean isEmptyHtml(String dom){
 		if(dom.isEmpty()){
 			return true;
 		}
-		
+
 		String str = dom;
 		str = str.replace("<html>", "")
 				.replace("</html>", "")
@@ -2644,10 +2686,10 @@ public class WebProcessor {
 	public void setConfig(String configFile) {
 		this.sysConfig = new SystemConfig(configFile);
 		this.configProxy();
-		
-//		configDownloadFolder(sysConfig.getOutputFile());
+
+		//		configDownloadFolder(sysConfig.getOutputFile());
 		configDownloadFolder(outputFolder());
-		
+
 	}
 
 
@@ -2658,14 +2700,14 @@ public class WebProcessor {
 	private void configDownloadFolder(String path) {
 		//Config download folder
 		String filepath = path;
-		
+
 		//Get filePath from the parameter path
 		if(filepath!=null && !filepath.isEmpty()){
 			File fileOfPath = new File(filepath);
 			if(fileOfPath.isFile()) {
 				filepath = filepath.substring(0, filepath.lastIndexOf(File.separator));
 			}
-			
+
 			if(filepath.endsWith(File.separator)){
 				filepath += "Downloads";
 			}
@@ -2675,18 +2717,18 @@ public class WebProcessor {
 		}
 		//Get filePath of outputFolder (if having)
 		else{
-//			filepath = "./Downloads";
+			//			filepath = "./Downloads";
 			filepath = outputFolder();
 			if(filepath==null || filepath.isEmpty()) {
 				filepath = "Downloads";
 			}
 		}
-		
+
 		File f = new File(filepath);
-		
-		
+
+
 		this.downloadFilePath = f.getAbsolutePath();
-		
+
 		//Create download folder
 		File downloadFolder = new File(filepath);
 		if(!downloadFolder.exists()){
@@ -2701,7 +2743,7 @@ public class WebProcessor {
 		}
 		if(action.getMethod().toLowerCase().equals("post")){
 			boolean possibleLogin = sysConfig.isLoginURL(url);
-			
+
 			if ( possibleLogin ) {
 				Account user = (Account) action.getUser();
 				//FIXME: need to check the account parameters corresponding 
@@ -2723,7 +2765,7 @@ public class WebProcessor {
 		if(url==null || url.trim().isEmpty()) {
 			return false;
 		}
-		
+
 		if ( visibleWithoutLogin == null ) {
 			visibleWithoutLogin = new HashSet<String>();
 			if(this.inputList!=null && this.inputList.size()>0) {
@@ -2739,9 +2781,9 @@ public class WebProcessor {
 				}
 			}
 		}
-		
+
 		boolean contain = false;
-		
+
 		for(String vUrl: visibleWithoutLogin) {
 			if(SystemConfig.equalURL(vUrl, url.trim())) {
 				contain = true;
@@ -2758,15 +2800,15 @@ public class WebProcessor {
 			this.proxyApi = new ClientApi(this.sysConfig.getProxyAddress(), 
 					this.sysConfig.getProxyPort(), this.sysConfig.getProxyApiKey());
 		}
-		
+
 	}
-	
+
 	private WebOutputCleaned cleanUpOutPut(String page) {
 		Document doc = Jsoup.parse(page);
-		
+
 		WebOutputCleaned out = new WebOutputCleaned();
 		out.originalHtml = doc.toString();
-		
+
 		if(this.cleanUpDom){
 			@SuppressWarnings("static-access")
 			JsonObject jsonCleanUp = this.sysConfig.getCleanUp();
@@ -2836,7 +2878,7 @@ public class WebProcessor {
 					}
 				}
 			}
-			
+
 			//clean up elements based on ATTRIBUTES
 			if (jsonCleanUp.keySet().contains("attribute")) {
 				JsonObject attObject = jsonCleanUp.getAsJsonObject("attribute");
@@ -2892,21 +2934,21 @@ public class WebProcessor {
 				//delete all id values
 				Elements eIDs = doc.getElementsByAttribute("id");
 				for(Element ele:eIDs){
-//					ele.attr("id", "This id was cleaned up");
+					//					ele.attr("id", "This id was cleaned up");
 					ele.attr("id", "");
 				}
 			}
 		}
 		out.html = doc.toString();
 		out.text = doc.text();
-		
+
 		return out;
 	}
 
 	public List<String> getRandomFilePath() {
 		return this.randomFilePath;
 	}
-	
+
 	public void loadRandomAdminFilePath(String randomFilePathCatalogFile ) throws IOException {
 		randomAdminFilePath = new ArrayList<String>();
 		_loadFileContentFromPath(randomFilePathCatalogFile, randomAdminFilePath);
@@ -2916,17 +2958,17 @@ public class WebProcessor {
 		randomFilePath = new ArrayList<String>();
 		_loadFileContentFromPath(randomFilePathCatalogFile, randomFilePath);
 	}
-	
+
 	public void loadAdminRandomFilePath(String randomAdminFilePathCatalogFile ) throws IOException {
 		randomAdminFilePath = new ArrayList<String>();
 		_loadFileContentFromPath(randomAdminFilePathCatalogFile, randomAdminFilePath);
 	}
-	
+
 	public void _loadFileContentFromPath(String randomFilePathCatalogFile, List<String> randomFilePath ) throws IOException {
 		if(randomFilePathCatalogFile==null || randomFilePathCatalogFile.isEmpty()){
 			return;
 		}
-		
+
 		//Each line in the file contain a filePath
 		File f = new File(randomFilePathCatalogFile);
 		if (!f.exists()) {
@@ -2935,15 +2977,15 @@ public class WebProcessor {
 		}
 
 		BufferedReader br = new BufferedReader(new FileReader(f));
-		
+
 		String line = br.readLine();
-		
-		
-		
+
+
+
 		while (line != null) {
 			if(!line.trim().isEmpty()){
 				String path = line.trim();
-				
+
 				randomFilePath.add(path);
 			}
 			line = br.readLine();
@@ -2979,10 +3021,10 @@ public class WebProcessor {
 	public List getRandomAdminFilePath() {
 		return randomAdminFilePath;
 	}
-	
-	
-	
-	
+
+
+
+
 	/**
 	 * Check if the user_1 covers all URLs dedicated to user_2
 	 * @param username1
@@ -2994,26 +3036,26 @@ public class WebProcessor {
 				username1.isEmpty() || username2.isEmpty()) {
 			return false;
 		}
-		
+
 		if(userList==null || userList.size()<1 ||
 				inputList==null || inputList.size()<1) {
 			System.out.println("Need to load inputs before calling this function!");
 			return false;
 		}
-		
+
 		//Firstly check if both of two usernames exist
 		boolean u1Exist = false;
 		boolean u2Exist = false;
-		
+
 		String anonym = "anonym";
-		
+
 		//list all urls accessed by each user
 		Map<String, HashSet<String>> allUserUrls = new HashMap<String, HashSet<String>>();
 		allUserUrls.put(anonym, new HashSet<String>());
-		
+
 		String u1 = username1.trim();
 		String u2 = username2.trim();
-		
+
 		for(Account user:userList) {
 			if(user.getUsername()!=null) {
 				String un = user.getUsername().trim();
@@ -3023,23 +3065,23 @@ public class WebProcessor {
 				else if(un.equals(u2)) {
 					u2Exist = true;
 				}
-				
+
 				allUserUrls.put(un, new HashSet<String>());
 			}
-			
+
 		}
-		
+
 		if(!(u1Exist && u2Exist)) {
 			return false;
 		}
-		
+
 		for(WebInputCrawlJax input:inputList) {
 			if(input==null ||
 					input.actions()==null ||
 					input.actions().size()<1) {
 				continue;
 			}
-			
+
 			for(Action act:input.actions()) {
 				String url = act.getUrl();
 				if(url!=null && !url.trim().isEmpty()) {
@@ -3049,7 +3091,7 @@ public class WebProcessor {
 					}
 					Account user = (Account)act.getUser();
 					String username = user.getUsername();
-					
+
 					if(username==null || username.trim().isEmpty()) {
 						username = anonym;
 					}
@@ -3060,32 +3102,32 @@ public class WebProcessor {
 				}
 			}
 		}
-		
+
 		List<String> diff = new ArrayList<String>();
-		
+
 		for(String u2Url:allUserUrls.get(u2)) {
 			if(!allUserUrls.get(u1).contains(u2Url)) {
 				diff.add(u2Url);
 			}
 		}
-		
+
 		if(diff.size()<1) {
 			return true;
 		}
-		
+
 		System.out.println("num of " + u1 + ": " +allUserUrls.get(u1).size());
 		System.out.println("num of " + u2 + ": " +allUserUrls.get(u2).size());
-		
+
 		System.out.println("List of URLs accessed by " + u2 + 
 				" but not accessed by " + u1 +": (" + diff.size() + ")");
 		for(String u:diff) {
 			System.out.println("\t- " + u);
 		}
-		
+
 		return false;
 	}
-	
-	
+
+
 
 
 	public boolean isSupervisorOf(Object user1, Object user2) {
@@ -3094,27 +3136,27 @@ public class WebProcessor {
 				!(user2 instanceof Account)) {
 			return false;
 		}
-		
+
 		//TODO: should check account parameters, however it might cause errors/bugs
-		
+
 		String username1 = ((Account)user1).getUsername();
 		String username2 = ((Account)user2).getUsername();
-		
+
 		return sysConfig.isSupervisorOf(username1, username2);
 	}
-	
+
 
 
 	public boolean isError(Object output) {
 		if(!(output instanceof WebOutputSequence)){
 			return true;
 		}
-		
+
 		return ((WebOutputSequence)output).isError();
 	}
 
 
-	
+
 	/**
 	 * Return the list of actions whose URLs are changed after multiple executions.
 	 * This function should be invoked only and only the function output was called (one or many times)
@@ -3124,7 +3166,7 @@ public class WebProcessor {
 		if(updateUrlMap==null || updateUrlMap.isEmpty()) {
 			return null;
 		}
-		
+
 		ArrayList<Action> result = new ArrayList<Action>();
 		for(WebInputCrawlJax inp:inputList) {
 			for(Action act:inp.actions()) {
@@ -3140,7 +3182,7 @@ public class WebProcessor {
 		}
 		return result;
 	}
-	
+
 	/**
 	 * Remove all messages in the proxy
 	 */
@@ -3148,7 +3190,7 @@ public class WebProcessor {
 		if(proxyApi==null) {
 			return;
 		}
-		
+
 		//1. get all URLs
 		ApiResponseList sites = null;
 		try {
@@ -3157,13 +3199,13 @@ public class WebProcessor {
 			System.out.println("The history of ZAP Proxy is current empty!");
 			e.printStackTrace();
 		}
-		
+
 		if(sites==null ||
 				sites.getItems()==null||
 				sites.getItems().size()<1) {
 			return;
 		}
-		
+
 		//2. delele all site nodes related to each URL 
 		for(ApiResponse site:sites.getItems()) {
 			String delUrl = site.toString();
@@ -3174,36 +3216,36 @@ public class WebProcessor {
 			}
 		}
 	}
-	
+
 
 
 	public void resetProxy() {
 		//clear all messages in the history of the proxy
 		clearProxyMessages();
-		
+
 		//clear all replacer rules
 		clearProxyReplacerRules();
 	}
 
 
 	HashMap<String,List<Object>> _loadedData = new HashMap<String,List<Object>>(); 
- 	public List _load(String dataName) {
- 		if ( _loadedData.containsKey(dataName) ) {
- 			return _loadedData.get(dataName);
- 		}
- 		
- 		ArrayList<String> list = new ArrayList<String>();
- 		
+	public List _load(String dataName) {
+		if ( _loadedData.containsKey(dataName) ) {
+			return _loadedData.get(dataName);
+		}
+
+		ArrayList<String> list = new ArrayList<String>();
+
 		try {
 			_loadFileContentFromPath(sysConfig.getConfigStringValue(dataName), list);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		return list;
 	}
- 	
- 	
+
+
 }
 
 

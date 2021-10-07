@@ -119,4 +119,15 @@ public abstract class Input extends MRData implements Cloneable {
 		}
 	}
 	
+	private boolean useWeakEncryption;
+	
+	public boolean isUseWeakEncryption() {
+		return useWeakEncryption;
+	}
+	
+	public boolean setUseWeakEncryption(boolean useUnsafeEncryption) {
+		this.useWeakEncryption = useUnsafeEncryption;
+		return true;
+	}
+	
 }
