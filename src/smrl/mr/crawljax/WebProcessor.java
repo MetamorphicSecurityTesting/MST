@@ -611,7 +611,7 @@ public class WebProcessor {
 
 
 
-	ChromeDriver driver = null;
+	WebDriver driver = null;
 	public WebOutputSequence output(WebInputCrawlJax input, boolean checkDownloadedObjects) {
 		System.out.println("HERE");
 		System.out.flush();
@@ -1423,7 +1423,24 @@ public class WebProcessor {
 
 		FirefoxOptions options = new FirefoxOptions();
 		options.setProfile(myprofile);
-		WebDriver driver = new FirefoxDriver(options);
+		
+		if(headless) {
+			options.addArguments("headless");
+			options.setHeadless(true);
+		}
+		
+		if ( driver == null || 
+				Operations.getResetBrowserBetweenInputs() || 
+				! ( driver instanceof FirefoxDriver) ) 
+		{
+			if ( driver != null ) {
+				driver.quit();
+				driver = null;
+			}
+			driver = new FirefoxDriver(options);
+		}
+		
+		
 
 		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
 	}
@@ -1487,7 +1504,10 @@ public class WebProcessor {
 
 		setCipherSuite(chOptions, input);
 
-		if ( Operations.getResetBrowserBetweenInputs() ) {
+		if ( driver == null || 
+				Operations.getResetBrowserBetweenInputs() || 
+				! ( driver instanceof ChromeDriver) ) 
+		{
 			if ( driver != null ) {
 				driver.quit();
 				driver = null;
@@ -1626,7 +1646,7 @@ public class WebProcessor {
 	}
 
 
-	private int getStatusCode(ChromeDriver driver) {
+	private int getStatusCode(WebDriver driver) {
 		int status = -1;
 		LogEntries logs = driver.manage().logs().get("performance");
 		//				System.out.println("Per logs: " + logs);
@@ -1669,7 +1689,7 @@ public class WebProcessor {
 		return status;
 	}
 
-	private String processUrlBeforeRequest(ChromeDriver driver, String urlToGet) {
+	private String processUrlBeforeRequest(WebDriver driver, String urlToGet) {
 		if(urlToGet==null) {
 			return "";
 		}
@@ -1871,7 +1891,7 @@ public class WebProcessor {
 		return 0;
 	}
 
-	private WebElement findElementMatchToAction(RemoteWebDriver driver, StandardAction act) {
+	private WebElement findElementMatchToAction(WebDriver driver, StandardAction act) {
 		WebElement eleResult = null;
 
 		String elementID = act.getId().trim();
@@ -1896,7 +1916,14 @@ public class WebProcessor {
 			String id = getInfoFromElement(elementInfo, "id");
 			if(id!=null && !id.isEmpty()){
 				try{
-					eleResult = driver.findElementById(id);
+					
+					if ( driver instanceof ChromeDriver ) {
+						eleResult = ((ChromeDriver)driver).findElementById(id);
+					}
+					
+					if ( driver instanceof FirefoxDriver ) {
+						eleResult = ((FirefoxDriver)driver).findElementById(id);
+					}
 				}
 				catch(NoSuchElementException e){
 					return null;
@@ -1920,7 +1947,7 @@ public class WebProcessor {
 	 * @param currentAction 
 	 * @param input sequence of actions, which contains the currentAction
 	 */
-	private void updateUrlsForNextActions(RemoteWebDriver driver, Action currentAction, WebInputCrawlJax input) {
+	private void updateUrlsForNextActions(WebDriver driver, Action currentAction, WebInputCrawlJax input) {
 		//		System.out.println("\t  -- In updateUrlsForNextActions");
 		if(currentAction==null ||
 				currentAction.getActionID()==null ||
@@ -2197,7 +2224,7 @@ public class WebProcessor {
 		}
 	}
 
-	private void executeInnerActions(RemoteWebDriver driver, Action act) {
+	private void executeInnerActions(WebDriver driver, Action act) {
 		if(act==null ||
 				act.getInnerActions()==null ||
 				act.getInnerActions().size()==0){
@@ -2208,7 +2235,7 @@ public class WebProcessor {
 		}
 	}
 
-	private String closeAlertAndGetItsText(RemoteWebDriver driver, Boolean acceptAlert) {
+	private String closeAlertAndGetItsText(WebDriver driver, Boolean acceptAlert) {
 		if(isDialogPresent(driver)){
 			Alert alert = driver.switchTo().alert();
 			String alertText = alert.getText();
@@ -2394,7 +2421,7 @@ public class WebProcessor {
 		return res;
 	}
 
-	private String getRedirectUrl(ChromeDriver driver, String beforeUrl, String requestedURL) {
+	private String getRedirectUrl(WebDriver driver, String beforeUrl, String requestedURL) {
 		String tempRedirectUrl = getRedirectUrl(driver, requestedURL);
 		if(tempRedirectUrl!=null && !tempRedirectUrl.isEmpty() &&
 				!beforeUrl.trim().equalsIgnoreCase(tempRedirectUrl)) {
