@@ -797,12 +797,19 @@ public class WebProcessor {
 			{
 				text = ((StandardAction)act).getText();
 
+				boolean skip_check_action_origin = false;
+				String actCurrentURL = ((StandardAction)act).getCurrentURL();
+				if ( actCurrentURL.startsWith("file://") ) {
+					skip_check_action_origin = true;
+				}
+				
 				//If this action is the POST one, 
 				// check if the current URL (from browser) is similar with the currentURL
 				// if not -> go back to the currentURL before execute the action
-				if(ensure_action_origin_url_is_the_same) {
+				if( skip_check_action_origin && ensure_action_origin_url_is_the_same) {
 					//					if(act.getMethod().toLowerCase().trim().equals("post")){
-					String actCurrentURL = ((StandardAction)act).getCurrentURL();
+					
+					
 					if(actCurrentURL!=null 
 							//								&& !actCurrentURL.isEmpty() &&
 							//								!actCurrentURL.trim().equals("/")
