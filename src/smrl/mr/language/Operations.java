@@ -1322,32 +1322,6 @@ public class Operations {
 	}
 
 
-	
-	
-	//14
-	////////not completed
-	@MRDataProvider  
-	public static String EncodeUrl(String url){  // i get error
-		if(url==null){
-			return null;
-		}
-		
-		 try {
-	            return URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
-	        } catch (UnsupportedEncodingException ex) {
-	            throw new RuntimeException(ex.getCause());
-	        }
-		/* try {  
-             String encodeURL = URLEncoder.encode( url, "UTF-8" );  
-             return encodeURL;  
-        } catch (UnsupportedEncodingException e) {  
-             return "Issue while encoding" +e.getMessage();  
-        }  */
-		 
-		
-		
-	}
-	
 	@MRDataProvider  
 	public static String FileWithInvalidType(){ 
 		return FileWithInvalidType(1);
@@ -1372,28 +1346,9 @@ public class Operations {
 		return MR.CURRENT.getMRData("XMLInjectedFile",x);
 	}
 	
-	public static boolean URLContainProtocol( String url ){
-		///FIXME!!!!
-		// if the value is invalid then return True.
-		return true; 
-	}
+	//16
+	////////not completed
 	
-	
-	
-	@MRDataProvider  
-	public static Object invalidCertificate(){ 
-		return invalidCertificate(1);
-
-		// check the date of certificate to be expired as well
-	}
-
-
-	@MRDataProvider()
-	public static Object invalidCertificate(int x){ 
-		return MR.CURRENT.getMRData("invalidCertificate",x);
-	}
-	
-
 	@MRDataProvider 
 	public static boolean isDeltaLogDifferent(Object output1, Object output2) {
 		//FIXME!!
@@ -1409,7 +1364,18 @@ public class Operations {
 	}
 	
 	
-	
+	@MRDataProvider  
+	public static Object invalidCertificate(){ 
+		return invalidCertificate(1);
+
+		// check the date of certificate to be expired as well
+	}
+
+
+	@MRDataProvider()
+	public static Object invalidCertificate(int x){ 
+		return MR.CURRENT.getMRData("invalidCertificate",x);
+	}
 
 	//	/**
 	//	 * Web-specific function.
@@ -1429,9 +1395,9 @@ public class Operations {
 
 }
 
-//Completed:14
-//21
+//Completed:16
+//19
 
 
 
-//total: 21 + 7 = 28    completed: 14 + 5 = 19     rate: 19/28 = 68% 
+//total: 19 + 8 = 27    completed: 16 + 6 = 21     rate: 22/27 = 81% 

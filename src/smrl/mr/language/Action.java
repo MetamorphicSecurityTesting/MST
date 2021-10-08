@@ -16,9 +16,12 @@
  *******************************************************************************/
 package smrl.mr.language;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -611,6 +614,33 @@ public abstract class Action implements Cloneable {
 
 
 
+	
+	
+	public  String EncodeUrl(String url){  // i get error
+		if(url==null){
+			return null;
+		}
+		
+		 try {
+			    return URLEncoder.encode(url, StandardCharsets.UTF_8.name());
+	            //return URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+	        } catch (UnsupportedEncodingException ex) {
+	            throw new RuntimeException(ex.getCause());
+	        }
+		/* try {  
+             String encodeURL = URLEncoder.encode( url, "UTF-8" );  
+             return encodeURL;  
+        } catch (UnsupportedEncodingException e) {  
+             return "Issue while encoding" +e.getMessage();  
+        }  */
+		 
+		
+		
+	}
+	
+	
+	
+
 	public boolean setCertificate(Object certificate) {
 		return true;
 
@@ -623,23 +653,11 @@ public abstract class Action implements Cloneable {
 
 		// FIXME : ADD CODE
 	}
-
 	
 
-
-
-	//*************************************************************To be deleted:
-
-
-	public boolean setWeakEncryptionAlgorithm() {
-		return true;
-
-		// FIXME : ADD CODE
-	}
-	
 }
-//completed:5
-//7
+//completed:6
+//8
 
 
 
