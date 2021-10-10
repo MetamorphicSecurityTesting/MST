@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -38,6 +39,7 @@ import smrl.mr.crawljax.Account;
 import smrl.mr.language.actions.IndexAction;
 import smrl.mr.language.actions.StandardAction;
 import smrl.mr.language.actions.WaitAction;
+import smrl.mr.utils.RemoteFile;
 
 public class Operations {
 
@@ -1174,7 +1176,37 @@ public class Operations {
 	public static boolean getResetBrowserBetweenInputs() {
 		return resetBrowserBetweenInputs;
 	}
+	
+	/**
+	 * Returns a set of words that appear only in outputs that are associated to the passed user.
+	 * 
+	 * @param user
+	 * @return
+	 */
+	public static Set<String> reservedKeywords(Object user){
+		return MR.CURRENT.provider.reservedKeywords((Account) user);
+	}
+	
+	
+	
+	@MRDataProvider  
+	public static RemoteFile Log(){ 
+		return Log(1);
+	}
 
+	@MRDataProvider()
+	public static RemoteFile Log(int x){
+		return MR.CURRENT.provider.remoteFile( MR.CURRENT.getMRData("Log",x) );
+	}
+ 
+	public static boolean containsAny( Collection<String> lhs, Collection<Object> rhs ) {
+		for ( Object r : rhs ) {
+			if ( lhs.contains( r ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	//// Nazanin's Implementation Start Point
 	

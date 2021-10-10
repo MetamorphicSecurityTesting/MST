@@ -401,8 +401,8 @@ public class SystemConfig {
 			}
 			
 			
-			if(jsonObject.keySet().contains("vmAdmin")){
-				this.vmAdmin = jsonObject.get("vmAdmin").getAsString().trim();
+			if(jsonObject.keySet().contains("VMadmin")){
+				this.vmAdmin = jsonObject.get("VMadmin").getAsString().trim();
 			}
 			else{
 				this.vmAdmin = "";

@@ -18,8 +18,11 @@ package smrl.mr.language;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import smrl.mr.crawljax.Account;
 import smrl.mr.crawljax.WebInputCrawlJax;
+import smrl.mr.utils.RemoteFile;
 
 public interface OperationsProvider {
 
@@ -110,11 +113,20 @@ public interface OperationsProvider {
 	
 	Action newRequestUrlAction(String url);
 	
+	Set<String> reservedKeywords(Account user);
+	
+	
 	///Nazanin
 
 	boolean isResetPassword(Action action);
 
 	void setResetBrowserBetweenSourceInputs(boolean value);
+
+	RemoteFile remoteFile(Object mrData);
+
+	
+
+	
 	
 	
 
