@@ -18,13 +18,16 @@ package smrl.mr.test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
+import smrl.mr.crawljax.Account;
 import smrl.mr.crawljax.WebInputCrawlJax;
 import smrl.mr.language.Action;
 import smrl.mr.language.BasicUser;
 import smrl.mr.language.Input;
 import smrl.mr.language.OperationsProvider;
 import smrl.mr.language.SystemConfig;
+import smrl.mr.utils.RemoteFile;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class BasicOperationsProvider implements OperationsProvider {
@@ -289,6 +292,18 @@ public class BasicOperationsProvider implements OperationsProvider {
 	public void setResetBrowserBetweenSourceInputs(boolean value) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public Set<String> reservedKeywords(Account user) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RemoteFile remoteFile(Object mrData) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 

@@ -33,7 +33,7 @@ public abstract class MRBaseTest {
 
 	public void test(OperationsProvider provider, Class clazz){
 
-		System.setErr(new PrintStream(OutputStream.nullOutputStream()));
+		//System.setErr(new PrintStream(OutputStream.nullOutputStream()));
 		
 		//		Object[] testData = myProjectTestRule.getTestData();
 		List<String> fails = new ArrayList<>();

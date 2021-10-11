@@ -22,6 +22,18 @@ import java.util.concurrent.TimeUnit;
 public class VMWrapper {
 
 	private String vMname;
+	public String getvMname() {
+		return vMname;
+	}
+
+	public String getAdmin() {
+		return admin;
+	}
+
+	public String getIP() {
+		return IP;
+	}
+
 	private String admin;
 	private String IP;
 
@@ -54,7 +66,7 @@ public class VMWrapper {
 		
 		///1000+1000;
 		try {
-			int exitCode = executeBashCommandOnVM("jenkinsuser", "192.168.56.102", 22, 10000, 
+			int exitCode = executeBashCommandOnVM(admin, IP, 22, 10000, 
 					"sudo date -s '@"+future+"'\n exit\n"
 //				"exit\n"
 					);
@@ -70,6 +82,37 @@ public class VMWrapper {
 		
 	}
 
+	public boolean copyFromVM( String orig, String dest) {
+		try {
+			//System.out.println("!!! ADMIN "+admin);
+			return scpFromVM(admin, 
+					  IP, orig, dest, 10000 ) == 0;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static int scpFromVM(String username, 
+			  String host, String orig, String dest, long defaultTimeoutSeconds ) throws IOException {
+		
+		StringBuffer outputBuffer = new StringBuffer();
+		StringBuffer errorBuffer = new StringBuffer();
+		List<String> exec = new ArrayList<>();
+		exec.add("scp");
+		exec.add(username+"@"+host+":"+orig);
+		exec.add(dest);
+		
+		int exitCode = ProcessRunner.run( exec, "", outputBuffer, errorBuffer, (int) defaultTimeoutSeconds );
+		
+		System.out.println(outputBuffer);
+		System.out.println(errorBuffer);
+		System.out.println("Exit code: "+exitCode);
+		
+		return exitCode;
+	}
+	
 	public static int executeBashCommandOnVM(String username, 
 			  String host, int port, long defaultTimeoutSeconds, String command) throws IOException {
 		

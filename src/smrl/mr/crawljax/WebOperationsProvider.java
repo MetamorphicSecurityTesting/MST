@@ -21,10 +21,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 
@@ -40,73 +43,74 @@ import smrl.mr.language.Output;
 import smrl.mr.language.SystemConfig;
 import smrl.mr.language.actions.StandardAction;
 import smrl.mr.utils.CipherSuites;
+import smrl.mr.utils.RemoteFile;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 public class WebOperationsProvider implements OperationsProvider {
 	WebProcessor impl;
 	HashMap<WebInputCrawlJax, WebOutputSequence> outputCache = new HashMap<WebInputCrawlJax, WebOutputSequence>();
-	
+
 	HashMap<String, HashMap<String, WebOutputCleaned>> outputStore = 
 			new HashMap<String, HashMap<String, WebOutputCleaned>>();
 	private boolean keepCache; 
-	
+
 	public WebOperationsProvider(String configFile) {
 		impl = new WebProcessor();
 		this.keepCache = false;
-		
+
 		if(configFile!=null && !configFile.isEmpty()){
 			impl.setConfig(configFile);
 		}
-		
+
 		try {
 			impl.loadInput(WebProcessor.getSysConfig().getInputFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		impl.setOutputFile(WebProcessor.getSysConfig().getOutputFile());
-		
+
 		impl.loadUsers();
-		
+
 		try {
 			impl.loadRandomFilePath(impl.getSysConfig().getRandomFilePathFile());
-			
+
 			impl.loadRandomAdminFilePath(impl.getSysConfig().getRandomAdminFilePathFile());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public WebOperationsProvider(String inputFile, String outFile, String configFile) {
 		impl = new WebProcessor();
 		this.keepCache = false;
-		
+
 		if(configFile!=null && !configFile.isEmpty()){
 			impl.setConfig(configFile);
 		}
-		
+
 		try {
 			impl.loadInput(inputFile);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		impl.setOutputFile(outFile);
-		
-		
-		
+
+
+
 		impl.loadUsers();
 	}
-	
+
 	public WebOperationsProvider(String inputFile, String outFile, String configFile, String randomFilePath, String randomAdminFilePath) {
 		this(inputFile, outFile, configFile);
 		this.keepCache = false;
-		
+
 		try {
-			
+
 			impl.loadRandomFilePath(randomFilePath);
 			impl.loadRandomAdminFilePath(randomAdminFilePath);
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -116,38 +120,38 @@ public class WebOperationsProvider implements OperationsProvider {
 		if(outputStore!=null && !outputStore.isEmpty()){
 			return true;		//already loaded
 		}
-		
+
 		outputStore = new HashMap<String, HashMap<String, WebOutputCleaned>>(); 
-		
+
 		String outputStoreFolder = WebProcessor.getSysConfig().getOutputStore();
-		
+
 		//check if the outputStoreFolder exist
 		File outFolder = new File(outputStoreFolder);
 		if(!outFolder.exists() || !outFolder.isDirectory()){
 			return false;	// The directory does not exist
 		}
-		
+
 		File[] subFolders = outFolder.listFiles();
-		
+
 		boolean loaded = false;
 		for(File sf:subFolders){
 			//Try to get outputs of each user
-			
+
 			//if this sf is not a directory -> continue
 			if(!sf.isDirectory()){
 				continue;
 			}
-			
+
 			//Start to load all outputs of the current username/Anonymous
 			String username = sf.getName();
 			HashMap<String, WebOutputCleaned> lsOutput = new HashMap<String, WebOutputCleaned>();
-			
+
 			File[] filesList = sf.listFiles();
 			for(File f:filesList){
 				if(!f.isFile()){
 					continue;
 				}
-				
+
 				//1. get type of output (html/text)
 				String fullFileName = f.getName();
 				String extension = fullFileName;
@@ -157,25 +161,25 @@ public class WebOperationsProvider implements OperationsProvider {
 				else{
 					continue;
 				}
-				
+
 				//2. get the content of output
 				String contentHTML = null;
 				String htmlFileName = f.getAbsolutePath();
 				contentHTML = readFile(htmlFileName);
-				
+
 				String contentText = null;
 				String textFileName = htmlFileName.substring(0, htmlFileName.length()-4) + "txt";
 				contentText = readFile(textFileName);
-				
-				
+
+
 				if(contentHTML!=null || contentText!=null){
 					String filename = fullFileName.substring(0, fullFileName.length()-5); //-5 because this is html file
-					
+
 					WebOutputCleaned outCleaned = new WebOutputCleaned();
 					outCleaned.html = contentHTML;
 					outCleaned.text = contentText;
-					
-					
+
+
 					lsOutput.put(filename, outCleaned);
 				}
 
@@ -183,10 +187,10 @@ public class WebOperationsProvider implements OperationsProvider {
 			if(!lsOutput.isEmpty()){
 				outputStore.put(username, lsOutput);
 			}
-			
+
 			loaded = true;
 		}
-		
+
 		return loaded;
 	}
 
@@ -236,10 +240,10 @@ public class WebOperationsProvider implements OperationsProvider {
 				actions.add(a);
 			}
 		}
-		
+
 		return actions;
 	}
-	
+
 	public List<Action> loadActionsAvailableWithoutLogin() {
 		List<WebInputCrawlJax> inps = impl.getInputList();
 		LinkedList<Action> actions = new LinkedList<>();
@@ -251,15 +255,15 @@ public class WebOperationsProvider implements OperationsProvider {
 					loggedIn = true;
 					isLogOut = false;
 					continue;
-//					break;
+					//					break;
 				}
-				
+
 				isLogOut = isLogout(a);
 				if(isLogOut) {
 					loggedIn = false;
 					continue;
 				}
-				
+
 				if(!loggedIn && !isLogOut &&
 						!containActionURL(actions, a) &&
 						a.getUrl()!=null &&
@@ -270,7 +274,7 @@ public class WebOperationsProvider implements OperationsProvider {
 				}
 			}
 		}
-		
+
 		return actions;
 	}
 
@@ -285,38 +289,38 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	private boolean containActionURL(LinkedList<Action> actions, Action act) {
 		if(actions==null || act==null || 
-			actions.size()<1 ||
-			act.getUrl()==null ||
-			act.getUrl().isEmpty()) {
+				actions.size()<1 ||
+				act.getUrl()==null ||
+				act.getUrl().isEmpty()) {
 			return false;
 		}
-		
+
 		for(Action a:actions) {
 			if(a.getUrl()!=null && !a.getUrl().isEmpty() &&
 					a.getUrl().equals(act.getUrl())) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
 	public List<WebInputCrawlJax> loadInputs() {
 		return impl.getInputList();
 	}
-	
+
 	private List loadRandomFilePath() {
 		return impl.getRandomFilePath();
 	}
-	
+
 	private List loadRandomAdminFilePath() {
 		return impl.getRandomAdminFilePath();
 	}
-	
+
 	private List loadWeakCipherSuite() {
 		return CipherSuites.weakCipherSuite();
 	}
-	
+
 
 	@Override
 	public smrl.mr.language.Input changeCredentials(smrl.mr.language.Input input, Object user) {
@@ -327,7 +331,7 @@ public class WebOperationsProvider implements OperationsProvider {
 	public boolean cannotReachThroughGUI(Object user, smrl.mr.language.Input input) {
 		return impl.guiNotContain((Account) user, (WebInputCrawlJax) input);
 	}
-	
+
 	@Override
 	public boolean cannotReachThroughGUI(Object user, String URL) {
 		return impl.guiNotContain((Account) user, URL);
@@ -362,13 +366,13 @@ public class WebOperationsProvider implements OperationsProvider {
 			return loadRandomAdminFilePath();
 		case "WeakEncryption":
 			return loadWeakCipherSuite();
-			
-	
-			
+
+
+
 		default :
 			return _load(dataName);
 		}
-		
+
 	}
 
 
@@ -379,7 +383,7 @@ public class WebOperationsProvider implements OperationsProvider {
 	@Override
 	public boolean notVisibleWithoutLoggingIn(String url) {
 		return impl.notVisibleWithoutLoggingIn(url);
-		
+
 	}
 
 	@Override
@@ -392,14 +396,14 @@ public class WebOperationsProvider implements OperationsProvider {
 		if(input.actions()==null || input.actions().get(x)==null) {
 			return false;
 		}
-		
+
 		WebInputCrawlJax actionsChangedUrl = impl.getActionsChangedUrl();
-		
+
 		if(actionsChangedUrl==null ||
 				actionsChangedUrl.size()<1) {
 			return false;
 		}
-		
+
 		try {
 			Action comparedAction = input.actions().get(x).clone();
 			comparedAction.setUser(null);
@@ -414,7 +418,7 @@ public class WebOperationsProvider implements OperationsProvider {
 		} catch (CloneNotSupportedException e1) {
 			e1.printStackTrace();
 		}
-		
+
 		return false;
 	}
 
@@ -450,11 +454,11 @@ public class WebOperationsProvider implements OperationsProvider {
 		}
 
 		String username = ((Account)user).getUsername();
-		
+
 		//if output is an instance of smrl.mr.language.Output
 		if(output instanceof smrl.mr.language.Output) {
 			ArrayList<Object> outSequence = ((WebOutputSequence)output).getOutputSequence();
-			
+
 			//check Anonymous
 			if(userCanRetrieve("ANONYMOUS", outSequence)){
 				return true;
@@ -466,33 +470,104 @@ public class WebOperationsProvider implements OperationsProvider {
 				return true;
 			}
 		}
-		
+
 		// if output is an instance of File
 		if(output instanceof File) {
 			try {
 				String fileContent = FileUtils.readFileToString((File)output, Charsets.UTF_8);
-				
+
 				//check Anonymous
 				if(userCanRetrieveContent("ANONYMOUS", fileContent)){
 					return true;
 				}
 
-				
+
 				return userCanRetrieveContent(username, fileContent);
-					
+
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 		}
-		
+
 		return false;
+	}
+
+	private HashMap<String,Set<String>> _reservedKeywords;
+	
+	@Override
+	public Set<String> reservedKeywords(Account _user) {
+	
+		String username = _user.getUsername();
+	
+		if( _reservedKeywords == null ){
+
+			loadOutputStore();
+			
+			System.out.println(outputStore);
+			
+			HashMap<String,Set<String>> wordsMap = new HashMap<String,Set<String>>();
+			
+			for ( Entry<String, HashMap<String, WebOutputCleaned>> e : outputStore.entrySet() ) {
+				
+				String user = e.getKey();
+				
+				HashMap<String, WebOutputCleaned> allOutputs = e.getValue();
+				
+				HashSet<String> _words = new HashSet<String>();
+				for(String key:allOutputs.keySet()){
+					WebOutputCleaned storedOutput = allOutputs.get(key);
+					String[] words = storedOutput.text.split("\\s+");
+					
+					List<String> list = new ArrayList<String> ( Arrays.asList(words) );
+					
+					
+					
+					//remove likely dates
+					list.removeIf( w -> w.length() <= 3 );
+					
+					//remove likely dates
+					list.removeIf( w -> w.contains(":") );
+					
+					//remove likely HTML
+					list.removeIf( w -> ( w.contains(">") || w.contains("<") ) );
+					
+					_words.addAll( list );
+					
+					
+				}
+				wordsMap.put(user,_words);
+				
+			}
+
+			for ( Entry<String, Set<String>> e : wordsMap.entrySet() ) {
+				Set<String> out = e.getValue();
+
+				for ( Entry<String, Set<String>> e1 : wordsMap.entrySet() ) {
+					Set<String> in = e1.getValue();
+
+					if ( in != out ) {
+						out.removeAll( in );
+					}
+				}
+			}
+
+			_reservedKeywords = wordsMap;
+		}
+
+		Set<String> keywords = _reservedKeywords.get( username );
+		if ( keywords == null ) {
+			keywords = new HashSet<String>();	
+		}
+		keywords.add( _user.getPassword() );
+		
+		return keywords;
 	}
 
 	private boolean userCanRetrieve(String username, ArrayList<Object> outSequence) {
 		if(username==null || username.isEmpty() || this.outputStore.isEmpty() || !this.outputStore.containsKey(username)){
 			return false;
 		}
-		
+
 		HashMap<String, WebOutputCleaned> allOutputs = this.outputStore.get(username);
 		for(String key:allOutputs.keySet()){
 			WebOutputCleaned storedOutput = allOutputs.get(key);
@@ -503,10 +578,10 @@ public class WebOperationsProvider implements OperationsProvider {
 				}
 			}
 		}
-		
+
 		return false;
 	}
-	
+
 	private boolean userCanRetrieveContent(String username, String content) {
 		if(username==null || username.isEmpty() || this.outputStore.isEmpty() || !this.outputStore.containsKey(username)){
 			return false;
@@ -514,12 +589,12 @@ public class WebOperationsProvider implements OperationsProvider {
 		HashMap<String, WebOutputCleaned> allOutputs = this.outputStore.get(username);
 		for(String key:allOutputs.keySet()){
 			WebOutputCleaned storedOutput = allOutputs.get(key);
-			
+
 			if(storedOutput.compare(content)){
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -531,7 +606,7 @@ public class WebOperationsProvider implements OperationsProvider {
 	@Override
 	public boolean isEncrypted(Action action) {
 		String channel = action.getChannel();
-		
+
 		if(channel!=null && channel.trim().toLowerCase().equals("https")){
 			return true;
 		}
@@ -547,14 +622,14 @@ public class WebOperationsProvider implements OperationsProvider {
 		if(input==null || pos<0){
 			return null;
 		}
-		
+
 		boolean CACHED = outputCache.containsKey(input);
-//		System.out.println("\t!!! CACHED:"+CACHED+" "+System.identityHashCode(input)+" "+input);
+		//		System.out.println("\t!!! CACHED:"+CACHED+" "+System.identityHashCode(input)+" "+input);
 		if(CACHED){
 			WebOutputSequence res = new WebOutputSequence();
-			
+
 			ArrayList<Object> listOutput = outputCache.get(input).getOutputSequence();
-			
+
 			if(listOutput.size() <= pos){
 				int size = listOutput.size();
 				res.add(listOutput.get(size-1));
@@ -566,12 +641,12 @@ public class WebOperationsProvider implements OperationsProvider {
 				res.add(listOutput.get(pos));
 				res.addRedirectURL(outputCache.get(input).redirectURL(pos));
 				res.addSession((CookieSession) outputCache.get(input).getSession(pos));
-//				res.add(listOutput.get(pos-1));
-//				res.addRedirectURL(outputCache.get(input).redirectURL(pos-1));
+				//				res.add(listOutput.get(pos-1));
+				//				res.addRedirectURL(outputCache.get(input).redirectURL(pos-1));
 				return res;
 			}
 		}
-		
+
 		//request the web server before get the output at the pos
 		Output(input);
 		return Output(input, pos);
@@ -583,10 +658,10 @@ public class WebOperationsProvider implements OperationsProvider {
 			System.out.println("get from cache: " +input);
 			return (WebOutputSequence) outputCache.get(input);
 		}
-		
+
 		//else, send requests to web server then get result
 		WebOutputSequence s = impl.output((WebInputCrawlJax) input);
-		
+
 		if(s!= null){
 			outputCache.put((WebInputCrawlJax) input, s);
 		}
@@ -601,13 +676,13 @@ public class WebOperationsProvider implements OperationsProvider {
 			this.outputCache.clear();
 		}
 		impl.resetUpdateUrlMap();
-//		throw new NotImplementedException();
+		//		throw new NotImplementedException();
 	}
 
 	@Override
 	public boolean afterLogin(Action action) {
 		Input input = action.getInput();
-		
+
 		for ( Action a : input.actions() ){
 			if ( a == action ){
 				return false;
@@ -616,10 +691,10 @@ public class WebOperationsProvider implements OperationsProvider {
 				return true;
 			}
 		}
-		
+
 		throw new IllegalStateException("The action does not belong to the input");
 	}
-	
+
 	@Override
 	public boolean isUserIdParameter(Action a, int parpos, Object user) {
 		if( a.getParameters()==null ||
@@ -629,16 +704,16 @@ public class WebOperationsProvider implements OperationsProvider {
 				!(user instanceof Account)) {
 			return false;
 		}
-		
+
 		Entry<String, String> par = a.getParameters().get(parpos);
 		Account uAcc = (Account) user;
-		
+
 		if(par.getKey()!=null &&
 				uAcc.getUsernameParam()!=null &&
 				par.getKey().equals(uAcc.getUsernameParam())) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -653,9 +728,9 @@ public class WebOperationsProvider implements OperationsProvider {
 		if(as.length <1){
 			return null;
 		}
-		
+
 		WebInputCrawlJax res = null;
-		
+
 		for(int i=0; i<as.length; i++){
 			if(i==0){
 				try {
@@ -672,26 +747,26 @@ public class WebOperationsProvider implements OperationsProvider {
 				}
 			}
 		}
-		
+
 		if(res!=null){
-//			ArrayList<LoginParam> allLoginParams = WebProcessor.sysConfig.getLoginParams();
-//			LoginParam usedLoginParam = null;
-//			
-//			for(Action a:res.actions()) {
-//				if(a instanceof StandardAction) {
-//					usedLoginParam = ((StandardAction)a).usedLoginParam(allLoginParams);
-//				}
-//				if(usedLoginParam!=null) {
-//					break;
-//				}
-//			}
-//
-//			if(usedLoginParam!=null){
-//				res.identifyUsers(usedLoginParam.userParam, usedLoginParam.passwordParam, impl);
-//			}
+			//			ArrayList<LoginParam> allLoginParams = WebProcessor.sysConfig.getLoginParams();
+			//			LoginParam usedLoginParam = null;
+			//			
+			//			for(Action a:res.actions()) {
+			//				if(a instanceof StandardAction) {
+			//					usedLoginParam = ((StandardAction)a).usedLoginParam(allLoginParams);
+			//				}
+			//				if(usedLoginParam!=null) {
+			//					break;
+			//				}
+			//			}
+			//
+			//			if(usedLoginParam!=null){
+			//				res.identifyUsers(usedLoginParam.userParam, usedLoginParam.passwordParam, impl);
+			//			}
 			res.identifyUsers(impl);
 		}
-		
+
 		return res;
 	}
 
@@ -707,7 +782,7 @@ public class WebOperationsProvider implements OperationsProvider {
 					smrl.mr.language.Input tempInput = Operations.Input(act);
 					try {
 						res = Operations.changeCredentials(tempInput, user).actions().get(0).clone();
-						
+
 						found = true;
 						break;
 					} catch (CloneNotSupportedException e) {
@@ -719,16 +794,16 @@ public class WebOperationsProvider implements OperationsProvider {
 				break;
 			}
 		}
-		
+
 		return res;
 	}
-	
+
 	@Override
 	public Action newLoginAction(WebInputCrawlJax input, Object user) {
 		if(input==null || user==null) {
 			return null;
 		}
-		
+
 		Action res = null;
 
 		for(int i=0; i<input.actions().size(); i++){
@@ -743,7 +818,7 @@ public class WebOperationsProvider implements OperationsProvider {
 				}
 			}
 		}
-		
+
 		return res;
 	}
 
@@ -751,7 +826,7 @@ public class WebOperationsProvider implements OperationsProvider {
 	public smrl.mr.language.Input Input(Action action) {
 		if(impl.getInputList() != null)
 		{
-			 try {
+			try {
 				Object res = null;
 				res = impl.getInputList().get(0).getClass().newInstance();
 				((Input)res).addAction(action);
@@ -764,7 +839,7 @@ public class WebOperationsProvider implements OperationsProvider {
 		return null;
 	}
 
-	
+
 	@Override
 	public boolean isSignup(Action action) {
 		return impl.isSignup(action);
@@ -777,12 +852,12 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	@Override
 	public boolean isAdmin(Object user) {
-		
-		
+
+
 		if ( user.equals(impl.getAdmin()) ) {
 			return true;
 		}
-		
+
 		return false;
 	}
 
@@ -829,7 +904,7 @@ public class WebOperationsProvider implements OperationsProvider {
 	@Override
 	public void resetProxy() {
 		this.impl.resetProxy();
-		
+
 	}
 
 	@Override
@@ -857,8 +932,20 @@ public class WebOperationsProvider implements OperationsProvider {
 	@Override
 	public void setResetBrowserBetweenSourceInputs(boolean value) {
 		// TODO Auto-generated method stub
-		
+
 	}
+
+
 	
+
+	public RemoteFile remoteFile(Object path) {
+		
+		SystemConfig sysConfig = impl.getSysConfig();
+		VMWrapper vmWrapper = new VMWrapper(sysConfig.getVMname(),sysConfig.getIP(),sysConfig.getVmAdmin());
+		
+		RemoteFile rf = new RemoteFile(vmWrapper, path.toString());
+		
+		return rf;
+	}
 
 }
