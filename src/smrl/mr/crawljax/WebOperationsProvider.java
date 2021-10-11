@@ -492,13 +492,23 @@ public class WebOperationsProvider implements OperationsProvider {
 		return false;
 	}
 
-	public HashMap<String,Set<String>> _reservedKeywords; 
-	public Set<String> reservedKeywords( String username ) {
+	private HashMap<String,Set<String>> _reservedKeywords;
+	
+	@Override
+	public Set<String> reservedKeywords(Account _user) {
+	
+		String username = _user.getUsername();
+	
 		if( _reservedKeywords == null ){
 
-
+			loadOutputStore();
+			
+			System.out.println(outputStore);
+			
 			HashMap<String,Set<String>> wordsMap = new HashMap<String,Set<String>>();
+			
 			for ( Entry<String, HashMap<String, WebOutputCleaned>> e : outputStore.entrySet() ) {
+				
 				String user = e.getKey();
 				
 				HashMap<String, WebOutputCleaned> allOutputs = e.getValue();
@@ -507,7 +517,23 @@ public class WebOperationsProvider implements OperationsProvider {
 				for(String key:allOutputs.keySet()){
 					WebOutputCleaned storedOutput = allOutputs.get(key);
 					String[] words = storedOutput.text.split("\\s+");
-					_words.addAll(Arrays.asList(words));
+					
+					List<String> list = new ArrayList<String> ( Arrays.asList(words) );
+					
+					
+					
+					//remove likely dates
+					list.removeIf( w -> w.length() <= 3 );
+					
+					//remove likely dates
+					list.removeIf( w -> w.contains(":") );
+					
+					//remove likely HTML
+					list.removeIf( w -> ( w.contains(">") || w.contains("<") ) );
+					
+					_words.addAll( list );
+					
+					
 				}
 				wordsMap.put(user,_words);
 				
@@ -530,9 +556,10 @@ public class WebOperationsProvider implements OperationsProvider {
 
 		Set<String> keywords = _reservedKeywords.get( username );
 		if ( keywords == null ) {
-			return new HashSet<String>();	
+			keywords = new HashSet<String>();	
 		}
-
+		keywords.add( _user.getPassword() );
+		
 		return keywords;
 	}
 
@@ -908,11 +935,8 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	}
 
-	@Override
-	public Set<String> reservedKeywords(Account user) {
-		return reservedKeywords(user.getUsername());
-		
-	}
+
+	
 
 	public RemoteFile remoteFile(Object path) {
 		

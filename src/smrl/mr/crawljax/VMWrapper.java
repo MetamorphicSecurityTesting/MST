@@ -22,6 +22,18 @@ import java.util.concurrent.TimeUnit;
 public class VMWrapper {
 
 	private String vMname;
+	public String getvMname() {
+		return vMname;
+	}
+
+	public String getAdmin() {
+		return admin;
+	}
+
+	public String getIP() {
+		return IP;
+	}
+
 	private String admin;
 	private String IP;
 
