@@ -10,6 +10,9 @@ import org.openqa.selenium.firefox.ProfilesIni;
 
 public class ConfigureUnsafeFirefox{
    public static void main(String[] args) {
+	   System.setProperty("webdriver.gecko.driver", "C:/Users/nbaya076/geckodriver.exe");
+	   
+	   
 	   
 	   //before running this code please run "firefox -p" in order to create the profile "UnsafeEncryption"
 	   ProfilesIni profile = new ProfilesIni();

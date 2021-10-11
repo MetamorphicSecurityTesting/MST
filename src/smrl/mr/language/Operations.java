@@ -287,6 +287,11 @@ public class Operations {
 	public static Object WeakEncryption() {
 		return MR.CURRENT.getMRData("WeakEncryption",1);
 	}
+	
+	@MRDataProvider
+	public static Object WeakEncryption(int i) {
+		return MR.CURRENT.getMRData("WeakEncryption",i);
+	}
 
 	/**
 	 * Data Representation Function. 
@@ -1349,11 +1354,7 @@ public class Operations {
 	//16
 	////////not completed
 	
-	@MRDataProvider 
-	public static boolean isDeltaLogDifferent(Object output1, Object output2) {
-		//FIXME!!
-		return true;
-	}
+	
 
 
 	@MRDataProvider()

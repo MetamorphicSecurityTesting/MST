@@ -607,16 +607,8 @@ public abstract class Action implements Cloneable {
 		return true;
 		// FIXME : ADD CODE
 	}
-
-
-
-
-
-
-
 	
-	
-	public  String EncodeUrl(String url){  // i get error
+	public  String EncodeUrl(String url){ 
 		if(url==null){
 			return null;
 		}
