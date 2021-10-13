@@ -16,12 +16,18 @@
  *******************************************************************************/
 package smrl.mr.language;
 
+import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.X509Certificate;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +35,15 @@ import java.util.Random;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.conn.ssl.SSLContexts;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.hamcrest.core.IsInstanceOf;
 import org.openqa.selenium.Cookie;
 
@@ -630,16 +644,39 @@ public abstract class Action implements Cloneable {
 		
 	}
 	
-	
-	
+	public boolean getCertificate(String aURL)  throws Exception{
+		/*
+		URL destinationURL = new URL(null, "https://google.com", new sun.net.www.protocol.https.Handler());
+	       // URL destinationURL = new URL(aURL);
+	        HttpsURLConnection conn = (HttpsURLConnection) destinationURL.openConnection();
+	        conn.connect();
+	        Certificate[] certs = conn.getServerCertificates();
+	        for (Certificate cert : certs) {
+	            System.out.println("Certificate is: " + cert);
+	            if(cert instanceof X509Certificate) {
+	                    X509Certificate x = (X509Certificate ) cert;
+	                    System.out.println(x.getIssuerDN());
+	            }
+	        
+	    }
+	    */
+		
+		String keyPassphrase = "";
 
-	public boolean setCertificate(Object certificate) {
+		KeyStore keyStore = KeyStore.getInstance("PKCS12");
+		keyStore.load(new FileInputStream("cert-key-pair.pfx"), keyPassphrase.toCharArray());
+
+		SSLContext sslContext = SSLContexts.custom()
+		        .loadKeyMaterial(keyStore, null)
+		        .build();
+
+		CloseableHttpClient httpClient = HttpClients.custom().setSSLContext(sslContext).build();
+		System.out.println(httpClient);
+		HttpResponse response = httpClient.execute(new HttpGet("https://example.com"));
+		
+		
 		return true;
-
-		// FIXME : ADD CODE
 	}
-
-
 	public boolean 	removeCertificate() {
 		return true;
 
@@ -648,10 +685,6 @@ public abstract class Action implements Cloneable {
 	
 
 }
-//completed:6
-//8
-
-
 
 
 

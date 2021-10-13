@@ -1383,32 +1383,7 @@ public class Operations {
 		return MR.CURRENT.getMRData("XMLInjectedFile",x);
 	}
 	
-	//16
-	////////not completed
 	
-	
-
-
-	@MRDataProvider()
-	public static boolean isValidIpNode(String url) {
-	    
-		return true;
-		// FIXME : ADD CODE
-	}
-	
-	
-	@MRDataProvider  
-	public static Object invalidCertificate(){ 
-		return invalidCertificate(1);
-
-		// check the date of certificate to be expired as well
-	}
-
-
-	@MRDataProvider()
-	public static Object invalidCertificate(int x){ 
-		return MR.CURRENT.getMRData("invalidCertificate",x);
-	}
 
 	//	/**
 	//	 * Web-specific function.
@@ -1428,9 +1403,3 @@ public class Operations {
 
 }
 
-//Completed:16
-//19
-
-
-
-//total: 19 + 8 = 27    completed: 16 + 6 = 21     rate: 22/27 = 81% 
