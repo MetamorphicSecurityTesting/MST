@@ -39,6 +39,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONException;
@@ -1310,7 +1311,7 @@ public class WebProcessor {
 					outObj.statusCode = getStatusCode(driver);
 				}
 
-
+				outObj.hasAlert = ( ExpectedConditions.alertIsPresent() != null );
 
 				File file = findNewDownloadedFile();
 				if ( file != null ){

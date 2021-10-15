@@ -496,5 +496,20 @@ public class WebOutputSequence implements Output {
 		return seq;
 	}
 
+
+
+
+
+	@Override
+	public boolean hasAlert() {
+		for ( Object out : seq ) {
+			Output oo = (Output) out;
+			if ( oo.hasAlert() ){
+				return true;
+			}
+		}
+		return false;
+	}
+
 	
 }

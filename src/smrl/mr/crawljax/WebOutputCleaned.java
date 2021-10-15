@@ -34,6 +34,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.support.ui.ExpectedCondition;
 
 import com.google.common.base.Charsets;
 
@@ -56,8 +58,21 @@ public class WebOutputCleaned {
 	private ArrayList<CollectionOfConcepts> allConcepts;
 	public String realRequestedUrl; 
 	public String realClickedElementText;
+	public boolean hasAlert;
 	
 	
+	public boolean hasAlert() {
+		return hasAlert;
+	}
+
+
+
+	public void setHasAlert(boolean hasAlert) {
+		this.hasAlert = hasAlert;
+	}
+
+
+
 	public WebOutputCleaned() {
 		this.resultedUrl = null;
 		this.html = null;

@@ -717,6 +717,19 @@ public class Operations {
 
 		return res;
 	}
+	
+	/**
+	 * Web-specific function.
+	 * Returns true if a URL can be reached by the given user by exploring the user interface of the system (e.g., by traversing anchors).
+	 * The result depends on the data collected by the data collection method.
+	 * 
+	 * @param user
+	 * @param URL
+	 * @return	true if the user can reach the given URL
+	 */
+	public static boolean canReachThroughGUI(Object user, String URL){
+		return ! cannotReachThroughGUI(user,URL);
+	}
 
 	/**
 	 * Data Representation Function.
@@ -1212,7 +1225,8 @@ public class Operations {
 		}
 		return false;
 	}
-
+	
+	
 	//// Nazanin's Implementation Start Point
 	
 	public static boolean isFormInput(Object formInput) {
