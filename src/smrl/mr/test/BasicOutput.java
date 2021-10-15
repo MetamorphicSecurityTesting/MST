@@ -115,5 +115,11 @@ public class BasicOutput implements Output {
 		ArrayList<Object> al = new ArrayList<Object>();
 		return al;
 	}
+
+	@Override
+	public boolean hasAlert() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 }
