@@ -16,18 +16,12 @@
  *******************************************************************************/
 package smrl.mr.language;
 
-import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.net.http.HttpClient;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +29,7 @@ import java.util.Random;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
 import org.hamcrest.core.IsInstanceOf;
 import org.openqa.selenium.Cookie;
 
@@ -615,37 +601,70 @@ public abstract class Action implements Cloneable {
 		return true;
 		// FIXME : ADD CODE
 	}
-	
+
 	public boolean setCookie(Set<Cookie> NewCookie) {
 		this.session = (CookieSession) NewCookie;
 		return true;
 		// FIXME : ADD CODE
 	}
-	
+
 	public  String EncodeUrl(String url){ 
 		if(url==null){
 			return null;
 		}
-		
-		 try {
-			    return URLEncoder.encode(url, StandardCharsets.UTF_8.name());
-	            //return URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
-	        } catch (UnsupportedEncodingException ex) {
-	            throw new RuntimeException(ex.getCause());
-	        }
+
+		try {
+			return URLEncoder.encode(url, StandardCharsets.UTF_8.name());
+			//return URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex.getCause());
+		}
 		/* try {  
              String encodeURL = URLEncoder.encode( url, "UTF-8" );  
              return encodeURL;  
         } catch (UnsupportedEncodingException e) {  
              return "Issue while encoding" +e.getMessage();  
         }  */
-		 
-		
-		
+
+
+
 	}
-	
-	public boolean getCertificate(String aURL)  throws Exception{
+
+	public boolean setProfile(){ 
 		/*
+		 * package cwe.tests;
+
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class Naz {
+
+    public static void main(String[] args) {
+
+        //Creating a driver object referencing WebDriver interface
+        WebDriver driver;
+
+        //Setting webdriver.gecko.driver property
+        System.setProperty("webdriver.gecko.driver", "C:\\Users\\nbaya076\\geckodriver.exe");
+
+        //Instantiating driver object and launching browser
+        driver = new FirefoxDriver();
+
+        //Using get() method to open a webpage
+        driver.get("https://google.com");
+
+        //Closing the browser
+        driver.quit();
+
+    }
+
+}
+		 * */
+		return true;
+	}
+	/*
+	public boolean getCertificate(String aURL)  throws Exception{
+
 		URL destinationURL = new URL(null, "https://google.com", new sun.net.www.protocol.https.Handler());
 	       // URL destinationURL = new URL(aURL);
 	        HttpsURLConnection conn = (HttpsURLConnection) destinationURL.openConnection();
@@ -657,10 +676,10 @@ public abstract class Action implements Cloneable {
 	                    X509Certificate x = (X509Certificate ) cert;
 	                    System.out.println(x.getIssuerDN());
 	            }
-	        
+
 	    }
-	    */
-		
+	    OR
+		public boolean getCertificate(String aURL)  throws Exception{
 		String keyPassphrase = "";
 
 		KeyStore keyStore = KeyStore.getInstance("PKCS12");
@@ -673,18 +692,15 @@ public abstract class Action implements Cloneable {
 		CloseableHttpClient httpClient = HttpClients.custom().setSSLContext(sslContext).build();
 		System.out.println(httpClient);
 		HttpResponse response = httpClient.execute(new HttpGet("https://example.com"));
-		
-		
+
+
 		return true;
 	}
-	public boolean 	removeCertificate() {
-		return true;
 
-		// FIXME : ADD CODE
-	}
-	
-
+	 */
 }
+
+
 
 
 
