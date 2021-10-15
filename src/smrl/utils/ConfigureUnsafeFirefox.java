@@ -10,7 +10,7 @@ import org.openqa.selenium.firefox.ProfilesIni;
 
 public class ConfigureUnsafeFirefox{
    public static void main(String[] args) {
-	   System.setProperty("webdriver.gecko.driver", "C:/Users/nbaya076/geckodriver.exe");
+	   //System.setProperty("webdriver.gecko.driver", "C:/Users/nbaya076/geckodriver.exe");
 	   
 	   
 	   
