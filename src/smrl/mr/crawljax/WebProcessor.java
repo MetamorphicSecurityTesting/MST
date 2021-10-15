@@ -622,7 +622,9 @@ public class WebProcessor {
 		WebOutputSequence outputSequence = new WebOutputSequence();
 
 		if ( input.isUseWeakEncryption() ) {
-			loadUnsafeDriver(input);
+			loadUnsafeProfile(input);
+		} if ( input.isUseOutdatedCertificate() ) {
+			loadProfileWithOutdatedCertificate(input);
 		} else {
 			loadDefaultDriver(input);	
 		}
@@ -1411,7 +1413,15 @@ public class WebProcessor {
 	}
 
 
-	private void loadUnsafeDriver(WebInputCrawlJax input) {
+	private void loadUnsafeProfile(WebInputCrawlJax input) {
+		loadGeckoDriver(input,"UnsafeEncryption");
+	}
+	
+	private void loadProfileWithOutdatedCertificate(WebInputCrawlJax input) {
+		loadGeckoDriver(input,"OutdatedCertificate");
+	}
+	
+	private void loadGeckoDriver(WebInputCrawlJax input, String profileName) {
 		//We assume a firefox browser with profile UnsafeEncryption exist
 		//The profile is configured to work with weak algorithms
 		//See class smrl.utils.ConfigureUnsafeFirefox to set it up
@@ -1425,7 +1435,7 @@ public class WebProcessor {
 		
 		
 		ProfilesIni profile = new ProfilesIni();
-		FirefoxProfile myprofile = profile.getProfile("UnsafeEncryption");
+		FirefoxProfile myprofile = profile.getProfile(profileName);
 
 
 		FirefoxOptions options = new FirefoxOptions();

@@ -32,7 +32,8 @@ import com.google.gson.JsonObject;
 
 public class WebInputCrawlJax extends Input{
 
-	private ArrayList<Action> actions; 
+	private ArrayList<Action> actions;
+
 	
 	
 	public WebInputCrawlJax(JsonArray jsonInput) {
@@ -497,6 +498,8 @@ public class WebInputCrawlJax extends Input{
 	public boolean containAction(Action addedAction) {
 		return actions.contains(addedAction);
 	}
+
+
 
 	
 }
