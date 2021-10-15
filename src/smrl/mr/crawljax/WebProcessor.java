@@ -1431,7 +1431,8 @@ public class WebProcessor {
 
 		//call web browser
 		if (exePath == null ) {
-			exePath = "/usr/local/bin/geckodriver";
+		//	exePath = "/usr/local/bin/geckodriver";
+			exePath = "C:\\Users\\nbaya076\\geckodriver.exe";
 		}
 		
 		
@@ -1469,7 +1470,8 @@ public class WebProcessor {
 
 		//call web browser
 		if (exePath == null ) {
-			exePath = "/usr/local/bin/chromedriver";
+			//exePath = "/usr/local/bin/chromedriver";
+			exePath = "C:\\Users\\nbaya076\\chromedriver.exe";
 		}
 
 
