@@ -626,6 +626,8 @@ public class WebProcessor {
 			loadUnsafeProfile(input);
 		} if ( input.isUseOutdatedCertificate() ) {
 			loadProfileWithOutdatedCertificate(input);
+		} if ( input.isUseRemovedCertificate() ) {
+			loadProfileWithRemovedCertificate(input);
 		} else {
 			loadDefaultDriver(input);	
 		}
@@ -1420,6 +1422,10 @@ public class WebProcessor {
 	
 	private void loadProfileWithOutdatedCertificate(WebInputCrawlJax input) {
 		loadGeckoDriver(input,"OutdatedCertificate");
+	}
+	
+	private void loadProfileWithRemovedCertificate(WebInputCrawlJax input) {
+		loadGeckoDriver(input,"RemovedCertificate");
 	}
 	
 	private void loadGeckoDriver(WebInputCrawlJax input, String profileName) {

@@ -629,17 +629,18 @@ public abstract class Action implements Cloneable {
 
 
 	}
+	
+	
+	
+	/*
 
 	public boolean setProfile(){ 
 		/*
 		 * package cwe.tests;
+		 * import org.openqa.selenium.WebDriver;
+		 * import org.openqa.selenium.firefox.FirefoxDriver;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
 
-public class Naz {
-
-    public static void main(String[] args) {
 
         //Creating a driver object referencing WebDriver interface
         WebDriver driver;
@@ -659,10 +660,10 @@ public class Naz {
     }
 
 }
-		 * */
+		 
 		return true;
 	}
-	/*
+	
 	public boolean getCertificate(String aURL)  throws Exception{
 
 		URL destinationURL = new URL(null, "https://google.com", new sun.net.www.protocol.https.Handler());
@@ -703,7 +704,7 @@ public class Naz {
 
 
 
-
+//6
 
 
 

@@ -141,4 +141,15 @@ public abstract class Input extends MRData implements Cloneable {
 		return true;
 	}
 	
+	
+	private boolean useRemovedCertificate; 
+	public boolean isUseRemovedCertificate() {
+		return useRemovedCertificate;
+	}
+	
+	public boolean setUseRemovedCertificate(boolean value) {
+		this.useRemovedCertificate = value;
+		
+		return true;
+	}
 }
