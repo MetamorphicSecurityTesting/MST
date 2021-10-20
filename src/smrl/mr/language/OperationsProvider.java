@@ -120,7 +120,7 @@ public interface OperationsProvider {
 
 	boolean isResetPassword(Action action);
 
-	void setResetBrowserBetweenSourceInputs(boolean value);
+	//void setResetBrowserBetweenSourceInputs(boolean value);
 
 	RemoteFile remoteFile(Object mrData);
 

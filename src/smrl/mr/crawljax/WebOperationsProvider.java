@@ -929,11 +929,7 @@ public class WebOperationsProvider implements OperationsProvider {
 		throw new RuntimeException("Not implemented");
 	}
 
-	@Override
-	public void setResetBrowserBetweenSourceInputs(boolean value) {
-		// TODO Auto-generated method stub
 
-	}
 
 
 	

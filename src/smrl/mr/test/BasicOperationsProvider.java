@@ -288,11 +288,6 @@ public class BasicOperationsProvider implements OperationsProvider {
 		return null;
 	}
 
-	@Override
-	public void setResetBrowserBetweenSourceInputs(boolean value) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	@Override
 	public Set<String> reservedKeywords(Account user) {
