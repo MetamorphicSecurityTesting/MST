@@ -1397,8 +1397,30 @@ public class Operations {
 		return MR.CURRENT.getMRData("XMLInjectedFile",x);
 	}
 	
-	//17
-	////////not completed
+	@MRDataProvider  
+	public static Object CronExpressionsInjection(){ 
+		return CronExpressionsInjection(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object CronExpressionsInjection(int x){ 
+		return MR.CURRENT.getMRData("CronExpressionsInjection",x);
+	}
+	
+	
+
+	@MRDataProvider  
+	public static Object RandomPath(){ 
+		return RandomPath(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object RandomPath(int x){ 
+		return MR.CURRENT.getMRData("RandomPath",x);
+	}
+	
 	
 	
 
