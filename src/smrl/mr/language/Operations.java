@@ -1422,6 +1422,16 @@ public class Operations {
 	}
 	
 	
+	@MRDataProvider  
+	public static Object test_username(){ 
+		return test_username(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object test_username(int x){ 
+		return MR.CURRENT.getMRData("test_username",x);
+	}
 	
 
 	//	/**
