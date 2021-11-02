@@ -1226,10 +1226,11 @@ public class Operations {
 		return false;
 	}
 	
+
 	public static boolean isFileParameter(String value) {
 		return value.matches("^[:,\\w,\\,/,\\s-]+\\.[A-Za-z]{2,3}");
 	}
-	
+
 	//// Nazanin's Implementation Start Point
 	
 	public static boolean isFormInput(Object formInput) {
@@ -1400,9 +1401,41 @@ public class Operations {
 		return MR.CURRENT.getMRData("XMLInjectedFile",x);
 	}
 	
-	//17
-	////////not completed
+	@MRDataProvider  
+	public static Object CronExpressionsInjection(){ 
+		return CronExpressionsInjection(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object CronExpressionsInjection(int x){ 
+		return MR.CURRENT.getMRData("CronExpressionsInjection",x);
+	}
 	
+	
+
+	@MRDataProvider  
+	public static Object RandomPath(){ 
+		return RandomPath(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object RandomPath(int x){ 
+		return MR.CURRENT.getMRData("RandomPath",x);
+	}
+	
+	
+	@MRDataProvider  
+	public static Object test_username(){ 
+		return test_username(1);
+	}
+
+
+	@MRDataProvider()
+	public static Object test_username(int x){ 
+		return MR.CURRENT.getMRData("test_username",x);
+	}
 	
 
 	//	/**
