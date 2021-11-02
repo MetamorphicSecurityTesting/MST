@@ -1226,6 +1226,9 @@ public class Operations {
 		return false;
 	}
 	
+	public static boolean isFileParameter(String value) {
+		return value.matches("^[:,\\w,\\,/,\\s-]+\\.[A-Za-z]{2,3}");
+	}
 	
 	//// Nazanin's Implementation Start Point
 	
