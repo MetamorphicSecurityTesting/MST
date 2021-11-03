@@ -140,6 +140,10 @@ public class Operations {
 	 */
 	public static int myint( int x ){ return x; };
 
+	public static List<Input> inputs(){
+		return MR.CURRENT.getMRData("Input");
+	}
+	
 	/**
 	 * Data Representation Function. 
 	 * Returns the i-th input sequence.
