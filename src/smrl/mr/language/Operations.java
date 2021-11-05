@@ -32,6 +32,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -1007,7 +1008,18 @@ public class Operations {
 
 	static HashMap<String,HashSet<String>> triedInputs = new HashMap<String,HashSet<String>>();
 	private static boolean resetBrowserBetweenInputs = true;
+	private static boolean keepDialogsOpen;
 
+
+	public static void setKeepDialogsOpen(boolean _keepDialogsOpen) {
+		keepDialogsOpen = _keepDialogsOpen;
+	}
+
+	public static boolean getKeepDialogsOpen() {
+		return keepDialogsOpen;
+	}
+
+	
 	/**
 	 * Web-specific function.
 	 * Checks whether a given user tried to access a given URL until the current execution period.

@@ -80,6 +80,7 @@ import org.zaproxy.clientapi.core.ApiResponseSet;
 import org.zaproxy.clientapi.core.ClientApi;
 import org.zaproxy.clientapi.core.ClientApiException;
 
+import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
@@ -135,7 +136,9 @@ public class WebProcessor {
 	private Set<String> URLsAcessedByEveryUser;
 
 	private boolean autoDetectConfirmation = true;
-	private boolean alwaysConfirm = true;
+	
+	private boolean alwaysConfirm = ( Operations.getKeepDialogsOpen() == false);
+	
 	private boolean prioritizeButton=true;
 	//	private String[] confirmationTexts = {"You must use POST method to trigger builds", 
 	//	"The URL you're trying to access requires that requests be sent using POST (like a form submission)"};
@@ -1117,7 +1120,7 @@ public class WebProcessor {
 			}
 
 
-
+			boolean hasAlert = false;
 			if(autoDetectConfirmation){
 				boolean confirmed = false;
 
@@ -1143,6 +1146,7 @@ public class WebProcessor {
 						}
 					}
 					confirmed = true;
+					hasAlert = true;
 				}
 
 				//2. check if the current page contains confirmation request
@@ -1215,7 +1219,8 @@ public class WebProcessor {
 					try{
 						List<WebElement> eles = driver.findElements(elementBy);
 
-
+						
+						
 
 						if(eles!=null && eles.size()>0){
 							String beforeUrl = driver.getCurrentUrl();
@@ -1236,6 +1241,7 @@ public class WebProcessor {
 									break;
 								}
 							}
+
 
 							//Phu: just commented statements under (20/12/2019) to try another way to click on the element
 							//							try {
@@ -1314,8 +1320,10 @@ public class WebProcessor {
 					outObj.statusCode = getStatusCode(driver);
 				}
 
-				ExpectedCondition<Alert> alert = ExpectedConditions.alertIsPresent();
-				outObj.setHasAlert( alert.apply(driver) != null );
+//				ExpectedCondition<Alert> alert = ExpectedConditions.alertIsPresent();
+//				outObj.setHasAlert( alert.apply(driver) != null );
+				System.out.println("!!!ALERT :"+hasAlert);
+				outObj.setHasAlert( hasAlert );
 
 				File file = findNewDownloadedFile();
 				if ( file != null ){

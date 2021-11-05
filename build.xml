@@ -14,7 +14,8 @@
             </manifest>
             <fileset dir="${dir.jarfile}/target/classes"/>
         	<zipfileset excludes="META-INF/*.SF" src="/Users/fabrizio.pastore/.m2/repository/com/google/guava/guava/25.0-jre/guava-25.0-jre.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/asm-7.0.jar"/>
+        	
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/asm-7.0.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/javassist-3.12.1.GA.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/reflections-0.9.10.jar"/>
             <!--
@@ -77,6 +78,7 @@
             <zipfileset excludes="META-INF/*.SF" src="/Users/fabrizio.pastore/.m2/repository/commons-io/commons-io/2.6/commons-io-2.6.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="/Users/fabrizio.pastore/.m2/repository/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar"/>
             
+        	
         </jar>
     </target>
 </project>
