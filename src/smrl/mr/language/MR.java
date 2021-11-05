@@ -513,6 +513,19 @@ public abstract class MR {
 		
 		msg += "\n **** ";
 		
+		msg += "\n **Actions : ";
+		
+		
+		for ( int j=0; j<lastInputStrs.length; j++ ) {
+			msg += "\n"+lastInputStrs[j]+" (action position: "+lastPosStrs[j]+")";
+			msg += "\n"+lastInputs.get(j).actions().get(lastPosStrs[j]).toCompleteString();
+			
+		}
+		
+		msg += "\n **** ";
+		
+		
+		
 //		msg += "\n**[Last equal: "+lastEqualA+" ="+lastEqualBStr+"]";
 //		
 //		msg += "\n**[Last equal: "+lastEqual+"]";
@@ -823,6 +836,11 @@ public abstract class MR {
 		}
 		lineOfFirstME = -1;
 		
+		resetLastOutputs();
+	}
+
+
+	private void resetLastOutputs() {
 		lastInputPos = new ArrayList<Integer>();
 		lastInputs = new ArrayList<Input>();
 	}
@@ -887,6 +905,8 @@ public abstract class MR {
 //		resetPassingExpressionsCounter();
 //		resetIfBocksCounter();
 //		}
+		
+		resetLastOutputs();
 	}
 
 

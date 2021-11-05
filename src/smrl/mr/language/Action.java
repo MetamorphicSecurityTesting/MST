@@ -508,7 +508,11 @@ public abstract class Action implements Cloneable {
 
 	public abstract boolean containFormInput();
 
-	public abstract JsonArray getFormInputs(); 
+	public abstract JsonArray getFormInputs();
+	
+	public boolean setFormInput(int pos, String value) {
+		return Operations.updateStringFormInput(getFormInputs().get(pos).getAsJsonObject(), value );
+	}
 
 	public abstract boolean containFormInputForFilePath();
 
@@ -628,6 +632,11 @@ public abstract class Action implements Cloneable {
 
 
 
+	}
+
+	public String toCompleteString() {
+		// TODO Auto-generated method stub
+		return toString();
 	}
 	
 	

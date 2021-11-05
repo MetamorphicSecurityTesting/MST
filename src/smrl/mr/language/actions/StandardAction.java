@@ -266,6 +266,13 @@ public class StandardAction extends Action {
 		}
 		return "[Action " + actionID + " : " + eventType + " on " + elementURL +"]";
 	}
+	
+	@Override
+	public String toCompleteString() {
+		String res = toString();
+		res += getFormInputs().toString();
+		return res;
+	}
 
 //	@Override
 //	public String getParameterValue(int p) {

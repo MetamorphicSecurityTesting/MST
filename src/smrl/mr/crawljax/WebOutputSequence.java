@@ -60,9 +60,14 @@ public class WebOutputSequence implements Output {
 		return redirectedURLs;
 	}
 
+	public void add(Object singleOutput, String redirectedUrl, CookieSession session) {
+		add(singleOutput);
+		addRedirectURL(redirectedUrl);
+		addSession( session );
+//		seqText
+	}
 
-
-	public void add(Object singleOutput) {
+	private void add(Object singleOutput) {
 		seq.add(singleOutput);
 //		seqText
 	}
@@ -123,7 +128,7 @@ public class WebOutputSequence implements Output {
 		return null;
 	}
 	
-	public void addRedirectURL(String url){
+	private void addRedirectURL(String url){
 		this.redirectedURLs.add(url);
 	}
 
@@ -353,7 +358,7 @@ public class WebOutputSequence implements Output {
 		this.sessionSequence = session;
 	}
 
-	public void addSession(CookieSession session) {
+	private void addSession(CookieSession session) {
 		this.sessionSequence.add(session);
 	}
 

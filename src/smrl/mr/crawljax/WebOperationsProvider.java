@@ -632,15 +632,11 @@ public class WebOperationsProvider implements OperationsProvider {
 
 			if(listOutput.size() <= pos){
 				int size = listOutput.size();
-				res.add(listOutput.get(size-1));
-				res.addRedirectURL(outputCache.get(input).redirectURL(size-1));
-				res.addSession((CookieSession) outputCache.get(input).getSession(size-1));
+				res.add(listOutput.get(size-1), outputCache.get(input).redirectURL(size-1), (CookieSession) outputCache.get(input).getSession(size-1));
 				return res;
 			}
 			else{
-				res.add(listOutput.get(pos));
-				res.addRedirectURL(outputCache.get(input).redirectURL(pos));
-				res.addSession((CookieSession) outputCache.get(input).getSession(pos));
+				res.add(listOutput.get(pos), outputCache.get(input).redirectURL(pos), (CookieSession) outputCache.get(input).getSession(pos));
 				//				res.add(listOutput.get(pos-1));
 				//				res.addRedirectURL(outputCache.get(input).redirectURL(pos-1));
 				return res;
