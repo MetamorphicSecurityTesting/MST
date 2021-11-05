@@ -48,8 +48,17 @@ public class StandardAction extends Action {
 	private String oldChannel;
 	private String oldMethod;
 	private String cipherSuiteBlackList;
+	private String linkText;
 	
 	
+	public String getLinkText() {
+		return linkText;
+	}
+
+	public void setLinkText(String linkText) {
+		this.linkText = linkText;
+	}
+
 	public StandardAction(){
 		this.text = "";
 		this.id = "";
@@ -79,6 +88,13 @@ public class StandardAction extends Action {
 		}
 		else{
 			this.text = "";
+		}
+		
+		if(keys.contains("linkText")){
+			this.linkText = jsonAction.get("linkText").getAsString();
+		}
+		else{
+			this.linkText = "";
 		}
 		
 		if(keys.contains("id")){

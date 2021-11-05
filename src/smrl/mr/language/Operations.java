@@ -1277,7 +1277,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String  XSSInjectionString(int x){ 
-		return (String) MR.CURRENT.getMRData("XSSInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return (String) MR.CURRENT.getMRData("XSSInjectionString",x);
 	}
     
 

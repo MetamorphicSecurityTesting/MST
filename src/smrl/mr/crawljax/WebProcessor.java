@@ -39,6 +39,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -1313,7 +1314,8 @@ public class WebProcessor {
 					outObj.statusCode = getStatusCode(driver);
 				}
 
-				outObj.hasAlert = ( ExpectedConditions.alertIsPresent() != null );
+				ExpectedCondition<Alert> alert = ExpectedConditions.alertIsPresent();
+				outObj.setHasAlert( alert.apply(driver) != null );
 
 				File file = findNewDownloadedFile();
 				if ( file != null ){
@@ -1921,6 +1923,22 @@ public class WebProcessor {
 		WebElement eleResult = null;
 
 		String elementID = act.getId().trim();
+		if ( elementID == null || elementID.length() == 0 ) {
+
+			String lt = act.getLinkText();
+			if ( lt.length() > 0) {
+				if ( driver instanceof ChromeDriver ) {
+					eleResult = ((ChromeDriver)driver).findElementByLinkText(lt);
+				}
+
+				if ( driver instanceof FirefoxDriver ) {
+					eleResult = ((FirefoxDriver)driver).findElementByLinkText(lt);
+				}
+			}
+
+		}
+		
+		
 		if(elementID.split(" ").length !=2){
 			System.out.print("\t\t!!! Cannot get id for the action: " + act.getText());
 		}
