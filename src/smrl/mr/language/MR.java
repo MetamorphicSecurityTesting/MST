@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -512,6 +513,19 @@ public abstract class MR {
 		
 		msg += "\n **** ";
 		
+		msg += "\n **Actions : ";
+		
+		
+		for ( int j=0; j<lastInputStrs.length; j++ ) {
+			msg += "\n"+lastInputStrs[j]+" (action position: "+lastPosStrs[j]+")";
+			msg += "\n"+lastInputs.get(j).actions().get(lastPosStrs[j]).toCompleteString();
+			
+		}
+		
+		msg += "\n **** ";
+		
+		
+		
 //		msg += "\n**[Last equal: "+lastEqualA+" ="+lastEqualBStr+"]";
 //		
 //		msg += "\n**[Last equal: "+lastEqual+"]";
@@ -772,7 +786,12 @@ public abstract class MR {
 	
 	
 
-	
+	public List getMRData(String name){
+		if(dataDBs.keySet().contains(name)) {
+			return dataDBs.get(name).values();
+		}
+		return null;
+	}
 	
 	public Object getMRData(String name, int i){
 		if(dataDBs.keySet().contains(name)) {
@@ -817,6 +836,11 @@ public abstract class MR {
 		}
 		lineOfFirstME = -1;
 		
+		resetLastOutputs();
+	}
+
+
+	private void resetLastOutputs() {
 		lastInputPos = new ArrayList<Integer>();
 		lastInputs = new ArrayList<Input>();
 	}
@@ -881,6 +905,8 @@ public abstract class MR {
 //		resetPassingExpressionsCounter();
 //		resetIfBocksCounter();
 //		}
+		
+		resetLastOutputs();
 	}
 
 

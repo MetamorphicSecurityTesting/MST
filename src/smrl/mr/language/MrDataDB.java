@@ -269,4 +269,11 @@ public class MrDataDB<D> {
 		}
 		unshuffled = null;
 	}
+
+	public List<D> values() {
+		//FIXME: probably we need to clone them see implementation of get)
+		LinkedList<D> all = new LinkedList<D>();
+		all.addAll(inputs);
+		return all;
+	}
 }

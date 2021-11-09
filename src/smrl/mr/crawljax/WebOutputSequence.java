@@ -60,9 +60,14 @@ public class WebOutputSequence implements Output {
 		return redirectedURLs;
 	}
 
+	public void add(Object singleOutput, String redirectedUrl, CookieSession session) {
+		add(singleOutput);
+		addRedirectURL(redirectedUrl);
+		addSession( session );
+//		seqText
+	}
 
-
-	public void add(Object singleOutput) {
+	private void add(Object singleOutput) {
 		seq.add(singleOutput);
 //		seqText
 	}
@@ -123,7 +128,7 @@ public class WebOutputSequence implements Output {
 		return null;
 	}
 	
-	public void addRedirectURL(String url){
+	private void addRedirectURL(String url){
 		this.redirectedURLs.add(url);
 	}
 
@@ -148,135 +153,145 @@ public class WebOutputSequence implements Output {
 		
 		//check each output in the sequence
 		for(Object out:this.seq){
-			String cleanedOutHhml = ((WebOutputCleaned)out).html;
-			Document doc = Jsoup.parse(cleanedOutHhml);
+			isError(sysConfig, (WebOutputCleaned) out);
+		}
+		
+		return false;
+	}
 
-			JsonObject errorSigns = sysConfig.getErrorSigns();
-			//Check class, script, attribute, id, title
 
-			//Check CLASSES
-			if(errorSigns.keySet().contains("class") && 
-					errorSigns.getAsJsonArray("class").size()>0){
-				JsonArray classArray = errorSigns.getAsJsonArray("class");
-				for(Element ele:doc.getElementsByAttribute("class")){
-					for(int i=0; i<classArray.size(); i++){
-						String errorClass = classArray.get(i).getAsString();
-						if(ele.attr("class").equals(errorClass)){
-							return true;
-						}
-					}
-				}
-			} 	
 
-			
-			//Check SCRIPTS
-			if(errorSigns.keySet().contains("script") && 
-					errorSigns.getAsJsonArray("script").size()>0){
 
-				JsonArray scriptArray = errorSigns.getAsJsonArray("script");
-				if (scriptArray.size() > 0) {
-					Elements eScript = doc.getElementsByTag("script");
 
-					//check attributes of the script
-					for(Element ele:eScript){
-						for(Attribute att:ele.attributes()){
-							for (int k = 0; k < scriptArray.size(); k++) {
-								String expr = scriptArray.get(k).getAsString();
-								if(att.getKey().equals(expr)){
-									return true;
-								}
-							}
-						}
-					}
+	public static boolean isError(SystemConfig sysConfig, WebOutputCleaned out) {
+		String cleanedOutHhml = out.html;
+		Document doc = Jsoup.parse(cleanedOutHhml);
 
-					//check data of the script
-					for (int i = 0; i < eScript.size(); i++) {
-						List<org.jsoup.nodes.Node> tempChildren = eScript.get(i).childNodes();
-						for (int j = 0; j < tempChildren.size(); j++) {
-							Node node = tempChildren.get(j);
-							for (int k = 0; k < scriptArray.size(); k++) {
-								String contain = scriptArray.get(k).getAsString();
-								if (node.attributes().get("data").contains(contain)) {
-									return true;
-								}
-							}
-						}
+		JsonObject errorSigns = sysConfig.getErrorSigns();
+		//Check class, script, attribute, id, title
+
+		//Check CLASSES
+		if(errorSigns.keySet().contains("class") && 
+				errorSigns.getAsJsonArray("class").size()>0){
+			JsonArray classArray = errorSigns.getAsJsonArray("class");
+			for(Element ele:doc.getElementsByAttribute("class")){
+				for(int i=0; i<classArray.size(); i++){
+					String errorClass = classArray.get(i).getAsString();
+					if(ele.attr("class").equals(errorClass)){
+						return true;
 					}
 				}
 			}
-			
-			//Check elements based on ATTRIBUTES
-			if (errorSigns.keySet().contains("attribute")) {
-				JsonObject attObject = errorSigns.getAsJsonObject("attribute");
-				if (attObject.keySet().contains("name") && 
-						attObject.getAsJsonArray("name").size()>0) {
-					JsonArray nameArray = attObject.get("name").getAsJsonArray();
-					for (int i = 0; i < nameArray.size(); i++) {
-						String attName = nameArray.get(i).getAsString();
-						Elements element = doc.getElementsByAttribute(attName);
-						if (element != null) {
-							return true;
+		} 	
+
+		
+		//Check SCRIPTS
+		if(errorSigns.keySet().contains("script") && 
+				errorSigns.getAsJsonArray("script").size()>0){
+
+			JsonArray scriptArray = errorSigns.getAsJsonArray("script");
+			if (scriptArray.size() > 0) {
+				Elements eScript = doc.getElementsByTag("script");
+
+				//check attributes of the script
+				for(Element ele:eScript){
+					for(Attribute att:ele.attributes()){
+						for (int k = 0; k < scriptArray.size(); k++) {
+							String expr = scriptArray.get(k).getAsString();
+							if(att.getKey().equals(expr)){
+								return true;
+							}
 						}
 					}
 				}
-				if (attObject.keySet().contains("nameValue") && 
-						attObject.getAsJsonArray("nameValue").size()>0) {
-					JsonArray nameValueArray = attObject.get("nameValue").getAsJsonArray();
-					for (int i = 0; i < nameValueArray.size(); i++) {
-						JsonObject nameValueObject = nameValueArray.get(i).getAsJsonObject();
-						for (String key : nameValueObject.keySet()) {
-							Elements element = doc.getElementsByAttributeValue(key,
-									nameValueObject.get(key).getAsString());
-							if (element != null) {
+
+				//check data of the script
+				for (int i = 0; i < eScript.size(); i++) {
+					List<org.jsoup.nodes.Node> tempChildren = eScript.get(i).childNodes();
+					for (int j = 0; j < tempChildren.size(); j++) {
+						Node node = tempChildren.get(j);
+						for (int k = 0; k < scriptArray.size(); k++) {
+							String contain = scriptArray.get(k).getAsString();
+							if (node.attributes().get("data").contains(contain)) {
 								return true;
 							}
 						}
 					}
 				}
 			}
-			
-			//Check elements based on IDs
-			if (errorSigns.keySet().contains("id") && 
-					errorSigns.getAsJsonArray("id").size()>0) {
-				JsonArray idObject = errorSigns.getAsJsonArray("id");
-				for (int i = 0; i < idObject.size(); i++) {
-					String id = idObject.get(i).getAsString();
-					Element eID = doc.getElementById(id);
-					if (eID != null) {
+		}
+		
+		//Check elements based on ATTRIBUTES
+		if (errorSigns.keySet().contains("attribute")) {
+			JsonObject attObject = errorSigns.getAsJsonObject("attribute");
+			if (attObject.keySet().contains("name") && 
+					attObject.getAsJsonArray("name").size()>0) {
+				JsonArray nameArray = attObject.get("name").getAsJsonArray();
+				for (int i = 0; i < nameArray.size(); i++) {
+					String attName = nameArray.get(i).getAsString();
+					Elements element = doc.getElementsByAttribute(attName);
+					if (element != null) {
 						return true;
 					}
 				}
 			}
-			
-			//Check page title
-			if (errorSigns.keySet().contains("title") && 
-					errorSigns.getAsJsonArray("title").size()>0) {
-				JsonArray titleObject = errorSigns.getAsJsonArray("title");
-				for (int i = 0; i < titleObject.size(); i++) {
-					String titleError = titleObject.get(i).getAsString().toLowerCase();
-					String title = doc.getElementsByTag("title").text().toLowerCase();
-					if(title.contains(titleError)){
-						return true;
+			if (attObject.keySet().contains("nameValue") && 
+					attObject.getAsJsonArray("nameValue").size()>0) {
+				JsonArray nameValueArray = attObject.get("nameValue").getAsJsonArray();
+				for (int i = 0; i < nameValueArray.size(); i++) {
+					JsonObject nameValueObject = nameValueArray.get(i).getAsJsonObject();
+					for (String key : nameValueObject.keySet()) {
+						Elements element = doc.getElementsByAttributeValue(key,
+								nameValueObject.get(key).getAsString());
+						if (element != null) {
+							return true;
+						}
 					}
 				}
 			}
-			
-			//Check content of the page
-			if(errorSigns.keySet().contains("content") &&
-					errorSigns.getAsJsonArray("content").size()>0) {
-				JsonArray contentObject = errorSigns.getAsJsonArray("content");
-				for(int i=0; i<contentObject.size(); i++) {
-					String contentSign = contentObject.get(i).getAsString();
-					if(doc.hasText() && doc.text().contains(contentSign)) {
-						return true;
-					}
+		}
+		
+		//Check elements based on IDs
+		if (errorSigns.keySet().contains("id") && 
+				errorSigns.getAsJsonArray("id").size()>0) {
+			JsonArray idObject = errorSigns.getAsJsonArray("id");
+			for (int i = 0; i < idObject.size(); i++) {
+				String id = idObject.get(i).getAsString();
+				Element eID = doc.getElementById(id);
+				if (eID != null) {
+					return true;
 				}
 			}
-			
-			//Check http response status code
-			if( ((WebOutputCleaned)out).getStatusCode() >= 400){
-				return true;
+		}
+		
+		//Check page title
+		if (errorSigns.keySet().contains("title") && 
+				errorSigns.getAsJsonArray("title").size()>0) {
+			JsonArray titleObject = errorSigns.getAsJsonArray("title");
+			for (int i = 0; i < titleObject.size(); i++) {
+				String titleError = titleObject.get(i).getAsString().toLowerCase();
+				String title = doc.getElementsByTag("title").text().toLowerCase();
+				if(title.contains(titleError)){
+					return true;
+				}
 			}
+		}
+		
+		//Check content of the page
+		if(errorSigns.keySet().contains("content") &&
+				errorSigns.getAsJsonArray("content").size()>0) {
+			JsonArray contentObject = errorSigns.getAsJsonArray("content");
+			for(int i=0; i<contentObject.size(); i++) {
+				String contentSign = contentObject.get(i).getAsString();
+				if(doc.hasText() && doc.text().contains(contentSign)) {
+					return true;
+				}
+			}
+		}
+		
+		//Check http response status code
+		if( ((WebOutputCleaned)out).getStatusCode() >= 400){
+			return true;
 		}
 		
 		return false;
@@ -343,7 +358,7 @@ public class WebOutputSequence implements Output {
 		this.sessionSequence = session;
 	}
 
-	public void addSession(CookieSession session) {
+	private void addSession(CookieSession session) {
 		this.sessionSequence.add(session);
 	}
 

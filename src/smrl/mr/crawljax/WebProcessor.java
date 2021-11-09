@@ -39,6 +39,7 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -79,6 +80,7 @@ import org.zaproxy.clientapi.core.ApiResponseSet;
 import org.zaproxy.clientapi.core.ClientApi;
 import org.zaproxy.clientapi.core.ClientApiException;
 
+import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
@@ -134,7 +136,9 @@ public class WebProcessor {
 	private Set<String> URLsAcessedByEveryUser;
 
 	private boolean autoDetectConfirmation = true;
-	private boolean alwaysConfirm = true;
+
+	private boolean alwaysConfirm = ( Operations.getKeepDialogsOpen() == false);
+
 	private boolean prioritizeButton=true;
 	//	private String[] confirmationTexts = {"You must use POST method to trigger builds", 
 	//	"The URL you're trying to access requires that requests be sent using POST (like a form submission)"};
@@ -607,7 +611,9 @@ public class WebProcessor {
 
 
 	public WebOutputSequence output(WebInputCrawlJax input) {
+
 		return output(input, false);
+
 	}
 
 
@@ -642,750 +648,23 @@ public class WebProcessor {
 
 		int timeOfConfirm=0;
 		for(int i=0; i<actions.size(); i++){
-			Action act = actions.get(i);
-			String text = "index";
-			String aURL = act.getUrl();
-
-			if(act.getUrl()!=null && 
-					!act.getUrl().trim().isEmpty() && 
-					!actionUrls.containsKey(act.getActionID())) {
-				actionUrls.put(act.getActionID(), act.getUrl());
-			}
-
-			ActionType type = act.getEventType();
-
-			//Get text and URL
-			switch (type){
-			case index: 
-				text = "index";
-				break;
-			case alert: 
-				text = "Alert " + ((AlertAction)act).getText();
-				aURL = "";
-				break;
-			case click: 
-				text = ((StandardAction)act).getText();
-				break;
-			case hover: 
-				text = ((StandardAction)act).getText();
-				break;
-			case randomClickOnNewElement: 
-				text = "randomly click";
-				aURL = "";
-				break;
-			case wait: 
-				text = "Wait " + ((WaitAction)act).getMillis();
-				aURL = "";
-				break;
-			default:
-				break;
-			}
-
-			if(Operations.isLogin(act) && act.getUser()!=null) {
-				text = "log in with " + ((Account)act.getUser()).getUsername();
-			}
-
-			System.out.print("\t- Action " + act.getActionID() + " : " + text + " (" + aURL + ")");
-
-			if(waitBeforeEachAction){
+			try {
+				System.out.println("!!!PROCESSING ACT "+i+ " OF "+input.getId());
+				Action act = actions.get(i);
+				timeOfConfirm = processInput(input, checkDownloadedObjects, outputSequence, 
+						act, actionUrls,
+						timeOfConfirm, i);
+			} catch ( Throwable t ) {
+				System.out.println("!!!Throwable "+t);
+				outputSequence.add(null,null,null);
 				try {
-					//					Thread.sleep(1000);
-					Thread.sleep(500);
+					Thread.sleep(3000);
 				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-			}
-
-			// process the action (depend on type of action)
-			boolean doneAction = false;
-			String redirectURL = "";
-
-
-			CookieSession session = (CookieSession) act.getSession();
-			if ( session != null ) {
-				for (Cookie ck : session.getCookies() ) {
-					setCookieInDriver(ck);
-				}
-			}
-
-
-
-			//create replace rule
-			String ruleChannelDescription = ""; 
-			if ( act.isChannelChanged() && proxyApi!=null){
-				String oldChannel = act.getOldChannel();
-				String newChannel = act.getNewChannel();
-				ruleChannelDescription = "replace_" + oldChannel + "_to_" + newChannel; 
-				proxyReplacerRules.add(ruleChannelDescription);
-				//set the rule in the proxy to replace the channel or the address
-				try {
-					proxyApi.replacer.addRule(ruleChannelDescription, "true", "REQ_HEADER_STR", "true", oldChannel, newChannel, "");
-				} catch (ClientApiException e) {
-					e.printStackTrace();
-				}
-			}
-
-			//Replace HTTP method using the proxy replacer
-			String ruleMethodDescription = "";
-			if(act.isMethodChanged() && proxyApi!=null) {
-				String oldMethod = act.getOldMethod();
-				String med = act.getMethod();
-				ruleMethodDescription = "replace_method_to_" + med;
-				proxyReplacerRules.add(ruleMethodDescription);
-				//set the rule in the proxy to replace the method
-				try {
-					proxyApi.replacer.addRule(ruleMethodDescription, "true", "REQ_HEADER_STR", "true", oldMethod.toUpperCase(), med, "");
-				} catch (ClientApiException e) {
-					e.printStackTrace();
-				}
-			}
-
-			//The max id of message in the proxy
-			int maxId = 0;
-			if(checkDownloadedObjects){
-				maxId = getMaxIdFromProxy();
-			}
-
-			String realRequestedUrl = aURL;
-			String realClickedElementText = null;
-
-
-
-
-			//Start to process request following the type of action (index, click, ...)
-			switch (type){
-			case index:
-			{
-				if(aURL!=null && !aURL.isEmpty()){
-					try{
-						realClickedElementText = "index " + aURL;
-						driver.get(aURL);
-						doneAction = true;
-					}
-					catch(WebDriverException e){
-						System.out.println("!!! Could not access the index");
-						driver.quit();
-						//						driver.close();
-						e.printStackTrace();
-						return outputSequence;
-					}
-
-					if(doneAction){
-						//get redirect URL
-						redirectURL = getRedirectUrl(driver, aURL);
-					}
-					else{
-						doneAction = true;
-						redirectURL = "";
-					}
-				}
-				else{
-					System.out.println("!!! The index URL should NOT be empty");
-					driver.quit();
-					//					driver.close();
-					return outputSequence;
-				}
-				System.out.println(" --> DONE");
-				break;
-			}
-
-			case alert:
-			{
-				closeAlertAndGetItsText(driver, ((AlertAction)act).getAccept());
-				doneAction = true;
-				System.out.println(" --> DONE");
-				redirectURL = getRedirectUrl(driver, aURL);
-				break;
-			}
-
-			case click: 
-			{
-				text = ((StandardAction)act).getText();
-
-				boolean skip_check_action_origin = false;
-				String actCurrentURL = ((StandardAction)act).getCurrentURL();
-				if ( actCurrentURL.startsWith("file://") ) {
-					skip_check_action_origin = true;
 				}
 				
-				//If this action is the POST one, 
-				// check if the current URL (from browser) is similar with the currentURL
-				// if not -> go back to the currentURL before execute the action
-				if( skip_check_action_origin && ensure_action_origin_url_is_the_same) {
-					//					if(act.getMethod().toLowerCase().trim().equals("post")){
-					
-					
-					if(actCurrentURL!=null 
-							//								&& !actCurrentURL.isEmpty() &&
-							//								!actCurrentURL.trim().equals("/")
-							){
-						String browserURL = driver.getCurrentUrl().trim();
-						if(!actCurrentURL.equals(browserURL)){
-
-							actCurrentURL = processUrlBeforeRequest(driver, actCurrentURL);
-
-							if(actCurrentURL!=null) {
-								//go back to the actCurrentURL
-								driver.get(actCurrentURL);
-							}
-						}
-					}
-					//					}
-				}
-
-				//Filling inputs in form
-				JsonArray formInputs = ((StandardAction)act).getFormInputs();
-				if(formInputs!=null && formInputs.size()>0){
-					for(int iForm=0; iForm<formInputs.size(); iForm++){
-						JsonObject fInput = formInputs.get(iForm).getAsJsonObject();
-						if(fInput.get("values").getAsJsonArray().size() <1){
-							continue;
-						}
-
-						String idHow = fInput.get("identification").getAsJsonObject().get("how").getAsString();
-						String idValue = fInput.get("identification").getAsJsonObject().get("value").getAsString();
-
-						By by = getByType(idHow, idValue);
-
-						//If cannot find any element in the current page by using the "by", go to next form input
-						if(by==null ){
-							continue;
-						}
-						else{
-							try{
-								WebElement foundE = driver.findElement(by);
-								if(foundE==null){
-									continue;
-								}
-							}
-							catch(NoSuchElementException e){
-								continue;
-							}
-						}
-
-						JsonArray values = fInput.get("values").getAsJsonArray();
-						if(values.size()<1){
-							continue;
-						}
-
-						String formType = fInput.get("type").getAsString().toLowerCase();
-						if(formType.startsWith("text") 
-								|| formType.equals("password") 
-								|| formType.equals("hidden")
-								|| formType.equals("file")){
-
-							String valueToSend = "";
-							if(values.size() >0){
-								valueToSend = values.get(0).getAsString().trim();
-							}
-
-							//Process the case in which this action is a signup action
-							if(isSignup(act)){
-								//If this form is username in the signup page
-								//add random string (to avoid the case the username has already existed)
-								String userParam = sysConfig.getSignupUserParam().trim();
-								if(userParam!= null &&
-										userParam.equals(idValue)){
-									valueToSend += RandomStringUtils.random(5,true,false);
-								}
-								else{
-									//Check if this input is the confirm password in the signup action
-									//then get value from password
-									List<String> passParams = sysConfig.getSignupPasswordParams();
-									if(passParams.size()>1 && 
-											passParams.contains(idValue)){
-										String passPar = passParams.get(0);	//Get the first password param
-										//get value of passPar in the formInputs
-										valueToSend = getFormInputValueFromParamName(formInputs, passPar);
-									}
-								}
-							}
-
-							if(!valueToSend.isEmpty()){
-								//clear available value
-								driver.findElement(by).clear();
-
-								//send new value to the element
-								driver.findElement(by).sendKeys(valueToSend);
-							}
-						}
-
-						else if (formType.equals("checkbox")){
-							boolean checkValue = values.get(0).getAsBoolean();
-							WebElement option = driver.findElement(by);
-
-							if(checkValue){	//if the check box should be selected
-								if(!option.isSelected()){	//if the check box is current UNselected
-									option.click();
-								}
-							}
-							else{	//if the check box should NOT be selected
-								if(option.isSelected()){ //if the check box is current selected
-									option.click();
-								}
-							}
-						}
-
-						else if (formType.equals("radio")){
-							//TODO: 
-						}
-
-						else if (formType.equals("select")){
-							//TODO: 
-						}
-					}
-				}
-
-				boolean clicked = false;
-
-				//Click based on the information in "id" field (xpath)
-				String elementID = ((StandardAction)act).getId();
-				WebElement eleToClick = findElementMatchToAction(driver, (StandardAction)act);
-
-				//Click on found element
-				if(eleToClick!=null){
-					//check the conformance between the xpath ID and URL
-					String newURL = null;
-					newURL = getElementURL(driver, eleToClick);
-					checkUpdateUrlMap(act, actionUrls, newURL);
-					realRequestedUrl = newURL;
-					realClickedElementText = eleToClick.getText();
-
-					//Click on the found element
-					try{
-						eleToClick.click();
-						clicked = true;
-						System.out.println(" --> DONE");
-					} catch(Throwable t){
-						clicked = false;
-						t.printStackTrace();
-					}
-				}
-
-				//follow URL if cannot find the element to click
-				if(!clicked){
-					System.out.println("\n\t\t!!! NOT FOUND: " + elementID);
-					if(!aURL.isEmpty()){
-						System.out.print("\t\t--> access directly the element URL (" + aURL + ")");
-
-						String urlToGet = aURL;
-
-						//update urlToGet, if actionUrls contains the url of the action
-						if(actionUrls.containsKey(act.getActionID())) {
-							urlToGet = actionUrls.get(act.getActionID());
-						}
-
-						urlToGet = processUrlBeforeRequest(driver, urlToGet);
-
-						if(urlToGet!=null) {
-							realRequestedUrl = urlToGet;
-							realClickedElementText = "access url " + urlToGet;
-							driver.get(urlToGet);
-							clicked = true;
-							System.out.println(" --> DONE");
-						}
-
-					}
-				}
-
-				if(!clicked){
-					System.out.println(" --> NOT DONE");
-				}
-
-				doneAction = true;
-
-				//get redirect URL
-				if(clicked){
-					redirectURL = getRedirectUrl(driver, aURL);
-				}
-				else{
-					redirectURL = "";
-				}
-
-				break;
 			}
-
-			case hover: 
-			{
-				//TODO: update this type of action in needed cases
-				doneAction = true;
-				System.out.println(" --> DONE");
-				//get redirect URL
-				redirectURL = getRedirectUrl(driver, aURL);
-				break;
-			}
-
-			case randomClickOnNewElement: 
-			{
-				String prevDom = "";
-				String currentDom = "";
-				if(i>=2){
-					prevDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(i-2)).originalHtml;
-					currentDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(i-1)).originalHtml;
-				}
-				else if(i==1){
-					currentDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(0)).originalHtml;
-				}
-
-				Elements newElements = getNewElements(prevDom, currentDom);
-
-				if(newElements.size()>0){
-					//randomly choose an element to click
-					int randomIndex = ThreadLocalRandom.current().nextInt(0, newElements.size());
-					Element executeEle = newElements.get(randomIndex);
-
-					String tagName = executeEle.tagName().toLowerCase();
-					By elementBy = null;
-					//					if(tagName.equals("a")){
-					//						if(executeEle.attributes().hasKey("href")){
-					//							 elementBy = getByType("linkText", executeEle.attr("href"));
-					//						}
-					//					}
-					//					else if (tagName.equals("button")){
-					//						if(executeEle.attributes().hasKey("id")){
-					//							 elementBy = getByType("id", executeEle.attr("id"));
-					//						}
-					//					}
-
-					if(tagName.equals("a")){
-						if(executeEle.attributes().hasKey("href")){
-							String xpath = "//a[@href='" + executeEle.attr("href").trim() + "']";
-							elementBy = getByType("xpath", xpath);
-							//							elementBy = getByType("linkText", executeEle.attr("href"));
-						}
-					}
-					else if (tagName.equals("button")){
-						if(executeEle.attributes().hasKey("id")){
-							elementBy = getByType("id", executeEle.attr("id"));
-						}
-						else if(executeEle.text()!=null &&
-								!executeEle.text().isEmpty()){
-							elementBy = getByType("linkText", executeEle.text());
-						}
-
-					}
-
-					try{
-						List<WebElement> eles = driver.findElements(elementBy);
-
-						if(eles!=null && eles.size()>0){
-							String elementURL = getElementURL(driver, executeEle);
-
-							try {
-								realClickedElementText = driver.findElement(elementBy).getText();
-								driver.findElement(elementBy).click();
-							} catch ( Throwable t ){
-								System.out.print("!!!Ignored (cannot click): "+elementURL);
-
-							}
-							aURL = elementURL;
-							realRequestedUrl = aURL;
-
-							System.out.println(" --> DONE");
-							//get redirect URL
-							redirectURL = getRedirectUrl(driver, elementURL);
-						}
-
-						System.out.println("\t\t" + executeEle);
-					}catch( Throwable t ){
-						System.out.println("!!!Ignored (cannot find element): " + elementBy);
-					}
-
-				}
-				doneAction = true;
-				break;
-			}
-
-			case wait: 
-			{
-				realClickedElementText = executeWait(act);
-				doneAction = true;
-				System.out.println(" --> DONE");
-				break;
-			}
-
-			default:
-				break;
-			}
-
-			//Wait for loading page before executing next action
-			try {
-				Thread.sleep(sysConfig.getWaitTimeAfterAction());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-
-
-			if(autoDetectConfirmation){
-				boolean confirmed = false;
-
-				//1. check if there is dialog
-				while(isDialogPresent(driver)){
-					Alert alert = driver.switchTo().alert();
-
-					//always click on yes
-					if(alwaysConfirm){
-						alert.accept();
-						System.out.print("\n\t\t!!Auto confirmed dialog!");
-					}
-					else{
-						String alertText = alert.getText();
-
-						if(containConfirmationText(alertText)){
-							alert.accept();
-							System.out.print("\n\t\t!!Confirmed dialog!");
-						}
-						else{
-							alert.dismiss();
-							System.out.print("\n\t\t!!Dismissed dialog!");
-						}
-					}
-					confirmed = true;
-				}
-
-				//2. check if the current page contains confirmation request
-				String newDom = driver.getPageSource();
-				Element executeEle = confirmationButton(newDom);
-
-				if(executeEle==null && containConfirmationText(newDom)){
-					//FIXME: these following instructs should be reused from the case of randomClick
-
-					String prevDom = "";
-					String currentDom = newDom;
-					if(i>=1){
-						prevDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(i-1)).originalHtml;
-					}
-
-					Elements newElements = getNewElements(prevDom, currentDom);
-
-					if(newElements.size()>0){
-
-						//if we prioritize buttons and input_submits, filter newElements to get only buttons from there
-						if(prioritizeButton){
-							Elements onlyButtons = new Elements();
-
-							for(int iEle=0; iEle<newElements.size(); iEle++){
-								Element elem = newElements.get(iEle);
-								if(elem.tagName().toLowerCase().equals("button") ||
-										elem.tagName().toLowerCase().equals("input")){
-									onlyButtons.add(elem);
-								}
-							}
-
-							if(onlyButtons.size()>0){
-								newElements = onlyButtons;
-							}
-						}
-
-						//randomly choose an element to click
-						int randomIndex = ThreadLocalRandom.current().nextInt(0, newElements.size());
-						executeEle = newElements.get(randomIndex);
-
-					}
-				}
-
-				if(executeEle!=null) {
-					String tagName = executeEle.tagName().toLowerCase();
-					By elementBy = null;
-					if(tagName.equals("a")){
-						if(executeEle.attributes().hasKey("href")){
-							String xpath = "//a[@href='" + executeEle.attr("href").trim() + "']";
-							elementBy = getByType("xpath", xpath);
-							//								elementBy = getByType("linkText", executeEle.attr("href"));
-						}
-					}
-					else if (tagName.equals("button")){
-						if(executeEle.attributes().hasKey("id")){
-							elementBy = getByType("id", executeEle.attr("id"));
-						}
-						else if(executeEle.text()!=null &&
-								!executeEle.text().isEmpty()){
-							elementBy = getByType("linkText", executeEle.text());
-						}
-
-					}
-					if(tagName.equals("input")){
-						if(executeEle.attributes().hasKey("type")){
-							elementBy = getByType("tagName", "input");
-						}
-					}
-
-					try{
-						List<WebElement> eles = driver.findElements(elementBy);
-
-
-
-						if(eles!=null && eles.size()>0){
-							String beforeUrl = driver.getCurrentUrl();
-							String elementURL = getElementURL(driver, executeEle);
-							//								System.out.println("\t--Will click on: " + elementURL);
-
-							for(WebElement e1:eles) {
-								if(matchElement(e1, executeEle)) {
-									if(e1.getTagName().equalsIgnoreCase("input") &&
-											e1.getAttribute("type")!=null &&
-											e1.getAttribute("type").equalsIgnoreCase("submit")) {
-										e1.submit();;
-									}
-									else {
-										e1.click();
-									}
-									confirmed = true;
-									break;
-								}
-							}
-
-							//Phu: just commented statements under (20/12/2019) to try another way to click on the element
-							//							try {
-							//								driver.findElement(elementBy).click();
-							//							} catch ( Throwable t ){
-							//								System.out.print("!!!Ignored (auto confirmation cannot click): "+elementURL);
-							//
-							//							}
-							//							confirmed = true;
-							//end of commented
-
-							aURL = elementURL;
-
-
-							//get redirect URL
-							redirectURL = getRedirectUrl(driver, beforeUrl, elementURL);
-							//							redirectURL = getRedirectUrl(driver, elementURL);
-						}
-
-						//							System.out.println("\t\t" + executeEle);
-					}catch( Throwable t ){
-						System.out.println("!!!Ignored (auto confirmation cannot find element): " + elementBy);
-					}
-				}
-
-
-				if(confirmed){
-					timeOfConfirm++;
-					System.out.println("\t\t!! automatically confirm --> DONE");
-					try {
-						Thread.sleep(sysConfig.getWaitTimeAfterAction());
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-			//Add result to the outputSequence
-			if(doneAction){
-				latestUrl = driver.getCurrentUrl();
-				//				if(redirectURL!=null && !redirectURL.isEmpty()) {
-				//					System.out.println("\t\t!!! Redirect URL: " + redirectURL);
-				//				}
-
-				//Execute inner actions if they exist
-				executeInnerActions(driver, act);
-
-				//get new dom
-				String newDom = "";
-
-				try{
-					if(this.isDialogPresent(driver)){
-						//get alert text
-						Alert alert = driver.switchTo().alert();
-						newDom = alert.getText();
-					}
-					else{
-						newDom = driver.getPageSource();
-					}
-				} catch(Throwable t){
-					t.printStackTrace();
-				}
-
-				if(newDom==null){
-					newDom = "";
-				}
-
-
-				//normalize the new dom
-				WebOutputCleaned outObj = cleanUpOutPut(newDom);
-				outObj.resultedUrl = driver.getCurrentUrl();
-				outObj.realRequestedUrl = realRequestedUrl;
-				outObj.realClickedElementText = realClickedElementText;
-
-				if(checkStatusCode) {
-					outObj.statusCode = getStatusCode(driver);
-				}
-
-				outObj.hasAlert = ( ExpectedConditions.alertIsPresent() != null );
-
-				File file = findNewDownloadedFile();
-				if ( file != null ){
-					String folderName = "OUTPUT_FILE_"+System.currentTimeMillis();
-					File outFolder = new File(outputFolder());
-
-					File outFolderFile = new File( outFolder, folderName);
-					outFolderFile.mkdir();
-
-					File newFile = new File( outFolderFile, file.getName() );
-					file.renameTo(newFile );
-					outObj.setDownloadedFile( newFile );
-				}
-
-				//get list of relevant downloaded objects
-				if(checkDownloadedObjects){
-					outObj.downloadedObjects = getDownloadedObjectsFromProxy(maxId, aURL, redirectURL);
-				}
-				else{
-					outObj.downloadedObjects = null;
-				}
-
-				outputSequence.add(outObj);
-				outputSequence.addRedirectURL(redirectURL);
-
-				//get cookie
-				CookieSession currentSession = null;
-				if(!isDialogPresent(driver)){
-					currentSession = new CookieSession(driver.manage().getCookies());
-				}
-				else{
-					CookieSession lastSession = (CookieSession)outputSequence.getSession();
-					if(lastSession!=null){
-						currentSession = lastSession;
-					}
-					else{
-						currentSession = new CookieSession();
-					}
-				}
-				outputSequence.addSession(currentSession);
-
-				String inputID = input.getId();
-				String executionId = null;
-
-				try{
-					executionId = MR.CURRENT.getCurrentExecutionId();
-				} catch(NullPointerException e){
-					//					e.printStackTrace();
-				}
-
-				if(executionId==null){
-					executionId = "";
-				}
-
-				if(storeDOMs) {
-					String fileName = executionId+"_"+inputID+"_" + (standardText(text) + "_" + aURL).hashCode();
-					saveDomToFile(outObj.html, fileName);
-
-					fileName = executionId+"_"+inputID+"_" + (standardText(text) + "_" + aURL).hashCode() + "_text_";
-					saveDomToFile(outObj.text, fileName);
-				}
-			}
-
-			//clear all replacer rule in the proxy
-			clearProxyReplacerRules();
-
-			ruleChannelDescription = "";
-			ruleMethodDescription = "";
-
-
-			//Update URLs of following actions (if needed)
-			updateUrlsForNextActions(driver, act, input);
 		}
 
 		//		try {
@@ -1416,44 +695,800 @@ public class WebProcessor {
 	}
 
 
+	private int processInput(WebInputCrawlJax input, boolean checkDownloadedObjects, WebOutputSequence outputSequence,
+			Action act, HashMap<Long, String> actionUrls, int timeOfConfirm, int i) {
+		
+		String text = "index";
+		String aURL = act.getUrl();
+
+		if(act.getUrl()!=null && 
+				!act.getUrl().trim().isEmpty() && 
+				!actionUrls.containsKey(act.getActionID())) {
+			actionUrls.put(act.getActionID(), act.getUrl());
+		}
+
+		ActionType type = act.getEventType();
+
+		//Get text and URL
+		switch (type){
+		case index: 
+			text = "index";
+			break;
+		case alert: 
+			text = "Alert " + ((AlertAction)act).getText();
+			aURL = "";
+			break;
+		case click: 
+			text = ((StandardAction)act).getText();
+			break;
+		case hover: 
+			text = ((StandardAction)act).getText();
+			break;
+		case randomClickOnNewElement: 
+			text = "randomly click";
+			aURL = "";
+			break;
+		case wait: 
+			text = "Wait " + ((WaitAction)act).getMillis();
+			aURL = "";
+			break;
+		default:
+			break;
+		}
+
+		if(Operations.isLogin(act) && act.getUser()!=null) {
+			text = "log in with " + ((Account)act.getUser()).getUsername();
+		}
+
+		System.out.print("\t- Action " + act.getActionID() + " : " + text + " (" + aURL + ")");
+
+		if(waitBeforeEachAction){
+			try {
+				//					Thread.sleep(1000);
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// process the action (depend on type of action)
+		boolean doneAction = false;
+		String redirectURL = "";
+
+
+		CookieSession session = (CookieSession) act.getSession();
+		if ( session != null ) {
+			for (Cookie ck : session.getCookies() ) {
+				setCookieInDriver(ck);
+			}
+		}
+
+
+
+		//create replace rule
+		String ruleChannelDescription = ""; 
+		if ( act.isChannelChanged() && proxyApi!=null){
+			String oldChannel = act.getOldChannel();
+			String newChannel = act.getNewChannel();
+			ruleChannelDescription = "replace_" + oldChannel + "_to_" + newChannel; 
+			proxyReplacerRules.add(ruleChannelDescription);
+			//set the rule in the proxy to replace the channel or the address
+			try {
+				proxyApi.replacer.addRule(ruleChannelDescription, "true", "REQ_HEADER_STR", "true", oldChannel, newChannel, "");
+			} catch (ClientApiException e) {
+				e.printStackTrace();
+			}
+		}
+
+		//Replace HTTP method using the proxy replacer
+		String ruleMethodDescription = "";
+		if(act.isMethodChanged() && proxyApi!=null) {
+			String oldMethod = act.getOldMethod();
+			String med = act.getMethod();
+			ruleMethodDescription = "replace_method_to_" + med;
+			proxyReplacerRules.add(ruleMethodDescription);
+			//set the rule in the proxy to replace the method
+			try {
+				proxyApi.replacer.addRule(ruleMethodDescription, "true", "REQ_HEADER_STR", "true", oldMethod.toUpperCase(), med, "");
+			} catch (ClientApiException e) {
+				e.printStackTrace();
+			}
+		}
+
+		//The max id of message in the proxy
+		int maxId = 0;
+		if(checkDownloadedObjects){
+			maxId = getMaxIdFromProxy();
+		}
+
+		String realRequestedUrl = aURL;
+		String realClickedElementText = null;
+
+
+
+
+		//Start to process request following the type of action (index, click, ...)
+		switch (type){
+		case index:
+		{
+			if(aURL!=null && !aURL.isEmpty()){
+				try{
+					realClickedElementText = "index " + aURL;
+					driver.get(aURL);
+					doneAction = true;
+				}
+				catch(WebDriverException e){
+					System.out.println("!!! Could not access the index");
+					driver.quit();
+					//						driver.close();
+					e.printStackTrace();
+					return timeOfConfirm;
+				}
+
+				if(doneAction){
+					//get redirect URL
+					redirectURL = getRedirectUrl(driver, aURL);
+				}
+				else{
+					doneAction = true;
+					redirectURL = "";
+				}
+			}
+			else{
+				System.out.println("!!! The index URL should NOT be empty");
+				driver.quit();
+				//					driver.close();
+				return timeOfConfirm;
+			}
+			System.out.println(" --> DONE");
+			break;
+		}
+
+		case alert:
+		{
+			closeAlertAndGetItsText(driver, ((AlertAction)act).getAccept());
+			doneAction = true;
+			System.out.println(" --> DONE");
+			redirectURL = getRedirectUrl(driver, aURL);
+			break;
+		}
+
+		case click: 
+		{
+			text = ((StandardAction)act).getText();
+
+			boolean skip_check_action_origin = false;
+			String actCurrentURL = ((StandardAction)act).getCurrentURL();
+			if ( actCurrentURL.startsWith("file://") ) {
+				skip_check_action_origin = true;
+			}
+
+			//If this action is the POST one, 
+			// check if the current URL (from browser) is similar with the currentURL
+			// if not -> go back to the currentURL before execute the action
+			if( skip_check_action_origin && ensure_action_origin_url_is_the_same) {
+				//					if(act.getMethod().toLowerCase().trim().equals("post")){
+
+
+				if(actCurrentURL!=null 
+						//								&& !actCurrentURL.isEmpty() &&
+						//								!actCurrentURL.trim().equals("/")
+						){
+					String browserURL = driver.getCurrentUrl().trim();
+					if(!actCurrentURL.equals(browserURL)){
+
+						actCurrentURL = processUrlBeforeRequest(driver, actCurrentURL);
+
+						if(actCurrentURL!=null) {
+							//go back to the actCurrentURL
+							driver.get(actCurrentURL);
+						}
+					}
+				}
+				//					}
+			}
+
+			//Filling inputs in form
+			JsonArray formInputs = ((StandardAction)act).getFormInputs();
+			if(formInputs!=null && formInputs.size()>0){
+				for(int iForm=0; iForm<formInputs.size(); iForm++){
+					JsonObject fInput = formInputs.get(iForm).getAsJsonObject();
+					if(fInput.get("values").getAsJsonArray().size() <1){
+						continue;
+					}
+
+					String idHow = fInput.get("identification").getAsJsonObject().get("how").getAsString();
+					String idValue = fInput.get("identification").getAsJsonObject().get("value").getAsString();
+
+					By by = getByType(idHow, idValue);
+
+					//If cannot find any element in the current page by using the "by", go to next form input
+					if(by==null ){
+						continue;
+					}
+					else{
+						try{
+							WebElement foundE = driver.findElement(by);
+							if(foundE==null){
+								continue;
+							}
+						}
+						catch(NoSuchElementException e){
+							continue;
+						}
+					}
+
+					JsonArray values = fInput.get("values").getAsJsonArray();
+					if(values.size()<1){
+						continue;
+					}
+
+					String formType = fInput.get("type").getAsString().toLowerCase();
+					if(formType.startsWith("text") 
+							|| formType.equals("password") 
+							|| formType.equals("hidden")
+							|| formType.equals("file")){
+
+						String valueToSend = "";
+						if(values.size() >0){
+							valueToSend = values.get(0).getAsString().trim();
+						}
+
+						//Process the case in which this action is a signup action
+						if(isSignup(act)){
+							//If this form is username in the signup page
+							//add random string (to avoid the case the username has already existed)
+							String userParam = sysConfig.getSignupUserParam().trim();
+							if(userParam!= null &&
+									userParam.equals(idValue)){
+								valueToSend += RandomStringUtils.random(5,true,false);
+							}
+							else{
+								//Check if this input is the confirm password in the signup action
+								//then get value from password
+								List<String> passParams = sysConfig.getSignupPasswordParams();
+								if(passParams.size()>1 && 
+										passParams.contains(idValue)){
+									String passPar = passParams.get(0);	//Get the first password param
+									//get value of passPar in the formInputs
+									valueToSend = getFormInputValueFromParamName(formInputs, passPar);
+								}
+							}
+						}
+
+						if(!valueToSend.isEmpty()){
+							//clear available value
+							driver.findElement(by).clear();
+
+							//send new value to the element
+							driver.findElement(by).sendKeys(valueToSend);
+						}
+					}
+
+					else if (formType.equals("checkbox")){
+						boolean checkValue = values.get(0).getAsBoolean();
+						WebElement option = driver.findElement(by);
+
+						if(checkValue){	//if the check box should be selected
+							if(!option.isSelected()){	//if the check box is current UNselected
+								option.click();
+							}
+						}
+						else{	//if the check box should NOT be selected
+							if(option.isSelected()){ //if the check box is current selected
+								option.click();
+							}
+						}
+					}
+
+					else if (formType.equals("radio")){
+						//TODO: 
+					}
+
+					else if (formType.equals("select")){
+						//TODO: 
+					}
+				}
+			}
+
+			boolean clicked = false;
+
+			//Click based on the information in "id" field (xpath)
+			String elementID = ((StandardAction)act).getId();
+			WebElement eleToClick = findElementMatchToAction(driver, (StandardAction)act);
+
+			//Click on found element
+			if(eleToClick!=null){
+				//check the conformance between the xpath ID and URL
+				String newURL = null;
+				newURL = getElementURL(driver, eleToClick);
+				checkUpdateUrlMap(act, actionUrls, newURL);
+				realRequestedUrl = newURL;
+				realClickedElementText = eleToClick.getText();
+
+				//Click on the found element
+				try{
+					eleToClick.click();
+					clicked = true;
+					System.out.println(" --> DONE");
+				} catch(Throwable t){
+					clicked = false;
+					t.printStackTrace();
+				}
+			}
+
+			//follow URL if cannot find the element to click
+			if(!clicked){
+				System.out.println("\n\t\t!!! NOT FOUND: " + elementID);
+				if(!aURL.isEmpty()){
+					System.out.print("\t\t--> access directly the element URL (" + aURL + ")");
+
+					String urlToGet = aURL;
+
+					//update urlToGet, if actionUrls contains the url of the action
+					if(actionUrls.containsKey(act.getActionID())) {
+						urlToGet = actionUrls.get(act.getActionID());
+					}
+
+					urlToGet = processUrlBeforeRequest(driver, urlToGet);
+
+					if(urlToGet!=null) {
+						realRequestedUrl = urlToGet;
+						realClickedElementText = "access url " + urlToGet;
+						driver.get(urlToGet);
+						clicked = true;
+						System.out.println(" --> DONE");
+					}
+
+				}
+			}
+
+			if(!clicked){
+				System.out.println(" --> NOT DONE");
+			}
+
+			doneAction = true;
+
+			//get redirect URL
+			if(clicked){
+				redirectURL = getRedirectUrl(driver, aURL);
+			}
+			else{
+				redirectURL = "";
+			}
+
+			break;
+		}
+
+		case hover: 
+		{
+			//TODO: update this type of action in needed cases
+			doneAction = true;
+			System.out.println(" --> DONE");
+			//get redirect URL
+			redirectURL = getRedirectUrl(driver, aURL);
+			break;
+		}
+
+		case randomClickOnNewElement: 
+		{
+			String prevDom = "";
+			String currentDom = "";
+			if(i>=2){
+				prevDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(i-2)).originalHtml;
+				currentDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(i-1)).originalHtml;
+			}
+			else if(i==1){
+				currentDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(0)).originalHtml;
+			}
+
+			Elements newElements = getNewElements(prevDom, currentDom);
+
+			if(newElements.size()>0){
+				//randomly choose an element to click
+				int randomIndex = ThreadLocalRandom.current().nextInt(0, newElements.size());
+				Element executeEle = newElements.get(randomIndex);
+
+				String tagName = executeEle.tagName().toLowerCase();
+				By elementBy = null;
+				//					if(tagName.equals("a")){
+				//						if(executeEle.attributes().hasKey("href")){
+				//							 elementBy = getByType("linkText", executeEle.attr("href"));
+				//						}
+				//					}
+				//					else if (tagName.equals("button")){
+				//						if(executeEle.attributes().hasKey("id")){
+				//							 elementBy = getByType("id", executeEle.attr("id"));
+				//						}
+				//					}
+
+				if(tagName.equals("a")){
+					if(executeEle.attributes().hasKey("href")){
+						String xpath = "//a[@href='" + executeEle.attr("href").trim() + "']";
+						elementBy = getByType("xpath", xpath);
+						//							elementBy = getByType("linkText", executeEle.attr("href"));
+					}
+				}
+				else if (tagName.equals("button")){
+					if(executeEle.attributes().hasKey("id")){
+						elementBy = getByType("id", executeEle.attr("id"));
+					}
+					else if(executeEle.text()!=null &&
+							!executeEle.text().isEmpty()){
+						elementBy = getByType("linkText", executeEle.text());
+					}
+
+				}
+
+				try{
+					List<WebElement> eles = driver.findElements(elementBy);
+
+					if(eles!=null && eles.size()>0){
+						String elementURL = getElementURL(driver, executeEle);
+
+						try {
+							realClickedElementText = driver.findElement(elementBy).getText();
+							driver.findElement(elementBy).click();
+						} catch ( Throwable t ){
+							System.out.print("!!!Ignored (cannot click): "+elementURL);
+
+						}
+						aURL = elementURL;
+						realRequestedUrl = aURL;
+
+						System.out.println(" --> DONE");
+						//get redirect URL
+						redirectURL = getRedirectUrl(driver, elementURL);
+					}
+
+					System.out.println("\t\t" + executeEle);
+				}catch( Throwable t ){
+					System.out.println("!!!Ignored (cannot find element): " + elementBy);
+				}
+
+			}
+			doneAction = true;
+			break;
+		}
+
+		case wait: 
+		{
+			realClickedElementText = executeWait(act);
+			doneAction = true;
+			System.out.println(" --> DONE");
+			break;
+		}
+
+		default:
+			break;
+		}
+
+		//Wait for loading page before executing next action
+		try {
+			Thread.sleep(sysConfig.getWaitTimeAfterAction());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+
+		boolean hasAlert = false;
+		if(autoDetectConfirmation){
+			boolean confirmed = false;
+
+			//1. check if there is dialog
+			while(isDialogPresent(driver)){
+				Alert alert = driver.switchTo().alert();
+
+				//always click on yes
+				if(alwaysConfirm){
+					alert.accept();
+					System.out.print("\n\t\t!!Auto confirmed dialog!");
+				}
+				else{
+					String alertText = alert.getText();
+
+					if(containConfirmationText(alertText)){
+						alert.accept();
+						System.out.print("\n\t\t!!Confirmed dialog!");
+					}
+					else{
+						alert.dismiss();
+						System.out.print("\n\t\t!!Dismissed dialog!");
+					}
+				}
+				confirmed = true;
+				hasAlert = true;
+			}
+
+			//2. check if the current page contains confirmation request
+			String newDom = driver.getPageSource();
+			Element executeEle = confirmationButton(newDom);
+
+			if(executeEle==null && containConfirmationText(newDom)){
+				//FIXME: these following instructs should be reused from the case of randomClick
+
+				String prevDom = "";
+				String currentDom = newDom;
+				if(i>=1){
+					prevDom = (String) ((WebOutputCleaned)outputSequence.getOutputAt(i-1)).originalHtml;
+				}
+
+				Elements newElements = getNewElements(prevDom, currentDom);
+
+				if(newElements.size()>0){
+
+					//if we prioritize buttons and input_submits, filter newElements to get only buttons from there
+					if(prioritizeButton){
+						Elements onlyButtons = new Elements();
+
+						for(int iEle=0; iEle<newElements.size(); iEle++){
+							Element elem = newElements.get(iEle);
+							if(elem.tagName().toLowerCase().equals("button") ||
+									elem.tagName().toLowerCase().equals("input")){
+								onlyButtons.add(elem);
+							}
+						}
+
+						if(onlyButtons.size()>0){
+							newElements = onlyButtons;
+						}
+					}
+
+					//randomly choose an element to click
+					int randomIndex = ThreadLocalRandom.current().nextInt(0, newElements.size());
+					executeEle = newElements.get(randomIndex);
+
+				}
+			}
+
+			if(executeEle!=null) {
+				String tagName = executeEle.tagName().toLowerCase();
+				By elementBy = null;
+				if(tagName.equals("a")){
+					if(executeEle.attributes().hasKey("href")){
+						String xpath = "//a[@href='" + executeEle.attr("href").trim() + "']";
+						elementBy = getByType("xpath", xpath);
+						//								elementBy = getByType("linkText", executeEle.attr("href"));
+					}
+				}
+				else if (tagName.equals("button")){
+					if(executeEle.attributes().hasKey("id")){
+						elementBy = getByType("id", executeEle.attr("id"));
+					}
+					else if(executeEle.text()!=null &&
+							!executeEle.text().isEmpty()){
+						elementBy = getByType("linkText", executeEle.text());
+					}
+
+				}
+				if(tagName.equals("input")){
+					if(executeEle.attributes().hasKey("type")){
+						elementBy = getByType("tagName", "input");
+					}
+				}
+
+				try{
+					List<WebElement> eles = driver.findElements(elementBy);
+
+
+
+
+					if(eles!=null && eles.size()>0){
+						String beforeUrl = driver.getCurrentUrl();
+						String elementURL = getElementURL(driver, executeEle);
+						//								System.out.println("\t--Will click on: " + elementURL);
+
+						for(WebElement e1:eles) {
+							if(matchElement(e1, executeEle)) {
+								if(e1.getTagName().equalsIgnoreCase("input") &&
+										e1.getAttribute("type")!=null &&
+										e1.getAttribute("type").equalsIgnoreCase("submit")) {
+									e1.submit();;
+								}
+								else {
+									e1.click();
+								}
+								confirmed = true;
+								break;
+							}
+						}
+
+
+						//Phu: just commented statements under (20/12/2019) to try another way to click on the element
+						//							try {
+						//								driver.findElement(elementBy).click();
+						//							} catch ( Throwable t ){
+						//								System.out.print("!!!Ignored (auto confirmation cannot click): "+elementURL);
+						//
+						//							}
+						//							confirmed = true;
+						//end of commented
+
+						aURL = elementURL;
+
+
+						//get redirect URL
+						redirectURL = getRedirectUrl(driver, beforeUrl, elementURL);
+						//							redirectURL = getRedirectUrl(driver, elementURL);
+					}
+
+					//							System.out.println("\t\t" + executeEle);
+				}catch( Throwable t ){
+					System.out.println("!!!Ignored (auto confirmation cannot find element): " + elementBy);
+				}
+			}
+
+
+			if(confirmed){
+				timeOfConfirm++;
+				System.out.println("\t\t!! automatically confirm --> DONE");
+				try {
+					Thread.sleep(sysConfig.getWaitTimeAfterAction());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		//Add result to the outputSequence
+		if(doneAction){
+			latestUrl = driver.getCurrentUrl();
+			//				if(redirectURL!=null && !redirectURL.isEmpty()) {
+			//					System.out.println("\t\t!!! Redirect URL: " + redirectURL);
+			//				}
+
+			//Execute inner actions if they exist
+			executeInnerActions(driver, act);
+
+			//get new dom
+			String newDom = "";
+
+			try{
+				if(this.isDialogPresent(driver)){
+					//get alert text
+					Alert alert = driver.switchTo().alert();
+					newDom = alert.getText();
+				}
+				else{
+					newDom = driver.getPageSource();
+				}
+			} catch(Throwable t){
+				t.printStackTrace();
+			}
+
+			if(newDom==null){
+				newDom = "";
+			}
+
+
+			//normalize the new dom
+			WebOutputCleaned outObj = cleanUpOutPut(newDom);
+			outObj.resultedUrl = driver.getCurrentUrl();
+			outObj.realRequestedUrl = realRequestedUrl;
+			outObj.realClickedElementText = realClickedElementText;
+
+			if(checkStatusCode) {
+				outObj.statusCode = getStatusCode(driver);
+			}
+
+			//				ExpectedCondition<Alert> alert = ExpectedConditions.alertIsPresent();
+			//				outObj.setHasAlert( alert.apply(driver) != null );
+			System.out.println("!!!ALERT :"+hasAlert);
+			outObj.setHasAlert( hasAlert );
+
+			File file = findNewDownloadedFile();
+			if ( file != null ){
+				String folderName = "OUTPUT_FILE_"+System.currentTimeMillis();
+				File outFolder = new File(outputFolder());
+
+				File outFolderFile = new File( outFolder, folderName);
+				outFolderFile.mkdir();
+
+				File newFile = new File( outFolderFile, file.getName() );
+				file.renameTo(newFile );
+				outObj.setDownloadedFile( newFile );
+			}
+
+			//get list of relevant downloaded objects
+			if(checkDownloadedObjects){
+				outObj.downloadedObjects = getDownloadedObjectsFromProxy(maxId, aURL, redirectURL);
+			}
+			else{
+				outObj.downloadedObjects = null;
+			}
+
+			
+
+			//get cookie
+			CookieSession currentSession = null;
+			if(!isDialogPresent(driver)){
+				currentSession = new CookieSession(driver.manage().getCookies());
+			}
+			else{
+				CookieSession lastSession = (CookieSession)outputSequence.getSession();
+				if(lastSession!=null){
+					currentSession = lastSession;
+				}
+				else{
+					currentSession = new CookieSession();
+				}
+			}
+			
+			outputSequence.add(outObj, redirectURL, currentSession);
+
+			String inputID = input.getId();
+			String executionId = null;
+
+			try{
+				executionId = MR.CURRENT.getCurrentExecutionId();
+			} catch(NullPointerException e){
+				//					e.printStackTrace();
+			}
+
+			if(executionId==null){
+				executionId = "";
+			}
+
+			if(storeDOMs) {
+				String fileName = executionId+"_"+inputID+"_" + (standardText(text) + "_" + aURL).hashCode();
+				saveDomToFile(outObj.html, fileName);
+
+				fileName = executionId+"_"+inputID+"_" + (standardText(text) + "_" + aURL).hashCode() + "_text_";
+				saveDomToFile(outObj.text, fileName);
+			}
+		}
+
+		//clear all replacer rule in the proxy
+		clearProxyReplacerRules();
+
+		ruleChannelDescription = "";
+		ruleMethodDescription = "";
+
+
+		//Update URLs of following actions (if needed)
+		updateUrlsForNextActions(driver, act, input);
+		return timeOfConfirm;
+	}
+
+
 	private void loadUnsafeProfile(WebInputCrawlJax input) {
 		loadGeckoDriver(input,"UnsafeEncryption");
 	}
-	
+
 	private void loadProfileWithOutdatedCertificate(WebInputCrawlJax input) {
 		loadGeckoDriver(input,"OutdatedCertificate");
 	}
-	
+
 	private void loadProfileWithRemovedCertificate(WebInputCrawlJax input) {
 		loadGeckoDriver(input,"RemovedCertificate");
 	}
-	
+
 	private void loadGeckoDriver(WebInputCrawlJax input, String profileName) {
 		//We assume a firefox browser with profile UnsafeEncryption exist
 		//The profile is configured to work with weak algorithms
 		//See class smrl.utils.ConfigureUnsafeFirefox to set it up
-		
+
 		String exePath = sysConfig.getFirefoxDriverPath();
 
 		//call web browser
 		if (exePath == null ) {
-		//	exePath = "/usr/local/bin/geckodriver";
+			//	exePath = "/usr/local/bin/geckodriver";
 			exePath = "C:\\Users\\nbaya076\\geckodriver.exe";
 		}
-		
-		
+
+
 		ProfilesIni profile = new ProfilesIni();
 		FirefoxProfile myprofile = profile.getProfile(profileName);
 
 
 		FirefoxOptions options = new FirefoxOptions();
 		options.setProfile(myprofile);
-		
+
 		if(headless) {
 			options.addArguments("headless");
 			options.setHeadless(true);
 		}
-		
+
 		if ( driver == null || 
 				Operations.getResetBrowserBetweenInputs() || 
 				! ( driver instanceof FirefoxDriver) ) 
@@ -1464,8 +1499,8 @@ public class WebProcessor {
 			}
 			driver = new FirefoxDriver(options);
 		}
-		
-		
+
+
 
 		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
 	}
@@ -1534,9 +1569,13 @@ public class WebProcessor {
 				Operations.getResetBrowserBetweenInputs() || 
 				! ( driver instanceof ChromeDriver) ) 
 		{
-			if ( driver != null ) {
-				driver.quit();
-				driver = null;
+			try {
+				if ( driver != null ) {
+					driver.quit();
+					driver = null;
+				}
+			} catch ( WebDriverException e ) {
+				System.out.println("Exception "+e.getMessage());
 			}
 			driver = new ChromeDriver(chOptions);
 		}
@@ -1921,6 +1960,22 @@ public class WebProcessor {
 		WebElement eleResult = null;
 
 		String elementID = act.getId().trim();
+		if ( elementID == null || elementID.length() == 0 ) {
+
+			String lt = act.getLinkText();
+			if ( lt.length() > 0) {
+				if ( driver instanceof ChromeDriver ) {
+					eleResult = ((ChromeDriver)driver).findElementByLinkText(lt);
+				}
+
+				if ( driver instanceof FirefoxDriver ) {
+					eleResult = ((FirefoxDriver)driver).findElementByLinkText(lt);
+				}
+			}
+
+		}
+
+
 		if(elementID.split(" ").length !=2){
 			System.out.print("\t\t!!! Cannot get id for the action: " + act.getText());
 		}
@@ -1942,11 +1997,11 @@ public class WebProcessor {
 			String id = getInfoFromElement(elementInfo, "id");
 			if(id!=null && !id.isEmpty()){
 				try{
-					
+
 					if ( driver instanceof ChromeDriver ) {
 						eleResult = ((ChromeDriver)driver).findElementById(id);
 					}
-					
+
 					if ( driver instanceof FirefoxDriver ) {
 						eleResult = ((FirefoxDriver)driver).findElementById(id);
 					}

@@ -40,8 +40,11 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import com.google.common.base.Charsets;
 
 import smrl.mr.language.CollectionOfConcepts;
+import smrl.mr.language.Output;
+import smrl.mr.language.Session;
+import smrl.mr.language.SystemConfig;
 
-public class WebOutputCleaned {
+public class WebOutputCleaned implements Output {
 	
 	private static boolean useEditDistance=true;
 	private static final float similarityThreshold_Html = (float) 0.95;
@@ -58,7 +61,7 @@ public class WebOutputCleaned {
 	private ArrayList<CollectionOfConcepts> allConcepts;
 	public String realRequestedUrl; 
 	public String realClickedElementText;
-	public boolean hasAlert;
+	private boolean hasAlert;
 	
 	
 	public boolean hasAlert() {
@@ -474,6 +477,127 @@ public class WebOutputCleaned {
 		}
 		
 		return getXPath(ele.parent()) + "/" + xpath;
+	}
+
+
+
+	@Override
+	public String redirectURL() {
+		throw new RuntimeException("Not implemented");
+	}
+
+
+
+	@Override
+	public boolean isError() {
+		SystemConfig sysConfig = WebProcessor.getSysConfig();
+		if(sysConfig==null || sysConfig.getErrorSigns()==null ||
+				sysConfig.getErrorSigns().size()<=0){
+			return false;
+		}
+		
+		
+		//check each output in the sequence
+		return WebOutputSequence.isError(sysConfig, this);
+		
+	}
+
+
+
+	@Override
+	public boolean isEmptyFile() {
+		if(downloadedFile.isFile() && downloadedFile.length()<=0) {
+			System.out.println("\t!!! downloaded file is EMPTY (from isEmptyFile)");
+			return true;
+		}
+		
+		return false;
+	}
+
+
+
+	@Override
+	public File file() {
+		return downloadedFile;
+	}
+
+
+
+	@Override
+	public boolean noFile() {
+		return downloadedFile != null;
+	}
+
+
+
+	@Override
+	public Session getSession() {
+		throw new RuntimeException("Not implemented");
+	}
+
+
+
+	@Override
+	public Session getSession(int pos) {
+		throw new RuntimeException("Not implemented");
+	}
+
+
+
+	@Override
+	public boolean containListOfTags() {
+		List<CollectionOfConcepts> tagsList = listsOfTags();
+		
+		boolean result = false;
+		
+		if(tagsList!=null && tagsList.size()>0) {
+			result = true;
+		}
+		
+		
+//		System.out.println("\t!!! Call containListOfTags: "+result);
+		return result;
+	}
+
+
+
+	@Override
+	public List<CollectionOfConcepts> listsOfTags() {
+		ArrayList<CollectionOfConcepts> result = new ArrayList<CollectionOfConcepts>();
+
+
+		ArrayList<CollectionOfConcepts> newList = this.getAllConcepts();
+		if(newList!=null && newList.size()>0) {
+			result.addAll(newList);
+		}
+		return result;
+	}
+
+
+
+	@Override
+	public CollectionOfConcepts listOfTags(String key) {
+		List<CollectionOfConcepts> tagsList = listsOfTags();
+		if(tagsList==null || tagsList.size()<1 || key==null) {
+			return new CollectionOfConcepts();
+		}
+		
+		for(CollectionOfConcepts cc:tagsList) {
+			if(cc.id.equals(key)) {
+				return cc;
+			}
+		}
+		
+		return new CollectionOfConcepts();
+	}
+
+
+
+	@Override
+	public List<Object> values() {
+		List l = new ArrayList<WebOutputCleaned>();
+		l.add( this );
+		return l;
 	}
 	
 }
