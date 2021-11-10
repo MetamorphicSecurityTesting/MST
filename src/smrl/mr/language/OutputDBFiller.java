@@ -40,18 +40,18 @@ public class OutputDBFiller {
 //		String sysConfigFile = "./testData/Jenkins/jenkinsSysConfig.json";
 //		String sysConfigFile = "./testData/Jenkins/jenkinsSysConfig_trying.json";
 		
-		String outFolder = "./testData/Joomla/outputStore";
-		String sysConfigFile = "./testData/Joomla/joomlaSysConfig.json";
+		String outFolder; 
+		String sysConfigFile; 
 		
-//		if(args!=null && args.length>=2) {
-//			outFolder = args[0].trim();
-//			sysConfigFile = args[1].trim();
-//		}
-//		else {
-//			System.out.println("Usage: " + OutputDBFiller.class.getSimpleName() + 
-//					" <path_of_output_store> <path_to_system_config_file>");
-//			return;
-//		}
+		if(args!=null && args.length>=2) {
+			outFolder = args[0].trim();
+			sysConfigFile = args[1].trim();
+		}
+		else {
+			System.out.println("Usage: " + OutputDBFiller.class.getSimpleName() + 
+					" <path_of_output_store> <path_to_system_config_file>");
+			return;
+		}
 		
 //		OutputDBFiller db = new OutputDBFiller(new File("./testData/OTG_AUTHZ_002/edlah2/outputStore"));
 //		OutputDBFiller db = new OutputDBFiller(new File("./testData/OTG_AUTHZ_002/jenkins-1/outputStore"));
