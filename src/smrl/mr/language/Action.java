@@ -638,6 +638,11 @@ public abstract class Action implements Cloneable {
 		// TODO Auto-generated method stub
 		return toString();
 	}
+
+	public String getElementURL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	
 	
