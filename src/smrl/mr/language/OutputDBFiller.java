@@ -40,8 +40,8 @@ public class OutputDBFiller {
 //		String sysConfigFile = "./testData/Jenkins/jenkinsSysConfig.json";
 //		String sysConfigFile = "./testData/Jenkins/jenkinsSysConfig_trying.json";
 		
-		String outFolder; 
-		String sysConfigFile; 
+		String outFolder = "./testData/DVWA/outputStore"; 
+		String sysConfigFile = "./testData/DVWA/DVWASysConfigDEMO.json"; 
 		
 		if(args!=null && args.length>=2) {
 			outFolder = args[0].trim();

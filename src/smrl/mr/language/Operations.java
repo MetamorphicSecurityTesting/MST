@@ -1257,15 +1257,15 @@ public class Operations {
 	}
 	
 	@MRDataProvider  
-	public static Object SQLInjectionString(){ 
+	public static String SQLInjectionString(){ 
 		return SQLInjectionString(1);
 	}
 
 	@MRDataProvider()
-	public static Object SQLInjectionString(int x){
+	public static String SQLInjectionString(int x){
 		
 		// return a complete list of sql injection strings
-		return MR.CURRENT.getMRData("SQLInjectionString",x);
+		return (String) MR.CURRENT.getMRData("SQLInjectionString",x);
 
 		//	String[] SQLInjectionList = {"1==1","hi = hi"};
 		//	return SQLInjectionList[x];
@@ -1356,7 +1356,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String CommandInjection(int x){ 
-		return (String) MR.CURRENT.getMRData("CommandInjection"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return (String) MR.CURRENT.getMRData("CommandInjection",x);
 	}
 	@MRDataProvider()
 	public static String randomString(int limit) {

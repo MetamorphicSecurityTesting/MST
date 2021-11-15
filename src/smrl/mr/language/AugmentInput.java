@@ -42,8 +42,9 @@ public class AugmentInput {
 	@SuppressWarnings("static-access")
 	public static void main(String[] args) {
 //		String configFile = "./testData/Jenkins/jenkinsSysConfig_withProxy.json";
-		String configFile = "./testData/Joomla/joomlaSysConfig.json";
+		//String configFile = "./testData/Joomla/joomlaSysConfig.json";
 		
+		String configFile = "./testData/DVWA/DVWASysConfigDEMO.json";
 //		if(args!=null && args.length>=1) {
 //			configFile = args[0].trim();
 //		}
