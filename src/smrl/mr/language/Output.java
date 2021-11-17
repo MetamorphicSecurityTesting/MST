@@ -63,5 +63,7 @@ public interface Output {
 	public List<Object> values();
 	
 	public boolean hasAlert();
+	
+	public long getDuration();
 
 }

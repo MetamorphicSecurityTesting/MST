@@ -62,8 +62,14 @@ public class WebOutputCleaned implements Output {
 	public String realRequestedUrl; 
 	public String realClickedElementText;
 	private boolean hasAlert;
+	private long duration;
 	
-	
+	public void setDuration(long duration) {
+		this.duration = duration;
+	}
+
+
+
 	public boolean hasAlert() {
 		return hasAlert;
 	}
@@ -598,6 +604,14 @@ public class WebOutputCleaned implements Output {
 		List l = new ArrayList<WebOutputCleaned>();
 		l.add( this );
 		return l;
+	}
+
+
+
+	@Override
+	public long getDuration() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }

@@ -651,9 +651,16 @@ public class WebProcessor {
 			try {
 				System.out.println("!!!PROCESSING ACT "+i+ " OF "+input.getId());
 				Action act = actions.get(i);
+				
+				long before = System.currentTimeMillis();
+				
 				timeOfConfirm = processInput(input, checkDownloadedObjects, outputSequence, 
 						act, actionUrls,
 						timeOfConfirm, i);
+				long after = System.currentTimeMillis();
+				
+				outputSequence.setDurationOfLast( after - before );
+				
 			} catch ( Throwable t ) {
 				System.out.println("!!!Throwable "+t);
 				outputSequence.add(null,null,null);
