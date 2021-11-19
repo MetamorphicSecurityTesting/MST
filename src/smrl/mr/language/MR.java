@@ -16,6 +16,7 @@
  *******************************************************************************/
 package smrl.mr.language;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -38,6 +39,7 @@ import com.google.gson.JsonObject;
 import smrl.mr.analysis.ASMUtil;
 import smrl.mr.analysis.ASMUtil.ASM_MRData;
 import smrl.mr.crawljax.Account;
+import smrl.mr.crawljax.WebInputCrawlJax;
 import smrl.mr.language.actions.IndexAction;
 import smrl.mr.language.actions.StandardAction;
 import smrl.mr.utils.URLUtil;
@@ -482,6 +484,7 @@ public abstract class MR {
 				}
 				
 				
+				
 				for ( int j = 0; j < lastInputs.size(); j++ ) {
 					Input linput = lastInputs.get(j);
 				
@@ -498,6 +501,15 @@ public abstract class MR {
 				
 				PrintUtil.USER_FRIENDLY_TO_STRING = true;
 				msg += i.getKey()+ " "+ followUp +" : \n"+i.toString()+"\n";
+				Output cachedOut = provider.getCachedOutput( (WebInputCrawlJax) i.getValue() );
+				String outputUrl = null;
+				if ( cachedOut != null ) {
+					File file = cachedOut.getHtmlFile();
+					if ( file != null ) {
+						outputUrl = file.getAbsolutePath();
+					}
+				}
+				msg += "output HTML at: "+outputUrl;
 				PrintUtil.USER_FRIENDLY_TO_STRING = false;
 			}	
 		}
@@ -919,6 +931,7 @@ public abstract class MR {
 		this.lastInputs.add( input );
 		this.lastInputPos.add( pos );
 	}
+	
 
 
 	public void setLastEQUAL(Object a, Object b) {

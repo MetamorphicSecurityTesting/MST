@@ -194,6 +194,10 @@ public class Operations {
 	public static Input changeCredentials( Input input, Object user){
 		return MR.CURRENT.provider.changeCredentials(input,user);
 	}
+	
+	public static Input changeCredentials( Input input, Object user, boolean ignoreSameAccount){
+		return MR.CURRENT.provider.changeCredentials(input,user,ignoreSameAccount);
+	}
 
 	/**
 	 * Web-specific function. 

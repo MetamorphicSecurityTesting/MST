@@ -552,5 +552,18 @@ public class WebOutputSequence implements Output {
 		return total;
 	}
 
+
+
+
+
+	@Override
+	public File getHtmlFile() {
+		Object last = seq.get(seq.size()-1);
+		if(!(last instanceof WebOutputCleaned)) {
+			return null;
+		}
+		return ((WebOutputCleaned)last).getHtmlFile();
+	}
+
 	
 }

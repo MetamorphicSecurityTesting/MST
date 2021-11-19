@@ -483,7 +483,7 @@ public class WebProcessor {
 		return false;
 	}
 
-	public WebInputCrawlJax changeCredential(WebInputCrawlJax _input, Account user2) {
+	public WebInputCrawlJax changeCredential(WebInputCrawlJax _input, Account user2, boolean ignoreSameAccount) {
 		if(_input==null || _input.actions().size()<1 ||
 				user2==null) {
 			return null;
@@ -562,7 +562,7 @@ public class WebProcessor {
 			this.latestUrl = "";
 		}
 
-		return input.changeCredential(user2);
+		return input.changeCredential(user2, ignoreSameAccount);
 	}
 
 	private boolean containCredential(Action act) {
@@ -1421,7 +1421,7 @@ public class WebProcessor {
 				}
 			}
 			
-			outputSequence.add(outObj, redirectURL, currentSession);
+			outputSequence.add(outObj, redirectURL, currentSession );
 
 			String inputID = input.getId();
 			String executionId = null;
@@ -1436,13 +1436,17 @@ public class WebProcessor {
 				executionId = "";
 			}
 
+			File storedFile = null;
 			if(storeDOMs) {
 				String fileName = executionId+"_"+inputID+"_" + (standardText(text) + "_" + aURL).hashCode();
-				saveDomToFile(outObj.html, fileName);
+				storedFile = saveDomToFile(outObj.html, fileName);
 
 				fileName = executionId+"_"+inputID+"_" + (standardText(text) + "_" + aURL).hashCode() + "_text_";
 				saveDomToFile(outObj.text, fileName);
 			}
+			
+			outObj.setHtmlFile ( storedFile );
+			
 		}
 
 		//clear all replacer rule in the proxy
@@ -2406,7 +2410,7 @@ public class WebProcessor {
 		return filesD[0];
 	}
 
-	private void saveDomToFile(String dom, String fileName) {
+	private File saveDomToFile(String dom, String fileName) {
 		String fullFileName = this.getOutputFile().getParent();
 		if(fullFileName.endsWith("/")){
 			fullFileName += "doms/";
@@ -2434,12 +2438,16 @@ public class WebProcessor {
 
 		fullFileName += "_" + (i-1) + ".html";
 
+		File storedFile = new File (fullFileName);
+		
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fullFileName, false))) {
 			bw.write(dom);
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
+		return storedFile;
 
 	}
 
@@ -2852,7 +2860,7 @@ public class WebProcessor {
 	}
 
 	public static boolean isLogin(Action action) {
-		String url = action.getUrl();
+		String url = action.getElementURL();//Fabrizio: changed on 2021-11-19 !!!ATTENTION!!! was getUrl()
 		if(url==null || url.isEmpty()){
 			return false;
 		}

@@ -66,4 +66,6 @@ public interface Output {
 	
 	public long getDuration();
 
+	public File getHtmlFile();
+
 }

@@ -64,6 +64,21 @@ public class WebOutputCleaned implements Output {
 	private boolean hasAlert;
 	private long duration;
 	
+	private File htmlFile;
+	
+	@Override
+	public File getHtmlFile() {
+		return htmlFile;
+	}
+
+
+
+	public void setHtmlFile(File htmlFile) {
+		this.htmlFile = htmlFile;
+	}
+
+
+
 	public void setDuration(long duration) {
 		this.duration = duration;
 	}
@@ -610,8 +625,7 @@ public class WebOutputCleaned implements Output {
 
 	@Override
 	public long getDuration() {
-		// TODO Auto-generated method stub
-		return 0;
+		return duration;
 	}
 	
 }

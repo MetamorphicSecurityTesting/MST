@@ -124,6 +124,10 @@ public interface OperationsProvider {
 
 	RemoteFile remoteFile(Object mrData);
 
+	smrl.mr.language.Input changeCredentials(smrl.mr.language.Input input, Object user, boolean ignoreSameAccount);
+
+	smrl.mr.language.Output getCachedOutput(WebInputCrawlJax input);
+
 	
 
 	

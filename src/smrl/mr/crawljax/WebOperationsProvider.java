@@ -41,6 +41,7 @@ import smrl.mr.language.Operations;
 import smrl.mr.language.OperationsProvider;
 import smrl.mr.language.Output;
 import smrl.mr.language.SystemConfig;
+import smrl.mr.language.actions.IndexAction;
 import smrl.mr.language.actions.StandardAction;
 import smrl.mr.utils.CipherSuites;
 import smrl.mr.utils.RemoteFile;
@@ -52,11 +53,16 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	HashMap<String, HashMap<String, WebOutputCleaned>> outputStore = 
 			new HashMap<String, HashMap<String, WebOutputCleaned>>();
-	private boolean keepCache; 
+	private boolean keepCache = true; 
 
+	@Override
+	public Output getCachedOutput( WebInputCrawlJax input ) {
+		return ( outputCache.get( input ) );
+	}
+	
 	public WebOperationsProvider(String configFile) {
 		impl = new WebProcessor();
-		this.keepCache = false;
+//		this.keepCache = false;
 
 		if(configFile!=null && !configFile.isEmpty()){
 			impl.setConfig(configFile);
@@ -83,7 +89,7 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	public WebOperationsProvider(String inputFile, String outFile, String configFile) {
 		impl = new WebProcessor();
-		this.keepCache = false;
+//		this.keepCache = false;
 
 		if(configFile!=null && !configFile.isEmpty()){
 			impl.setConfig(configFile);
@@ -104,7 +110,7 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	public WebOperationsProvider(String inputFile, String outFile, String configFile, String randomFilePath, String randomAdminFilePath) {
 		this(inputFile, outFile, configFile);
-		this.keepCache = false;
+//		this.keepCache = false;
 
 		try {
 
@@ -324,7 +330,12 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	@Override
 	public smrl.mr.language.Input changeCredentials(smrl.mr.language.Input input, Object user) {
-		return impl.changeCredential((WebInputCrawlJax) input, (Account) user);
+		return impl.changeCredential((WebInputCrawlJax) input, (Account) user, true);
+	}
+	
+	@Override
+	public smrl.mr.language.Input changeCredentials(smrl.mr.language.Input input, Object user, boolean ignoreSameAccount) {
+		return impl.changeCredential((WebInputCrawlJax) input, (Account) user, ignoreSameAccount);
 	}
 
 	@Override
@@ -776,8 +787,9 @@ public class WebOperationsProvider implements OperationsProvider {
 				Action act = input.actions().get(i);
 				if(Operations.isLogin(act)){
 					smrl.mr.language.Input tempInput = Operations.Input(act);
+					System.out.println(tempInput);
 					try {
-						res = Operations.changeCredentials(tempInput, user).actions().get(0).clone();
+						res = Operations.changeCredentials(tempInput, user, false).actions().get(0).clone();
 
 						found = true;
 						break;
@@ -921,8 +933,10 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	@Override
 	public Action newRequestUrlAction(String url) {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("Not implemented");
+		System.out.println("!!!! newRequestUrlAction : "+url);
+		IndexAction action = new IndexAction();
+		action.setUrl(url);
+		return action;
 	}
 
 
