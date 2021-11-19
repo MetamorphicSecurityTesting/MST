@@ -371,6 +371,12 @@ public class Operations {
 				} 
 			}
 		}
+		
+		if ( value.toLowerCase().equals("false") ||
+				value.toLowerCase().equals("true") 
+				) {
+			return Boolean.class;
+		}
 
 		//default
 		return String.class;
