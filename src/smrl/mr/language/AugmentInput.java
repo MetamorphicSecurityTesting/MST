@@ -41,18 +41,18 @@ public class AugmentInput {
 
 	@SuppressWarnings("static-access")
 	public static void main(String[] args) {
-//		String configFile = "./testData/Jenkins/jenkinsSysConfig_withProxy.json";
+		String configFile; //example: "./testData/Jenkins/jenkinsSysConfig_withProxy.json";
 		//String configFile = "./testData/Joomla/joomlaSysConfig.json";
 		
-		String configFile = "./testData/DVWA/DVWASysConfigDEMO.json";
-//		if(args!=null && args.length>=1) {
-//			configFile = args[0].trim();
-//		}
-//		else{
-//			System.out.println("Usage: " + AugmentInput.class.getSimpleName() + 
-//					" <path_to_system_config_file>");
-//			return;
-//		}
+//		String configFile = "./testData/DVWA/DVWASysConfigDEMO.json";
+		if(args!=null && args.length>=1) {
+			configFile = args[0].trim();
+		}
+		else{
+			System.out.println("Usage: " + AugmentInput.class.getSimpleName() + 
+					" <path_to_system_config_file>");
+			return;
+		}
 		
 		WebOperationsProvider provider = new WebOperationsProvider(configFile);
 		
