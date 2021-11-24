@@ -647,6 +647,10 @@ public abstract class Action implements Cloneable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	public boolean containLoginFormInput() {
+		return false;
+	}
 	
 	public String randomString(int limit) {
 		String randomizedCharacter="";
