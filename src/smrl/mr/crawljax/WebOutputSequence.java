@@ -71,6 +71,15 @@ public class WebOutputSequence implements Output {
 		seq.add(singleOutput);
 //		seqText
 	}
+	
+	public void setDurationOfLast(long d) {
+		if ( seq.size() > 0 ) {
+			Object last = seq.get( seq.size() -1 );
+			if ( last instanceof WebOutputCleaned ) {
+				((WebOutputCleaned) last).setDuration( d );
+			}
+		}
+	}
 
 	@Override
 	public boolean equals(Object obj) {
@@ -524,6 +533,36 @@ public class WebOutputSequence implements Output {
 			}
 		}
 		return false;
+	}
+
+
+
+
+
+	@Override
+	public long getDuration() {
+		long total = 0;
+		for(Object out:seq) {
+			if(!(out instanceof WebOutputCleaned)) {
+				continue;
+			}
+			total += ((WebOutputCleaned)out).getDuration();
+		}
+		
+		return total;
+	}
+
+
+
+
+
+	@Override
+	public File getHtmlFile() {
+		Object last = seq.get(seq.size()-1);
+		if(!(last instanceof WebOutputCleaned)) {
+			return null;
+		}
+		return ((WebOutputCleaned)last).getHtmlFile();
 	}
 
 	

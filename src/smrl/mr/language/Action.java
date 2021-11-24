@@ -513,6 +513,10 @@ public abstract class Action implements Cloneable {
 	public boolean setFormInput(int pos, String value) {
 		return Operations.updateStringFormInput(getFormInputs().get(pos).getAsJsonObject(), value );
 	}
+	
+	public boolean setFormInputOfType(int pos, String value, String type) {
+		return Operations.updateStringFormInput(getFormInputs().get(pos).getAsJsonObject(), value, type );
+	}
 
 	public abstract boolean containFormInputForFilePath();
 

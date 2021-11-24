@@ -301,5 +301,18 @@ public class BasicOperationsProvider implements OperationsProvider {
 		return null;
 	}
 
+	@Override
+	public smrl.mr.language.Input changeCredentials(smrl.mr.language.Input input, Object user,
+			boolean ignoreSameAccount) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public smrl.mr.language.Output getCachedOutput(WebInputCrawlJax input) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

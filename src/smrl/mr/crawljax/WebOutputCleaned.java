@@ -62,8 +62,29 @@ public class WebOutputCleaned implements Output {
 	public String realRequestedUrl; 
 	public String realClickedElementText;
 	private boolean hasAlert;
+	private long duration;
 	
+	private File htmlFile;
 	
+	@Override
+	public File getHtmlFile() {
+		return htmlFile;
+	}
+
+
+
+	public void setHtmlFile(File htmlFile) {
+		this.htmlFile = htmlFile;
+	}
+
+
+
+	public void setDuration(long duration) {
+		this.duration = duration;
+	}
+
+
+
 	public boolean hasAlert() {
 		return hasAlert;
 	}
@@ -598,6 +619,13 @@ public class WebOutputCleaned implements Output {
 		List l = new ArrayList<WebOutputCleaned>();
 		l.add( this );
 		return l;
+	}
+
+
+
+	@Override
+	public long getDuration() {
+		return duration;
 	}
 	
 }

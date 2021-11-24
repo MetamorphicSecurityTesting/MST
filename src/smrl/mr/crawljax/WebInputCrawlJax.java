@@ -34,21 +34,21 @@ public class WebInputCrawlJax extends Input{
 
 	private ArrayList<Action> actions;
 
-	
-	
+
+
 	public WebInputCrawlJax(JsonArray jsonInput) {
 		this.actions = new ArrayList<Action>();
-		
+
 		for(int i = 0; i<jsonInput.size(); i++){
 			JsonObject jsonAct = jsonInput.get(i).getAsJsonObject();
 			if(jsonAct!= null){
 				Action act = Action.newAction(jsonAct);
 				if (act!=null){
-					
-					
-					
+
+
+
 					act.setInput(this);
-					
+
 					//Check if the next is an inner input
 					int j = i+1;
 					while(j<jsonInput.size()){
@@ -56,11 +56,11 @@ public class WebInputCrawlJax extends Input{
 						if(nextAct!= null && 
 								nextAct.keySet().contains("eventType") &&
 								nextAct.get("eventType").getAsString().equals("alert")){
-							
+
 							//load inner action
 							AlertAction iAct = new AlertAction(nextAct);
 							iAct.setMainAction(act);
-							
+
 							act.addInnerAction(iAct);
 							j+=1;
 						}
@@ -69,18 +69,18 @@ public class WebInputCrawlJax extends Input{
 						}
 					}
 					i = j - 1;
-					
+
 					this.actions.add(act);
 				}
 			}
 		}
-		
-		
+
+
 	}
-	
+
 	public WebInputCrawlJax(Action action) {
 		this.actions = new ArrayList<Action>();
-		
+
 		try {
 			Action clone = action.clone();
 			clone.setInput(this);
@@ -89,7 +89,7 @@ public class WebInputCrawlJax extends Input{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public WebInputCrawlJax(List<Action> actions) {
 		this.actions = new ArrayList<Action>();
 		if(actions!=null && !actions.isEmpty()){
@@ -104,16 +104,16 @@ public class WebInputCrawlJax extends Input{
 			}
 		}
 	}
-	
+
 	public WebInputCrawlJax() {
 		this.actions = new ArrayList<Action>();
-		
+
 	}
-	
+
 	public Input Input( List<Action> actions ) {
 		return new WebInputCrawlJax(actions);
 	}
-	
+
 	@Override
 	public ArrayList<Action> actions() {
 		return this.actions;
@@ -121,35 +121,35 @@ public class WebInputCrawlJax extends Input{
 
 	public void setActions(List<Action> actions){
 		this.actions = new ArrayList<Action>();
-		
+
 		for(int i = 0; i<actions.size(); i++){
 			addAction(i, actions.get(i));
 		}
 	}
-	
+
 
 	@Override
 	public boolean equals(Object obj) {
 		if(obj==null || !(obj instanceof WebInputCrawlJax)){
 			return false;
 		}
-		
+
 		WebInputCrawlJax that = (WebInputCrawlJax) obj;
-		
+
 		if(this.actions==null && that.actions==null){
 			return true;
 		}
-		
+
 		if(this.actions.size()!= that.actions.size()){
 			return false;
 		}
-		
+
 		for(int i=0; i<this.actions.size(); i++){
 			if(!this.actions.get(i).equals(that.actions.get(i))){
 				return false;
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -164,38 +164,38 @@ public class WebInputCrawlJax extends Input{
 		if(pos<0 || pos>actions.size()){
 			return false;
 		}
-		
+
 		Action a;
 		try {
 			a = (Action) action.clone();
 			a.setInput(this);
-			
+
 			//*** update user in a
 			//1. if a contains a user
-//			fix: have to find the exact account parameters (username and password parameters)
-//			String userParam = WebProcessor.getSysConfig().getUserParameter();
-//			String passwordParam = WebProcessor.getSysConfig().getPasswordParameter();
-			
+			//			fix: have to find the exact account parameters (username and password parameters)
+			//			String userParam = WebProcessor.getSysConfig().getUserParameter();
+			//			String passwordParam = WebProcessor.getSysConfig().getPasswordParameter();
+
 			if(a instanceof StandardAction) { 
 				ArrayList<LoginParam> loginParams = WebProcessor.getSysConfig().getLoginParams();
 
 				LoginParam usedLoginParam = ((StandardAction)a).usedLoginParam(loginParams);
 
-//				if(a.containCredential(userParam, passwordParam)){
+				//				if(a.containCredential(userParam, passwordParam)){
 				if(usedLoginParam!=null) {
 					Account user = new Account();
-//					user.setUsernameParam(userParam);
-//					user.setPasswordParam(passwordParam);
+					//					user.setUsernameParam(userParam);
+					//					user.setPasswordParam(passwordParam);
 					user.setUsernameParam(usedLoginParam.userParam);
 					user.setPasswordParam(usedLoginParam.passwordParam);
 					user.setUsername(null);
 					user.setPassword(null);
-//					user = processCurrentActionAndUpdateUser((StandardAction) a, user, userParam, passwordParam);
+					//					user = processCurrentActionAndUpdateUser((StandardAction) a, user, userParam, passwordParam);
 					user = processCurrentActionAndUpdateUser(
 							(StandardAction) a, user, usedLoginParam.userParam, usedLoginParam.passwordParam);
 				}
 			}
-			
+
 			//2. if not, a inherits the user from the action at pos
 			else{
 				if(pos>0){
@@ -205,24 +205,24 @@ public class WebInputCrawlJax extends Input{
 					a.setUser(new Account());
 				}
 			}
-			
+
 			actions.add( pos, a);
 			return true;
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		
+
 	}
 
 	@Override
 	public boolean addAction(Action action) {
 		return addAction(actions.size(), action);
 	}
-	
+
 	@Override
 	public String toString() {
-		
+
 		if ( PrintUtil.USER_FRIENDLY_TO_STRING ) {
 			StringBuffer sb = new StringBuffer();
 			sb.append("[\n");
@@ -235,7 +235,7 @@ public class WebInputCrawlJax extends Input{
 
 			return sb.toString();
 		}
-		
+
 		return actions.toString();
 	}
 
@@ -244,20 +244,20 @@ public class WebInputCrawlJax extends Input{
 		WebInputCrawlJax clone = (WebInputCrawlJax) super.clone();
 		clone.actions = new ArrayList<>();
 		for ( Action action : actions ){
-//			clone.actions.add((Action)action.clone());
+			//			clone.actions.add((Action)action.clone());
 			clone.addAction(action.clone());
 		}
-		
+
 		return clone;
 	}
-	
+
 	/**
 	 * Return the number of actions in the input
 	 */
 	public int size(){
 		return this.actions.size();
 	}
-	
+
 	/**
 	 * Check if the input contain a concrete url
 	 * @param url to find
@@ -270,7 +270,7 @@ public class WebInputCrawlJax extends Input{
 		}
 		return false;
 	}
-	
+
 	public boolean containAccount(Account user){
 		for(Action acc:this.actions){
 			if(acc.containAccount(user)){
@@ -279,45 +279,48 @@ public class WebInputCrawlJax extends Input{
 		}
 		return false;
 	}
-	
-	public WebInputCrawlJax changeCredential(Account user2){
+
+	public WebInputCrawlJax changeCredential(Account user2, boolean avoidSameAccount){
 		if(user2==null || 
 				user2.getUsername()==null || 
 				user2.getPassword()==null) {
 			return null;
 		}
-		
+
 		Account loginAccount = null;
 		boolean changed = false;
 		for(Action act:actions()) {
 			if(Operations.isLogin(act)){
 				loginAccount = (Account) act.getUser();
-				if(loginAccount!=null &&
-						!(loginAccount.getUsername().equals(user2.getUsername()) &&		//will not change if user2 and loginAccount have the same username and password
-						  loginAccount.getPassword().equals(user2.getPassword()))) {
+				if(loginAccount!=null ) {
+					if ( avoidSameAccount && (loginAccount.getUsername().equals(user2.getUsername()) &&		//will not change if user2 and loginAccount have the same username and password
+							loginAccount.getPassword().equals(user2.getPassword()))) {
+						continue;
+					}
 					loginAccount.setUsername(user2.getUsername());
 					loginAccount.setPassword(user2.getPassword());
 					changed = true;
 					break;
+
 				}
 			}
 		}
-		
+
 		if(loginAccount==null || changed==false) {
 			return null;
 		}
-		
+
 		WebInputCrawlJax res=null;
 		try {
 			res = this.clone();
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		
+
 		if(res == null){
 			return null;
 		}
-		
+
 		List<Action> newActions = res.actions();
 		for(int i=0; i<res.actions().size(); i++){
 			if(res.actions.get(i).containCredential(loginAccount)){
@@ -364,7 +367,7 @@ public class WebInputCrawlJax extends Input{
 		user.setPasswordParam(passwordParam);
 		user.setUsername(null);
 		user.setPassword(null);
-		
+
 		boolean hasConfig = false;
 		if(webPro!=null &&
 				WebProcessor.sysConfig!=null){
@@ -379,7 +382,7 @@ public class WebInputCrawlJax extends Input{
 				else{	//accept all account-like info as user, even failed login
 					user = processCurrentActionAndUpdateUser((StandardAction) a, user, userParam, passwordParam);
 				}
-				
+
 			} else {
 				a.setUser(user);
 			}
@@ -389,10 +392,10 @@ public class WebInputCrawlJax extends Input{
 	private Account processCurrentActionAndUpdateUser(StandardAction a, Account user, String userParam, String passwordParam) {
 		StandardAction sAct = (StandardAction) a;
 		JsonArray fInputs = sAct.getFormInputs();
-		
+
 		String username = "";
 		String password = "";
-		
+
 		boolean hasUser = false;
 		boolean hasPassword = false;
 		for(int i = 0; i<fInputs.size(); i++){
@@ -400,9 +403,9 @@ public class WebInputCrawlJax extends Input{
 			if(fi.keySet().contains("identification") && fi.keySet().contains("values")){
 				JsonObject iden = fi.get("identification").getAsJsonObject();
 				JsonArray fiValues = fi.get("values").getAsJsonArray();
-				
-				
-				
+
+
+
 				if(iden.keySet().contains("value") && fiValues.size()>=1){
 					String idenKey = iden.get("value").getAsString().trim();
 					if(idenKey.equals(userParam)){
@@ -419,12 +422,12 @@ public class WebInputCrawlJax extends Input{
 					}
 				}
 			}
-			
+
 			if(hasUser && hasPassword){
 				break;
 			}
 		}
-		
+
 		if(hasUser && hasPassword){
 			user = new Account();
 			user.setUsernameParam(userParam);
@@ -433,41 +436,41 @@ public class WebInputCrawlJax extends Input{
 			user.setPassword(password);
 			a.setUser(user);
 			//setUser(user);
-			
+
 		} else {
 			a.setUser(user);
 		}
-		
+
 		return user;
 	}
 
 	@Override
 	public JsonArray toJson() {
 		JsonArray res = new JsonArray();
-		
+
 		if(actions==null || actions.size()<1){
 			return res;
 		}
-		
+
 		for(Action act:actions){
 			res.addAll(act.toJson());
 		}
-		
+
 		return res;
 	}
 
-	
+
 	public void identifyUsers(WebProcessor webProcessor) {
 		if(webProcessor==null || WebProcessor.sysConfig==null) {
 			return;
 		}
-		
+
 		Account user = new Account();
 		user.setUsernameParam(null);
 		user.setPasswordParam(null);
 		user.setUsername(null);
 		user.setPassword(null);
-		
+
 		for(Action a:actions){
 			if (a instanceof StandardAction) {
 				LoginParam usedLoginParam = ((StandardAction)a).usedLoginParam(WebProcessor.sysConfig.getLoginParams());
@@ -485,21 +488,21 @@ public class WebInputCrawlJax extends Input{
 				else {
 					a.setUser(user);
 				}
-				
+
 			} else {
 				a.setUser(user);
 			}
 		}
-		
-		
+
+
 	}
 
-	
+
 	public boolean containAction(Action addedAction) {
 		return actions.contains(addedAction);
 	}
 
 
 
-	
+
 }

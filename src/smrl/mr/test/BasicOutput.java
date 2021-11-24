@@ -121,5 +121,17 @@ public class BasicOutput implements Output {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public long getDuration() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public File getHtmlFile() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

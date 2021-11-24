@@ -34,6 +34,7 @@ import java.util.Set;
 
 import com.crawljax.core.configuration.CrawljaxConfiguration;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import smrl.mr.crawljax.Account;
@@ -193,6 +194,10 @@ public class Operations {
 	 */
 	public static Input changeCredentials( Input input, Object user){
 		return MR.CURRENT.provider.changeCredentials(input,user);
+	}
+	
+	public static Input changeCredentials( Input input, Object user, boolean ignoreSameAccount){
+		return MR.CURRENT.provider.changeCredentials(input,user,ignoreSameAccount);
 	}
 
 	/**
@@ -370,6 +375,12 @@ public class Operations {
 					return Path.class;
 				} 
 			}
+		}
+		
+		if ( value.toLowerCase().equals("false") ||
+				value.toLowerCase().equals("true") 
+				) {
+			return Boolean.class;
 		}
 
 		//default
@@ -934,6 +945,10 @@ public class Operations {
 	 * @return true if the updating is successful.
 	 */
 	public static boolean updateStringFormInput(JsonObject formInput, Object value) {
+		return updateStringFormInput(formInput, value, null);
+	}
+	
+	public static boolean updateStringFormInput(JsonObject formInput, Object value, String type) {
 		if(formInput==null || 
 				value==null || 
 				!formInput.keySet().contains("type")||
@@ -943,6 +958,14 @@ public class Operations {
 			return false;
 		}
 
+		if ( type != null ) {
+			JsonElement _type = formInput.get("type");
+			if ( ! _type.getAsString().equals(type) ) {
+				return false;
+			}
+		}
+		
+		
 		JsonArray valueArray = new JsonArray();
 		if (value instanceof Boolean) {
 			valueArray.add((Boolean) value);
