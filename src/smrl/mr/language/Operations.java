@@ -38,6 +38,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import smrl.mr.crawljax.Account;
+import smrl.mr.crawljax.WebProcessor;
 import smrl.mr.language.actions.IndexAction;
 import smrl.mr.language.actions.StandardAction;
 import smrl.mr.language.actions.WaitAction;
@@ -948,6 +949,30 @@ public class Operations {
 		return updateStringFormInput(formInput, value, null);
 	}
 	
+	public static boolean updateLoginStringFormInput(JsonObject fi, String value, String type) {
+		
+		ArrayList<LoginParam> loginParams = WebProcessor.getSysConfig().getLoginParams();
+		boolean hasUserParam = false;
+		for ( LoginParam loginParam : loginParams ) {
+			if(fi.keySet().contains("identification")){
+				JsonObject iden = fi.get("identification").getAsJsonObject();
+				if(iden.keySet().contains("value")){
+					if(iden.get("value").getAsString().trim().equals(loginParam.userParam)){
+						hasUserParam = true;
+						break;
+					}
+				}
+			}
+
+		}
+		
+		if ( ! hasUserParam ) {
+			return false;
+		}
+		
+		return updateStringFormInput(fi, value, type);
+	}
+	
 	public static boolean updateStringFormInput(JsonObject formInput, Object value, String type) {
 		if(formInput==null || 
 				value==null || 
@@ -1465,6 +1490,8 @@ public class Operations {
 	public static Object test_username(int x){ 
 		return MR.CURRENT.getMRData("test_username",x);
 	}
+
+	
 	
 	@MRDataProvider  
 	public static String XSSInjectionJenkins(){ 
