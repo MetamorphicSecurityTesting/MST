@@ -162,7 +162,11 @@ public class WebOutputSequence implements Output {
 		
 		//check each output in the sequence
 		for(Object out:this.seq){
-			isError(sysConfig, (WebOutputCleaned) out);
+			
+			if ( isError(sysConfig, (WebOutputCleaned) out) ) {
+				return true;
+			}
+			
 		}
 		
 		return false;
