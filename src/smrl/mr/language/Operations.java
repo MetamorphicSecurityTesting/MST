@@ -1369,7 +1369,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String XQueryInjection(int x){ 
-		return (String) MR.CURRENT.getMRData("XQueryInjection"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return (String) MR.CURRENT.getMRData("XQueryInjection",x);
 	}
 
 	@MRDataProvider  
