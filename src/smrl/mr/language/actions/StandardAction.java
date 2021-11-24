@@ -712,6 +712,35 @@ public class StandardAction extends Action {
 		
 		return false;
 	}
+	
+	@Override
+	public boolean containLoginFormInput() {
+		
+		if ( ! ( Operations.isLogin(this) || Operations.isSignup(this) ) ) {
+			return false;
+		}
+		
+		if(formInputs==null || 
+				formInputs.size()<1
+				){
+			return false;
+		}
+		
+		for(int i=0; i<formInputs.size(); i++){
+			JsonObject fi = formInputs.get(i).getAsJsonObject();
+			
+			if ( fi.keySet().contains("values")){
+				
+				
+				JsonArray values = fi.get("values").getAsJsonArray();
+				if( values.size()>0 ) {
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
 
 	@Override
 	public boolean containFormInputForFilePath() {
