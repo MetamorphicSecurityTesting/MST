@@ -582,7 +582,7 @@ public abstract class Action implements Cloneable {
 
 		for(int i=0; i<params.size(); i++){
 
-			if( params.get(i).getKey()== str )
+			if( params.get(i).getKey().equals(str))
 				params.get(i).setValue((String) val);		// Update value
 
 		}
@@ -656,7 +656,16 @@ public abstract class Action implements Cloneable {
 		return false;
 	}
 	
-	
+	public String randomString(int limit) {
+		String randomizedCharacter="";
+
+		Random random = new Random();
+		for (int i = 0; i<limit; i++)
+		{
+			randomizedCharacter += (char) (random.nextInt(26) + 'a');
+		}
+		return randomizedCharacter;
+	}
 	
 	/*
 

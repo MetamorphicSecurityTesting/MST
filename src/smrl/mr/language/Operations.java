@@ -1321,13 +1321,13 @@ public class Operations {
 
 	
 	@MRDataProvider  
-	public static Object CodeInjectionString(){
+	public static String CodeInjectionString(){
 		return CodeInjectionString(1);
 	}
 
 	@MRDataProvider()
-	public static Object CodeInjectionString(int x){ 
-		return MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+	public static String CodeInjectionString(int x){ 
+		return (String) MR.CURRENT.getMRData("CodeInjectionString",x);
 	}
 	
 	@MRDataProvider  
@@ -1378,13 +1378,13 @@ public class Operations {
 
 	
 	@MRDataProvider  
-	public static Object LDAPInjectionString(){ 
+	public static String LDAPInjectionString(){ 
 		return LDAPInjectionString(1);
 	}
 
 	@MRDataProvider()
-	public static Object LDAPInjectionString(int x){ 
-		return MR.CURRENT.getMRData("LDAPInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+	public static String LDAPInjectionString(int x){ 
+		return (String) MR.CURRENT.getMRData("LDAPInjectionString",x);
 	}
 	
 	@MRDataProvider  
@@ -1394,7 +1394,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String XQueryInjection(int x){ 
-		return (String) MR.CURRENT.getMRData("XQueryInjection"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return (String) MR.CURRENT.getMRData("XQueryInjection",x);
 	}
 
 	@MRDataProvider  
@@ -1406,17 +1406,7 @@ public class Operations {
 	public static String CommandInjection(int x){ 
 		return (String) MR.CURRENT.getMRData("CommandInjection",x);
 	}
-	@MRDataProvider()
-	public static String randomString(int limit) {
-		String randomizedCharacter="";
 
-		Random random = new Random();
-		for (int i = 0; i<200; i++)
-		{
-			randomizedCharacter += (char) (random.nextInt(26) + 'a');
-		}
-		return randomizedCharacter;
-	}
 
 	
 	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
@@ -1455,14 +1445,14 @@ public class Operations {
 	
 
 	@MRDataProvider  
-	public static Object XMLInjectedFile(){ 
+	public static String XMLInjectedFile(){ 
 		return XMLInjectedFile(1);
 	}
 
 
 	@MRDataProvider()
-	public static Object XMLInjectedFile(int x){ 
-		return MR.CURRENT.getMRData("XMLInjectedFile",x);
+	public static String XMLInjectedFile(int x){ 
+		return (String) MR.CURRENT.getMRData("XMLInjectedFile",x);
 	}
 	
 	/*@MRDataProvider  
@@ -1479,14 +1469,14 @@ public class Operations {
 	
 
 	@MRDataProvider  
-	public static Object RandomPath(){ 
+	public static String RandomPath(){ 
 		return RandomPath(1);
 	}
 
 
 	@MRDataProvider()
-	public static Object RandomPath(int x){ 
-		return MR.CURRENT.getMRData("RandomPath",x);
+	public static String RandomPath(int x){ 
+		return (String) MR.CURRENT.getMRData("RandomPath",x);
 	}
 	
 	
@@ -1503,7 +1493,18 @@ public class Operations {
 
 	
 	
+	@MRDataProvider  
+	public static String XSSInjectionJenkins(){ 
+		return XSSInjectionJenkins(1);
+	}
 
+
+	@MRDataProvider()
+	public static String XSSInjectionJenkins(int x){ 
+		return (String) MR.CURRENT.getMRData("XSSInjectionJenkins",x);
+	}
+	
+	
 	//	/**
 	//	 * Web-specific function.
 	//	 * Returns true if a an action might be performed by a user through the GUI.
