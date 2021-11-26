@@ -212,6 +212,9 @@ public abstract class MR {
 		
 		executions = 0;
 		
+		sourceInputsCounter = 0;
+		followUpInputsCounter = 0;
+		
 		resetMRState();
 		
 		iterateMR( sortedDBs, 0 );
@@ -236,6 +239,10 @@ public abstract class MR {
 		
 		
 		System.out.println("MR tested with "+executions+" set of inputs");
+		System.out.println("Source inputs : "+sourceInputsCounter);
+		System.out.println("Follow-up inputs : "+followUpInputsCounter);
+		
+		
 	}
 	
 	boolean FAILED=false;
@@ -423,6 +430,10 @@ public abstract class MR {
 	HashMap<MrDataDB,Integer> usedSourceInputsMap = new HashMap<MrDataDB,Integer>();
 
 	LinkedList<String> failures = new LinkedList<String>();
+
+	private int sourceInputsCounter;
+	private int followUpInputsCounter;
+	
 	public LinkedList<String> getFailures() {
 		return failures;
 	}
@@ -480,6 +491,11 @@ public abstract class MR {
 				if ( input instanceof MRData ) {
 					if ( ((MRData) input).isFollowUp() ) {
 						followUp = "[FOLLOW-UP INPUT]";
+						followUpInputsCounter++;
+					} else {
+						if ( input instanceof Input ) {
+							sourceInputsCounter++;	
+						}
 					}
 				}
 				
