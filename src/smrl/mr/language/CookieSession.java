@@ -187,6 +187,9 @@ public class CookieSession implements Session {
 		return map;
 	}
 	
+	@Override
+	public boolean isClean() {
+		return cookies.size() == 0;
+	}
 	
-
 }

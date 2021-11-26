@@ -666,6 +666,11 @@ public abstract class Action implements Cloneable {
 		}
 		return randomizedCharacter;
 	}
+
+	public String getCurrentURL() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 	/*
 

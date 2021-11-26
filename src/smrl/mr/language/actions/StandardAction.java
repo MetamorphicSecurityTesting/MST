@@ -211,6 +211,7 @@ public class StandardAction extends Action {
 		this.element = element;
 	}
 
+	@Override
 	public String getCurrentURL() {
 		return currentURL;
 	}
@@ -323,11 +324,6 @@ public class StandardAction extends Action {
 //		return null;
 //	}
 
-	@Override
-	public Session getSession() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public boolean isChannelChanged(){

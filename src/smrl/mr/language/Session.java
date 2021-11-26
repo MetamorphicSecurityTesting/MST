@@ -30,5 +30,7 @@ public interface Session {
 	public boolean isInvalid();
 	
 	public Map<String,String> getKeyValueMappings();
+
+	boolean isClean();
 	
 }

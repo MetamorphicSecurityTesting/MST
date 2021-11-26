@@ -1521,6 +1521,17 @@ public class Operations {
 
 
 
+	public static boolean sameUrl(String left, String right ) {
+		while ( left.endsWith("#") ) {
+			left = left.subSequence(0,left.length()-1 ).toString();
+		}
+		
+		while ( right.endsWith("#") ) {
+			right = right.subSequence(0,right.length()-1 ).toString();
+		}
+		
+		return left.equals(right);
+	}
 }
 
 

@@ -765,6 +765,11 @@ public class WebProcessor {
 
 		CookieSession session = (CookieSession) act.getSession();
 		if ( session != null ) {
+			
+			if ( session.isClean() ) {
+				driver.manage().deleteAllCookies();
+			}
+			
 			for (Cookie ck : session.getCookies() ) {
 				setCookieInDriver(ck);
 			}
