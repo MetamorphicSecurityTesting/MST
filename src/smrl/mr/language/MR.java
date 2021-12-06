@@ -517,15 +517,20 @@ public abstract class MR {
 				
 				PrintUtil.USER_FRIENDLY_TO_STRING = true;
 				msg += i.getKey()+ " "+ followUp +" : \n"+i.toString()+"\n";
-				Output cachedOut = provider.getCachedOutput( (WebInputCrawlJax) i.getValue() );
-				String outputUrl = null;
-				if ( cachedOut != null ) {
-					File file = cachedOut.getHtmlFile();
-					if ( file != null ) {
-						outputUrl = file.getAbsolutePath();
+				
+				Object output = i.getValue();
+				if ( output instanceof WebInputCrawlJax ) {
+					Output cachedOut = provider.getCachedOutput( (WebInputCrawlJax) output );
+					String outputUrl = null;
+					if ( cachedOut != null ) {
+						File file = cachedOut.getHtmlFile();
+						if ( file != null ) {
+							outputUrl = file.getAbsolutePath();
+						}
 					}
+
+					msg += "output HTML at: "+outputUrl;
 				}
-				msg += "output HTML at: "+outputUrl;
 				PrintUtil.USER_FRIENDLY_TO_STRING = false;
 			}	
 		}
