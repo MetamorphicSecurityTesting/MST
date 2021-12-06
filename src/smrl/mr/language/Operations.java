@@ -1207,7 +1207,10 @@ public class Operations {
 	 * @return true if the output contains an error message
 	 */
 	public static boolean isError(Object output) {
-		return MR.CURRENT.provider.isError(output);
+		boolean isError = MR.CURRENT.provider.isError(output);
+		
+		System.out.println("!!!isError: "+isError);
+		return isError;
 	}
 
 	/**
