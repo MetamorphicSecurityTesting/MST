@@ -1535,6 +1535,17 @@ public class Operations {
 		
 		return left.equals(right);
 	}
+	
+	@MRDataProvider()
+	public static String  PayloadEntry(String catalogName){ 
+		return (String) PayloadEntry(catalogName, 1);
+	}
+	
+	@MRDataProvider()
+	public static String  PayloadEntry(String catalogName, int x ){ 
+		return (String) MR.CURRENT.getMRData(catalogName,x);
+	}
+	
 }
 
 
