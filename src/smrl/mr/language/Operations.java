@@ -1099,6 +1099,7 @@ public class Operations {
 	 * @return
 	 */
 	private static boolean _notTried(String username, String url) {
+		
 		HashSet<String> setOfInputs = triedInputs.get(username);
 
 		if ( setOfInputs == null ) {
@@ -1107,11 +1108,13 @@ public class Operations {
 		}
 
 		if ( setOfInputs.contains(url) ) {
+			System.out.println("!!! _notTried WITH "+username+" "+url+" FALSE");
 			return false;
 		}
 
 		setOfInputs.add(url);
 
+		System.out.println("!!! _notTried WITH "+username+" "+url+" TRUE");
 		return true;
 	}
 
