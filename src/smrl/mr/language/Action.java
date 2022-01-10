@@ -227,6 +227,7 @@ public abstract class Action implements Cloneable {
 			return url;
 		}
 
+		//Fabrizio: the following code does not enable to remove the part following a "#"
 		try {
 			URI uri = new URI(url);
 
@@ -239,7 +240,12 @@ public abstract class Action implements Cloneable {
 		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
-
+		
+		int pos = url.indexOf("#");
+		if ( pos > 0 ) {
+			return url.substring(0,pos);
+		}
+		
 		return url;
 	}
 
