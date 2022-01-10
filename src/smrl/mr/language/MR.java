@@ -241,7 +241,7 @@ public abstract class MR {
 		System.out.println("MR tested with "+executions+" set of inputs");
 		System.out.println("Source inputs : "+sourceInputsCounter);
 		System.out.println("Follow-up inputs : "+followUpInputsCounter);
-		
+		System.out.println("Follow-up inputs executed : "+executedFollowUpInputsCounter);
 		
 	}
 	
@@ -433,6 +433,7 @@ public abstract class MR {
 
 	private int sourceInputsCounter;
 	private int followUpInputsCounter;
+	private int executedFollowUpInputsCounter;
 	
 	public LinkedList<String> getFailures() {
 		return failures;
@@ -949,6 +950,11 @@ public abstract class MR {
 
 
 	public void setLastInputProcessed(Input input, int pos) {
+		if ( input instanceof MRData ) {
+			if ( ((MRData) input).isFollowUp() ) {
+				this.executedFollowUpInputsCounter++;
+			}
+		}
 		this.lastInputs.add( input );
 		this.lastInputPos.add( pos );
 	}
