@@ -928,7 +928,7 @@ public class WebOperationsProvider implements OperationsProvider {
 	@Override
 	public boolean isResetPassword(Action action) {
 		// TODO Auto-generated method stub
-		return false;
+		return impl.sysConfig.isResetUrl(action.getUrl());
 	}
 
 	@Override

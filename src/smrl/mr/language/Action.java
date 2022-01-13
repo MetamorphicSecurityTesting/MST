@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.StringJoiner;
 
 import org.apache.http.client.utils.URIBuilder;
 import org.hamcrest.core.IsInstanceOf;
@@ -677,6 +678,30 @@ public abstract class Action implements Cloneable {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	
+	public String rephraseURL(String url, String sep) {
+		
+		String splited_url[] = url.split("/");
+		
+		StringJoiner joiner = new StringJoiner("/");
+		for(int i = 0; i <splited_url.length-1; i++) 
+			joiner.add(splited_url[i]);
+		
+		StringJoiner sj = new StringJoiner(sep);
+		sj.add(joiner.toString());
+		sj.add(splited_url[splited_url.length-1]);
+		
+		
+		//System.out.println(url);
+		//System.out.println(sj.toString());
+		return sj.toString();
+	}
+	
+	
+	
+	
+	
 	
 	/*
 

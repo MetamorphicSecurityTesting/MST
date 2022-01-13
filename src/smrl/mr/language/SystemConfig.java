@@ -39,6 +39,7 @@ public class SystemConfig {
 	private String randomFilePathFile;
 	private String randomAdminFilePathFile;
 	private String logoutURL;
+	private String resetURL;
 //	private String loginURL;
 //	private String userParameter;
 //	private String passwordParameter;
@@ -83,6 +84,7 @@ public class SystemConfig {
 		this.randomFilePathFile = "";
 		this.randomAdminFilePathFile = "";
 		this.logoutURL = "";
+		this.resetURL = "";
 //		this.loginURL = "";
 //		this.userParameter = "";
 //		this.passwordParameter = "";
@@ -184,6 +186,13 @@ public class SystemConfig {
 			}
 			else{
 				this.logoutURL = "";
+			}
+			
+			if(jsonObject.keySet().contains("resetURL")){
+				this.resetURL = jsonObject.get("resetURL").getAsString().trim();
+			}
+			else{
+				this.resetURL = "";
 			}
 			
 			this.loginParams = new ArrayList<LoginParam>();
@@ -543,9 +552,16 @@ public class SystemConfig {
 	public String getLogoutURL() {
 		return logoutURL;
 	}
+	public String getResetURL() {
+		return resetURL;
+	}
 
 	public void setLogoutURL(String logoutURL) {
 		this.logoutURL = logoutURL;
+	}
+	
+	public void setResetURL(String resetURL) {
+		this.resetURL = resetURL;
 	}
 
 	public JsonObject getSignup() {
@@ -825,6 +841,12 @@ public class SystemConfig {
 		return equalURL(this.logoutURL, url);		
 	}
 
+	public boolean isResetUrl(String url) {  ///Nazanin
+		if(url==null || url.isEmpty()){
+			return false;
+		}
+		return equalURL(this.resetURL, url);		
+	}
 	
 	
 	public boolean isHeadless() {
