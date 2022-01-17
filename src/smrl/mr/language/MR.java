@@ -461,6 +461,7 @@ public abstract class MR {
 		String lastInputStrs[] = new String[lastInputs.size()];
 		int lastPosStrs[] = new int[lastInputPos.size()];
 		
+		
 		for ( MrDataDB db : sortedDBs ){
 			HashMap<String, Object> inputsMap = db.getProcessedInputs();
 			
@@ -552,8 +553,18 @@ public abstract class MR {
 		
 		for ( int j=0; j<lastInputStrs.length; j++ ) {
 			msg += "\n"+lastInputStrs[j]+" (action position: "+lastPosStrs[j]+")";
-			msg += "\n"+lastInputs.get(j).actions().get(lastPosStrs[j]).toCompleteString();
-			
+			if ( lastInputs.size() <= j  ) {
+				msg += "\n"+"CANNOT FIND INPUT "+j+"";
+			} else {
+				if ( lastInputs.get(j).actions().size() <= lastPosStrs[j]  ) {
+					msg += "\n"+"CANNOT FIND ACTION "+lastPosStrs[j]+"";
+					for ( Action action : lastInputs.get(j).actions() ) {
+						msg += "\n\t\t"+action;	
+					}
+				} else { 
+					msg += "\n"+lastInputs.get(j).actions().get(lastPosStrs[j]).toCompleteString();
+				}
+			}
 		}
 		
 		msg += "\n **** ";
