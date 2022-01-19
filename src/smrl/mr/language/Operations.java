@@ -1358,15 +1358,16 @@ public class Operations {
 		return MR.CURRENT.getMRData("StaticInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 	
+
+	
 	@MRDataProvider  
 	public static String WeakPassword(){ 
 		return WeakPassword(1);
 	}
 
-
 	@MRDataProvider()
 	public static String WeakPassword(int x){ 
-		return (String) MR.CURRENT.getMRData("WeakPassword_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		return (String) MR.CURRENT.getMRData("WeakPassword",x);
 	}
 	
 	
