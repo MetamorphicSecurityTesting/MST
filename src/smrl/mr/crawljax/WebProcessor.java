@@ -1378,7 +1378,8 @@ public class WebProcessor {
 			outObj.resultedUrl = driver.getCurrentUrl();
 			outObj.realRequestedUrl = realRequestedUrl;
 			outObj.realClickedElementText = realClickedElementText;
-
+			outObj.setInputWithPos(input,i);
+			
 			if(checkStatusCode) {
 				outObj.statusCode = getStatusCode(driver);
 			}

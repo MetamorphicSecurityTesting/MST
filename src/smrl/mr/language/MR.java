@@ -562,7 +562,14 @@ public abstract class MR {
 						msg += "\n\t\t"+action;	
 					}
 				} else { 
-					msg += "\n"+lastInputs.get(j).actions().get(lastPosStrs[j]).toCompleteString();
+					if ( lastPosStrs[j] < 0 ) {
+						msg += "\n"+"ALL ACTIONS MIGHT BE FAULTY "+lastPosStrs[j]+"";
+						for ( Action action : lastInputs.get(j).actions() ) {
+							msg += "\n\t\t"+action;	
+						}
+					} else {
+						msg += "\n"+lastInputs.get(j).actions().get(lastPosStrs[j]).toCompleteString();
+					}
 				}
 			}
 		}
@@ -968,6 +975,18 @@ public abstract class MR {
 		}
 		this.lastInputs.add( input );
 		this.lastInputPos.add( pos );
+	}
+	
+	public void resetLastInputProcessed(Input input, int pos) {
+		if ( input instanceof MRData ) {
+			if ( ((MRData) input).isFollowUp() ) {
+//				this.executedFollowUpInputsCounter++;
+			}
+		}
+		
+		this.lastInputs.set( this.lastInputs.size() -1 , input );
+		this.lastInputPos.set( this.lastInputs.size() -1 , pos );
+		
 	}
 	
 

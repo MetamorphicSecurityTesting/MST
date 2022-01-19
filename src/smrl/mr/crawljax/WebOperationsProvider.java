@@ -37,6 +37,7 @@ import com.google.gson.JsonObject;
 import smrl.mr.language.Action;
 import smrl.mr.language.CookieSession;
 import smrl.mr.language.Input;
+import smrl.mr.language.MR;
 import smrl.mr.language.Operations;
 import smrl.mr.language.OperationsProvider;
 import smrl.mr.language.Output;
@@ -584,12 +585,14 @@ public class WebOperationsProvider implements OperationsProvider {
 			WebOutputCleaned storedOutput = allOutputs.get(key);
 			for(Object out:outSequence){
 				WebOutputCleaned newOutput = (WebOutputCleaned)out;
+				MR.CURRENT.setLastInputProcessed( newOutput.input, newOutput.inputPos );
 				if(storedOutput.compare(newOutput)){
 					return true;
 				}
 			}
 		}
 
+		
 		return false;
 	}
 

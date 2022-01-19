@@ -65,6 +65,8 @@ public class WebOutputCleaned implements Output {
 	private long duration;
 	
 	private File htmlFile;
+	public WebInputCrawlJax input;
+	public int inputPos;
 	
 	@Override
 	public File getHtmlFile() {
@@ -626,6 +628,13 @@ public class WebOutputCleaned implements Output {
 	@Override
 	public long getDuration() {
 		return duration;
+	}
+
+
+
+	public void setInputWithPos(WebInputCrawlJax input, int pos) {
+		this.input = input;
+		this.inputPos = pos;
 	}
 	
 }
