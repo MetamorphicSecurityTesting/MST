@@ -60,10 +60,10 @@ public class WebOperationsProvider implements OperationsProvider {
 	public Output getCachedOutput( WebInputCrawlJax input ) {
 		return ( outputCache.get( input ) );
 	}
-	
+
 	public WebOperationsProvider(String configFile) {
 		impl = new WebProcessor();
-//		this.keepCache = false;
+		//		this.keepCache = false;
 
 		if(configFile!=null && !configFile.isEmpty()){
 			impl.setConfig(configFile);
@@ -90,7 +90,7 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	public WebOperationsProvider(String inputFile, String outFile, String configFile) {
 		impl = new WebProcessor();
-//		this.keepCache = false;
+		//		this.keepCache = false;
 
 		if(configFile!=null && !configFile.isEmpty()){
 			impl.setConfig(configFile);
@@ -111,7 +111,7 @@ public class WebOperationsProvider implements OperationsProvider {
 
 	public WebOperationsProvider(String inputFile, String outFile, String configFile, String randomFilePath, String randomAdminFilePath) {
 		this(inputFile, outFile, configFile);
-//		this.keepCache = false;
+		//		this.keepCache = false;
 
 		try {
 
@@ -333,7 +333,7 @@ public class WebOperationsProvider implements OperationsProvider {
 	public smrl.mr.language.Input changeCredentials(smrl.mr.language.Input input, Object user) {
 		return impl.changeCredential((WebInputCrawlJax) input, (Account) user, true);
 	}
-	
+
 	@Override
 	public smrl.mr.language.Input changeCredentials(smrl.mr.language.Input input, Object user, boolean ignoreSameAccount) {
 		return impl.changeCredential((WebInputCrawlJax) input, (Account) user, ignoreSameAccount);
@@ -505,50 +505,50 @@ public class WebOperationsProvider implements OperationsProvider {
 	}
 
 	private HashMap<String,Set<String>> _reservedKeywords;
-	
+
 	@Override
 	public Set<String> reservedKeywords(Account _user) {
-	
+
 		String username = _user.getUsername();
-	
+
 		if( _reservedKeywords == null ){
 
 			loadOutputStore();
-			
+
 			System.out.println(outputStore);
-			
+
 			HashMap<String,Set<String>> wordsMap = new HashMap<String,Set<String>>();
-			
+
 			for ( Entry<String, HashMap<String, WebOutputCleaned>> e : outputStore.entrySet() ) {
-				
+
 				String user = e.getKey();
-				
+
 				HashMap<String, WebOutputCleaned> allOutputs = e.getValue();
-				
+
 				HashSet<String> _words = new HashSet<String>();
 				for(String key:allOutputs.keySet()){
 					WebOutputCleaned storedOutput = allOutputs.get(key);
 					String[] words = storedOutput.text.split("\\s+");
-					
+
 					List<String> list = new ArrayList<String> ( Arrays.asList(words) );
-					
-					
-					
+
+
+
 					//remove likely dates
 					list.removeIf( w -> w.length() <= 3 );
-					
+
 					//remove likely dates
 					list.removeIf( w -> w.contains(":") );
-					
+
 					//remove likely HTML
 					list.removeIf( w -> ( w.contains(">") || w.contains("<") ) );
-					
+
 					_words.addAll( list );
-					
-					
+
+
 				}
 				wordsMap.put(user,_words);
-				
+
 			}
 
 			for ( Entry<String, Set<String>> e : wordsMap.entrySet() ) {
@@ -571,7 +571,7 @@ public class WebOperationsProvider implements OperationsProvider {
 			keywords = new HashSet<String>();	
 		}
 		keywords.add( _user.getPassword() );
-		
+
 		return keywords;
 	}
 
@@ -592,7 +592,7 @@ public class WebOperationsProvider implements OperationsProvider {
 			}
 		}
 
-		
+
 		return false;
 	}
 
@@ -945,15 +945,21 @@ public class WebOperationsProvider implements OperationsProvider {
 
 
 
-	
+
 
 	public RemoteFile remoteFile(Object path) {
-		
+
 		SystemConfig sysConfig = impl.getSysConfig();
-		VMWrapper vmWrapper = new VMWrapper(sysConfig.getVMname(),sysConfig.getIP(),sysConfig.getVmAdmin());
+
+		VMWrapper vmWrapper;
+		if ( sysConfig.getVMname().isEmpty() ) {
+			vmWrapper = null;
+		} else {
+			vmWrapper = new VMWrapper(sysConfig.getVMname(),sysConfig.getIP(),sysConfig.getVmAdmin());
+		}
 		
 		RemoteFile rf = new RemoteFile(vmWrapper, path.toString());
-		
+
 		return rf;
 	}
 
