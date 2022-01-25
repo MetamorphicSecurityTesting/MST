@@ -685,17 +685,21 @@ public abstract class Action implements Cloneable {
 		String splited_url[] = url.split("/");
 		
 		StringJoiner joiner = new StringJoiner("/");
+		
+		if (splited_url.length>= 2) {
+		
 		for(int i = 0; i <splited_url.length-1; i++) 
 			joiner.add(splited_url[i]);
 		
 		StringJoiner sj = new StringJoiner(sep);
 		sj.add(joiner.toString());
 		sj.add(splited_url[splited_url.length-1]);
-		
-		
-		//System.out.println(url);
-		//System.out.println(sj.toString());
+	
 		return sj.toString();
+		}
+		else {
+			return null;
+		}
 	}
 	
 	

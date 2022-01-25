@@ -146,7 +146,7 @@ public class Operations {
 	public static List<Input> inputs(){
 		return MR.CURRENT.getMRData("Input");
 	}
-	
+
 	/**
 	 * Data Representation Function. 
 	 * Returns the i-th input sequence.
@@ -196,7 +196,7 @@ public class Operations {
 	public static Input changeCredentials( Input input, Object user){
 		return MR.CURRENT.provider.changeCredentials(input,user);
 	}
-	
+
 	public static Input changeCredentials( Input input, Object user, boolean ignoreSameAccount){
 		return MR.CURRENT.provider.changeCredentials(input,user,ignoreSameAccount);
 	}
@@ -300,7 +300,7 @@ public class Operations {
 	public static Object WeakEncryption() {
 		return MR.CURRENT.getMRData("WeakEncryption",1);
 	}
-	
+
 	@MRDataProvider
 	public static Object WeakEncryption(int i) {
 		return MR.CURRENT.getMRData("WeakEncryption",i);
@@ -377,7 +377,7 @@ public class Operations {
 				} 
 			}
 		}
-		
+
 		if ( value.toLowerCase().equals("false") ||
 				value.toLowerCase().equals("true") 
 				) {
@@ -734,7 +734,7 @@ public class Operations {
 
 		return res;
 	}
-	
+
 	/**
 	 * Web-specific function.
 	 * Returns true if a URL can be reached by the given user by exploring the user interface of the system (e.g., by traversing anchors).
@@ -948,9 +948,9 @@ public class Operations {
 	public static boolean updateStringFormInput(JsonObject formInput, Object value) {
 		return updateStringFormInput(formInput, value, null);
 	}
-	
+
 	public static boolean updateLoginStringFormInput(JsonObject fi, String value, String type) {
-		
+
 		ArrayList<LoginParam> loginParams = WebProcessor.getSysConfig().getLoginParams();
 		boolean hasUserParam = false;
 		for ( LoginParam loginParam : loginParams ) {
@@ -965,14 +965,14 @@ public class Operations {
 			}
 
 		}
-		
+
 		if ( ! hasUserParam ) {
 			return false;
 		}
-		
+
 		return updateStringFormInput(fi, value, type);
 	}
-	
+
 	public static boolean updateStringFormInput(JsonObject formInput, Object value, String type) {
 		if(formInput==null || 
 				value==null || 
@@ -989,8 +989,8 @@ public class Operations {
 				return false;
 			}
 		}
-		
-		
+
+
 		JsonArray valueArray = new JsonArray();
 		if (value instanceof Boolean) {
 			valueArray.add((Boolean) value);
@@ -1067,7 +1067,7 @@ public class Operations {
 		return keepDialogsOpen;
 	}
 
-	
+
 	/**
 	 * Web-specific function.
 	 * Checks whether a given user tried to access a given URL until the current execution period.
@@ -1099,7 +1099,7 @@ public class Operations {
 	 * @return
 	 */
 	private static boolean _notTried(String username, String url) {
-		
+
 		HashSet<String> setOfInputs = triedInputs.get(username);
 
 		if ( setOfInputs == null ) {
@@ -1211,7 +1211,7 @@ public class Operations {
 	 */
 	public static boolean isError(Object output) {
 		boolean isError = MR.CURRENT.provider.isError(output);
-		
+
 		System.out.println("!!!isError: "+isError);
 		return isError;
 	}
@@ -1264,7 +1264,7 @@ public class Operations {
 	public static boolean getResetBrowserBetweenInputs() {
 		return resetBrowserBetweenInputs;
 	}
-	
+
 	/**
 	 * Returns a set of words that appear only in outputs that are associated to the passed user.
 	 * 
@@ -1274,9 +1274,9 @@ public class Operations {
 	public static Set<String> reservedKeywords(Object user){
 		return MR.CURRENT.provider.reservedKeywords((Account) user);
 	}
-	
-	
-	
+
+
+
 	@MRDataProvider  
 	public static RemoteFile Log(){ 
 		return Log(1);
@@ -1286,7 +1286,7 @@ public class Operations {
 	public static RemoteFile Log(int x){
 		return MR.CURRENT.provider.remoteFile( MR.CURRENT.getMRData("Log",x) );
 	}
- 
+
 	public static boolean containsAny( Collection<String> lhs, Collection<Object> rhs ) {
 		for ( Object r : rhs ) {
 			if ( lhs.contains( r ) ) {
@@ -1295,21 +1295,21 @@ public class Operations {
 		}
 		return false;
 	}
-	
+
 
 	public static boolean isFileParameter(String value) {
 		return value.matches("^[:,\\w,\\,/,\\s-]+\\.[A-Za-z]{2,3}");
 	}
 
 	//// Nazanin's Implementation Start Point
-	
+
 	public static boolean isFormInput(Object formInput) {
 		return MR.CURRENT.provider.isFormInputForFilePath(formInput);
 	}
 	public static boolean isResetPassword(Action action) {
 		return MR.CURRENT.provider.isResetPassword(action);
 	}
-	
+
 	@MRDataProvider  
 	public static String SQLInjectionString(){ 
 		return SQLInjectionString(1);
@@ -1317,7 +1317,7 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String SQLInjectionString(int x){
-		
+
 		// return a complete list of sql injection strings
 		return (String) MR.CURRENT.getMRData("SQLInjectionString",x);
 
@@ -1325,7 +1325,7 @@ public class Operations {
 		//	return SQLInjectionList[x];
 	}
 
-	
+
 	@MRDataProvider  
 	public static String CodeInjectionString(){
 		return CodeInjectionString(1);
@@ -1333,9 +1333,9 @@ public class Operations {
 
 	@MRDataProvider()
 	public static String CodeInjectionString(int x){ 
-		return (String) MR.CURRENT.getMRData("CodeInjectionString",x);
+		return (String) MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-	
+
 	@MRDataProvider  
 	public static String  XSSInjectionString(){
 		return  XSSInjectionString(1);
@@ -1345,7 +1345,7 @@ public class Operations {
 	public static String  XSSInjectionString(int x){ 
 		return (String) MR.CURRENT.getMRData("XSSInjectionString",x);
 	}
-    
+
 
 	@MRDataProvider  
 	public static Object StaticInjectionString(){ 
@@ -1357,9 +1357,9 @@ public class Operations {
 	public static Object StaticInjectionString(int x){ 
 		return MR.CURRENT.getMRData("StaticInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
-	
 
-	
+
+
 	@MRDataProvider  
 	public static String WeakPassword(){ 
 		return WeakPassword(1);
@@ -1369,8 +1369,8 @@ public class Operations {
 	public static String WeakPassword(int x){ 
 		return (String) MR.CURRENT.getMRData("WeakPassword",x);
 	}
-	
-	
+
+
 
 	@MRDataProvider  
 	public static String SpecialCharacters(){ 
@@ -1383,7 +1383,7 @@ public class Operations {
 		return (String) MR.CURRENT.getMRData("SpecialCharacters",x);
 	}
 
-	
+
 	@MRDataProvider  
 	public static String LDAPInjectionString(){ 
 		return LDAPInjectionString(1);
@@ -1393,7 +1393,7 @@ public class Operations {
 	public static String LDAPInjectionString(int x){ 
 		return (String) MR.CURRENT.getMRData("LDAPInjectionString",x);
 	}
-	
+
 	@MRDataProvider  
 	public static String XQueryInjection(){ 
 		return XQueryInjection(1);
@@ -1415,7 +1415,7 @@ public class Operations {
 	}
 
 
-	
+
 	@MRDataProvider  //enable us to automatically iterate over a set of entries of that type
 	public static Object CookiePath(){ 
 		return CookiePath(1);
@@ -1426,7 +1426,7 @@ public class Operations {
 	public static Object  CookiePath(int x){ 
 		return MR.CURRENT.getMRData(" CookiePath",x); // let's see if this works
 	}
-	
+
 	@MRDataProvider  
 	public static Object CRLFAttackString(){ // it contains EVAL injection as well
 		return CRLFAttackString(1);
@@ -1449,7 +1449,7 @@ public class Operations {
 		return (String) MR.CURRENT.getMRData("FileWithInvalidType",x);
 	}
 
-	
+
 
 	@MRDataProvider  
 	public static String XMLInjectedFile(){ 
@@ -1461,7 +1461,7 @@ public class Operations {
 	public static String XMLInjectedFile(int x){ 
 		return (String) MR.CURRENT.getMRData("XMLInjectedFile",x);
 	}
-	
+
 	/*@MRDataProvider  
 	public static Object CronExpressionsInjection(){ 
 		return CronExpressionsInjection(1);
@@ -1472,8 +1472,8 @@ public class Operations {
 	public static Object CronExpressionsInjection(int x){ 
 		return MR.CURRENT.getMRData("CronExpressionsInjection",x);
 	}
-	*/
-	
+	 */
+
 
 	@MRDataProvider  
 	public static String RandomPath(){ 
@@ -1485,8 +1485,8 @@ public class Operations {
 	public static String RandomPath(int x){ 
 		return (String) MR.CURRENT.getMRData("RandomPath",x);
 	}
-	
-	
+
+
 	@MRDataProvider  
 	public static Object test_username(){ 
 		return test_username(1);
@@ -1498,8 +1498,8 @@ public class Operations {
 		return MR.CURRENT.getMRData("test_username",x);
 	}
 
-	
-	
+
+
 	@MRDataProvider  
 	public static String XSSInjectionJenkins(){ 
 		return XSSInjectionJenkins(1);
@@ -1510,8 +1510,8 @@ public class Operations {
 	public static String XSSInjectionJenkins(int x){ 
 		return (String) MR.CURRENT.getMRData("XSSInjectionJenkins",x);
 	}
-	
-	
+
+
 	//	/**
 	//	 * Web-specific function.
 	//	 * Returns true if a an action might be performed by a user through the GUI.
@@ -1529,27 +1529,33 @@ public class Operations {
 
 
 	public static boolean sameUrl(String left, String right ) {
-		while ( left.endsWith("#") ) {
-			left = left.subSequence(0,left.length()-1 ).toString();
+		if(left != null && right != null) {
+
+			while ( left.endsWith("#") ) {
+				left = left.subSequence(0,left.length()-1 ).toString();
+			}
+
+			while ( right.endsWith("#") ) {
+				right = right.subSequence(0,right.length()-1 ).toString();
+			}
+
+			return left.equals(right);
 		}
-		
-		while ( right.endsWith("#") ) {
-			right = right.subSequence(0,right.length()-1 ).toString();
+		else {
+			return false;
 		}
-		
-		return left.equals(right);
 	}
-	
+
 	@MRDataProvider()
 	public static String  PayloadEntry(String catalogName){ 
 		return (String) PayloadEntry(catalogName, 1);
 	}
-	
+
 	@MRDataProvider()
 	public static String  PayloadEntry(String catalogName, int x ){ 
 		return (String) MR.CURRENT.getMRData(catalogName,x);
 	}
-	
+
 }
 
 
