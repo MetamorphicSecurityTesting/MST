@@ -62,6 +62,11 @@ public class MrDataDBRandom extends MrDataDB<Object> {
 				double val = Math.random()*100 ;
 				db.add(val);
 			}
+		} else if ( type == Boolean.class ) {
+			db.add(true);
+			db.add(false);
+		} else {
+			throw new RuntimeException("Type "+type+"not handled by "+MrDataDBRandom.class.getName() );
 		}
 		return db;
 	}
