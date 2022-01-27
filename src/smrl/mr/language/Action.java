@@ -65,6 +65,9 @@ public abstract class Action implements Cloneable {
 		return session;
 	}
 
+	public boolean isClickOnButton() { return false; }
+	
+	
 	public static StandardAction standard(JsonObject standardAction){
 		if(standardAction.keySet().contains("eventType")){
 			String type = standardAction.get("eventType").getAsString().trim().toLowerCase();
