@@ -825,6 +825,22 @@ public class StandardAction extends Action {
 		return this.cipherSuiteBlackList;
 	}
 
+	@Override
+	public boolean isClickOnButton() {
+		if ( eventType != Action.ActionType.click ) {
+				return false;
+			}
+		int lastChunk = id.lastIndexOf("/");
+		if ( lastChunk > 0 ) {
+			String lastChunkString  = id.substring(lastChunk+1,id.length());
+			if ( lastChunkString.startsWith("BUTTON") ) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
 	
 	
 	

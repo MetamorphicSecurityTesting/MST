@@ -1332,8 +1332,9 @@ public class Operations {
 	}
 
 	@MRDataProvider()
-	public static String CodeInjectionString(int x){ 
-		return (String) MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+	public static String CodeInjectionString(int x){
+		return (String) MR.CURRENT.getMRData("CodeInjectionString",x);
+//		return (String) MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 
 	@MRDataProvider  

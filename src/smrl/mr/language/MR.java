@@ -241,10 +241,23 @@ public abstract class MR {
 		System.out.println("MR tested with "+executions+" set of inputs");
 		System.out.println("Source inputs : "+sourceInputsCounter);
 		System.out.println("Follow-up inputs : "+followUpInputsCounter);
+		
 		System.out.println("Follow-up inputs executed : "+executedFollowUpInputsCounter);
 		
 	}
 	
+	private int countExecutedFollowUpInputs() {
+		int executedFollowUpInputsCounter = 0;
+		for ( Input input : lastInputs ) {
+			if ( input instanceof MRData ) {
+				if ( ((MRData) input).isFollowUp() ) {
+					executedFollowUpInputsCounter++;
+				}
+			}
+		}
+		return executedFollowUpInputsCounter;
+	}
+
 	boolean FAILED=false;
 
 	public static boolean PRINT_EXECUTED_MRS = false;
@@ -277,7 +290,7 @@ public abstract class MR {
 			}
 			
 			
-			String msg = extractExecutionInformation(false);
+			String msg = extractExecutionInformation(false, false);
 			
 			if ( PRINT_EXECUTED_MRS ) {
 				System.out.println("Executed with: "+msg);
@@ -444,7 +457,7 @@ public abstract class MR {
 		
 		LOGGER.log(Level.INFO,"FAILURE");
 		
-		String msg = extractExecutionInformation(true);
+		String msg = extractExecutionInformation(true, true);
 		
 		if ( msg == null ) {
 			System.out.println("(DUPLICATED FAILURE, ignoring)");
@@ -455,7 +468,7 @@ public abstract class MR {
 		System.out.println("FAILURE: \n"+msg);
 	}
 	
-	private String extractExecutionInformation(boolean performFiltring) {
+	private String extractExecutionInformation(boolean performFiltring, boolean countInputs) {
 		String msg = "";
 		
 		String lastInputStrs[] = new String[lastInputs.size()];
@@ -493,10 +506,15 @@ public abstract class MR {
 				if ( input instanceof MRData ) {
 					if ( ((MRData) input).isFollowUp() ) {
 						followUp = "[FOLLOW-UP INPUT]";
-						followUpInputsCounter++;
+						
+						if ( countInputs ) {
+							followUpInputsCounter++;
+						}
 					} else {
 						if ( input instanceof Input ) {
-							sourceInputsCounter++;	
+							if ( countInputs ) {
+								sourceInputsCounter++;	
+							}
 						}
 					}
 				}
@@ -577,6 +595,9 @@ public abstract class MR {
 		msg += "\n **** ";
 		
 		
+		if( countInputs ){
+			executedFollowUpInputsCounter += countExecutedFollowUpInputs( );
+		}
 		
 //		msg += "\n**[Last equal: "+lastEqualA+" ="+lastEqualBStr+"]";
 //		
@@ -968,22 +989,11 @@ public abstract class MR {
 
 
 	public void setLastInputProcessed(Input input, int pos) {
-		if ( input instanceof MRData ) {
-			if ( ((MRData) input).isFollowUp() ) {
-				this.executedFollowUpInputsCounter++;
-			}
-		}
 		this.lastInputs.add( input );
 		this.lastInputPos.add( pos );
 	}
 	
 	public void resetLastInputProcessed(Input input, int pos) {
-		if ( input instanceof MRData ) {
-			if ( ((MRData) input).isFollowUp() ) {
-//				this.executedFollowUpInputsCounter++;
-			}
-		}
-		
 		this.lastInputs.set( this.lastInputs.size() -1 , input );
 		this.lastInputPos.set( this.lastInputs.size() -1 , pos );
 		
