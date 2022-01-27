@@ -249,10 +249,16 @@ public abstract class MR {
 	
 	private int countExecutedFollowUpInputs() {
 		int executedFollowUpInputsCounter = 0;
+		HashSet<Input> uniqueInputs = new HashSet<Input>();
+		
 		for ( Input input : lastInputs ) {
 			if ( input instanceof MRData ) {
 				if ( ((MRData) input).isFollowUp() ) {
-					executedFollowUpInputsCounter++;
+					
+					if ( uniqueInputs.add( input ) ) {//Avoid duplicates
+						executedFollowUpInputsCounter++;
+					}
+					
 				}
 			}
 		}
