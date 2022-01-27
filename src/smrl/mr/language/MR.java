@@ -214,6 +214,7 @@ public abstract class MR {
 		
 		sourceInputsCounter = 0;
 		followUpInputsCounter = 0;
+		executedFollowUpInputsCounter = 0;
 		
 		resetMRState();
 		
