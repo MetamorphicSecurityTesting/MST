@@ -241,7 +241,7 @@ public abstract class MR {
 		System.out.println("MR tested with "+executions+" set of inputs");
 		System.out.println("Source inputs : "+sourceInputsCounter);
 		System.out.println("Follow-up inputs : "+followUpInputsCounter);
-		int executedFollowUpInputsCounter = countExecutedFollowUpInputs( );
+		
 		System.out.println("Follow-up inputs executed : "+executedFollowUpInputsCounter);
 		
 	}
@@ -290,7 +290,7 @@ public abstract class MR {
 			}
 			
 			
-			String msg = extractExecutionInformation(false);
+			String msg = extractExecutionInformation(false, false);
 			
 			if ( PRINT_EXECUTED_MRS ) {
 				System.out.println("Executed with: "+msg);
@@ -446,7 +446,7 @@ public abstract class MR {
 
 	private int sourceInputsCounter;
 	private int followUpInputsCounter;
-//	private int executedFollowUpInputsCounter;
+	private int executedFollowUpInputsCounter;
 	
 	public LinkedList<String> getFailures() {
 		return failures;
@@ -457,7 +457,7 @@ public abstract class MR {
 		
 		LOGGER.log(Level.INFO,"FAILURE");
 		
-		String msg = extractExecutionInformation(true);
+		String msg = extractExecutionInformation(true, true);
 		
 		if ( msg == null ) {
 			System.out.println("(DUPLICATED FAILURE, ignoring)");
@@ -468,7 +468,7 @@ public abstract class MR {
 		System.out.println("FAILURE: \n"+msg);
 	}
 	
-	private String extractExecutionInformation(boolean performFiltring) {
+	private String extractExecutionInformation(boolean performFiltring, boolean countInputs) {
 		String msg = "";
 		
 		String lastInputStrs[] = new String[lastInputs.size()];
@@ -506,10 +506,15 @@ public abstract class MR {
 				if ( input instanceof MRData ) {
 					if ( ((MRData) input).isFollowUp() ) {
 						followUp = "[FOLLOW-UP INPUT]";
-						followUpInputsCounter++;
+						
+						if ( countInputs ) {
+							followUpInputsCounter++;
+						}
 					} else {
 						if ( input instanceof Input ) {
-							sourceInputsCounter++;	
+							if ( countInputs ) {
+								sourceInputsCounter++;	
+							}
 						}
 					}
 				}
@@ -590,6 +595,9 @@ public abstract class MR {
 		msg += "\n **** ";
 		
 		
+		if( countInputs ){
+			executedFollowUpInputsCounter += countExecutedFollowUpInputs( );
+		}
 		
 //		msg += "\n**[Last equal: "+lastEqualA+" ="+lastEqualBStr+"]";
 //		
