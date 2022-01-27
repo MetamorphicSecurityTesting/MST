@@ -241,10 +241,23 @@ public abstract class MR {
 		System.out.println("MR tested with "+executions+" set of inputs");
 		System.out.println("Source inputs : "+sourceInputsCounter);
 		System.out.println("Follow-up inputs : "+followUpInputsCounter);
+		int executedFollowUpInputsCounter = countExecutedFollowUpInputs( );
 		System.out.println("Follow-up inputs executed : "+executedFollowUpInputsCounter);
 		
 	}
 	
+	private int countExecutedFollowUpInputs() {
+		int executedFollowUpInputsCounter = 0;
+		for ( Input input : lastInputs ) {
+			if ( input instanceof MRData ) {
+				if ( ((MRData) input).isFollowUp() ) {
+					executedFollowUpInputsCounter++;
+				}
+			}
+		}
+		return executedFollowUpInputsCounter;
+	}
+
 	boolean FAILED=false;
 
 	public static boolean PRINT_EXECUTED_MRS = false;
@@ -433,7 +446,7 @@ public abstract class MR {
 
 	private int sourceInputsCounter;
 	private int followUpInputsCounter;
-	private int executedFollowUpInputsCounter;
+//	private int executedFollowUpInputsCounter;
 	
 	public LinkedList<String> getFailures() {
 		return failures;
@@ -968,22 +981,11 @@ public abstract class MR {
 
 
 	public void setLastInputProcessed(Input input, int pos) {
-		if ( input instanceof MRData ) {
-			if ( ((MRData) input).isFollowUp() ) {
-				this.executedFollowUpInputsCounter++;
-			}
-		}
 		this.lastInputs.add( input );
 		this.lastInputPos.add( pos );
 	}
 	
 	public void resetLastInputProcessed(Input input, int pos) {
-		if ( input instanceof MRData ) {
-			if ( ((MRData) input).isFollowUp() ) {
-//				this.executedFollowUpInputsCounter++;
-			}
-		}
-		
 		this.lastInputs.set( this.lastInputs.size() -1 , input );
 		this.lastInputPos.set( this.lastInputs.size() -1 , pos );
 		
