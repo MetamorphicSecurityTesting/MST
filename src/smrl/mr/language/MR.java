@@ -70,6 +70,8 @@ public abstract class MR {
 
 	private ArrayList<MrDataDB> sortedDBs;
 
+	private int executedSourceInputsCounter;
+
 
 
 
@@ -215,6 +217,7 @@ public abstract class MR {
 		sourceInputsCounter = 0;
 		followUpInputsCounter = 0;
 		executedFollowUpInputsCounter = 0;
+		executedSourceInputsCounter = 0;
 		
 		resetMRState();
 		
@@ -244,25 +247,25 @@ public abstract class MR {
 		System.out.println("Follow-up inputs : "+followUpInputsCounter);
 		
 		System.out.println("Follow-up inputs executed : "+executedFollowUpInputsCounter);
+		System.out.println("Source inputs executed : "+executedSourceInputsCounter);
 		
 	}
 	
-	private int countExecutedFollowUpInputs() {
-		int executedFollowUpInputsCounter = 0;
+	private void countExecutedFollowUpInputs() {
 		HashSet<Input> uniqueInputs = new HashSet<Input>();
 		
 		for ( Input input : lastInputs ) {
 			if ( input instanceof MRData ) {
-				if ( ((MRData) input).isFollowUp() ) {
-					
-					if ( uniqueInputs.add( input ) ) {//Avoid duplicates
+				if ( uniqueInputs.add( input ) ) {//Avoid duplicates
+					if ( ((MRData) input).isFollowUp() ) {
 						executedFollowUpInputsCounter++;
+					} else {
+						executedSourceInputsCounter++;
 					}
-					
 				}
 			}
 		}
-		return executedFollowUpInputsCounter;
+		
 	}
 
 	boolean FAILED=false;
@@ -603,7 +606,7 @@ public abstract class MR {
 		
 		
 		if( countInputs ){
-			executedFollowUpInputsCounter += countExecutedFollowUpInputs( );
+			countExecutedFollowUpInputs( );
 		}
 		
 //		msg += "\n**[Last equal: "+lastEqualA+" ="+lastEqualBStr+"]";
