@@ -1555,6 +1555,83 @@ public class Operations {
 	public static String  PayloadEntry(String catalogName, int x ){ 
 		return (String) MR.CURRENT.getMRData(catalogName,x);
 	}
+	
+	public static String SCInjection_beginning(String value, String sc) {
+		String str = sc+ value;
+		return str;
+		
+	}
+	
+	public static String SCInjection_beginning(JsonObject formInput, String sc) {
+		String str="";
+		if(formInput==null || 
+				!formInput.keySet().contains("type")||
+				!(formInput.get("type").getAsString().startsWith("text") ))
+					{			return str;		}
+		
+		else if ( !formInput.get("values").getAsString().equals("[]") ||
+				  !formInput.get("type").getAsString().equals("hidden")) {
+			str = formInput.get("values").getAsString();
+		}
+
+
+		JsonArray valueArray = new JsonArray();
+		valueArray.add(str);
+		valueArray.add(sc);
+
+		return sc+str;
+		
+	}
+	
+	public static String SCInjection_last(String value, String sc) {
+		String str = value + sc;
+		return str;
+		
+	}
+	
+	public static String SCInjection_last(JsonObject formInput, String sc) {
+		String str="";
+		
+		
+		 if ( !formInput.get("values").getAsString().equals("[]") ||
+				  !formInput.get("type").getAsString().equals("hidden")) {
+			str = formInput.get("values").getAsString();
+		}
+
+
+		JsonArray valueArray = new JsonArray();
+		valueArray.add(str);
+		valueArray.add(sc);
+
+		return str+sc;
+		
+	}
+	
+	
+	public static String SCInjection_sides(String value, String sc) {
+		String str = value + sc + value;
+		return str;
+		
+	}
+	
+	public static String SCInjection_sides(JsonObject formInput, String sc) {
+		String str="";
+		
+		
+		 if ( !formInput.get("values").getAsString().equals("[]") ||
+				  !formInput.get("type").getAsString().equals("hidden")) {
+			str = formInput.get("values").getAsString();
+		}
+
+
+		JsonArray valueArray = new JsonArray();
+		valueArray.add(str);
+		valueArray.add(sc);
+
+		return sc+str+sc;
+		
+	}
+	
 
 }
 
