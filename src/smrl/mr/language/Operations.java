@@ -1558,6 +1558,7 @@ public class Operations {
 	}
 	
 	public static String SCInjection_beginning(String value, String sc) {
+		
 		String str = sc+ value;
 		return str;
 		
@@ -1610,7 +1611,7 @@ public class Operations {
 	
 	
 	public static String SCInjection_sides(String value, String sc) {
-		String str = value + sc + value;
+		String str = sc + value + sc;
 		return str;
 		
 	}
@@ -1624,16 +1625,89 @@ public class Operations {
 			str = formInput.get("values").getAsString();
 		}
 
-
-		JsonArray valueArray = new JsonArray();
-		valueArray.add(str);
-		valueArray.add(sc);
-
 		return sc+str+sc;
 		
 	}
 	
+	public static String SCInjection_beginning_double(String value, String sc) {
+		String str = sc + sc + value;
+		return str;
+		
+	}
+	
+	public static String SCInjection_beginning_double(JsonObject formInput, String sc) {
+		String str="";
+		
+		
+		 if ( !formInput.get("values").getAsString().equals("[]") ||
+				  !formInput.get("type").getAsString().equals("hidden")) {
+			str = formInput.get("values").getAsString();
+		}
 
+		return sc + sc + str;
+		
+	}
+	
+	
+	public static String SCInjection_last_double(String value, String sc) {
+		String str = value + sc + sc;
+		return str;
+		
+	}
+	
+	public static String SCInjection_last_double(JsonObject formInput, String sc) {
+		String str="";
+		
+		
+		 if ( !formInput.get("values").getAsString().equals("[]") ||
+				  !formInput.get("type").getAsString().equals("hidden")) {
+			str = formInput.get("values").getAsString();
+		}
+
+
+		return str + sc + sc;
+		
+	}
+	
+	
+	// val+ sc + ue
+	public static String SCInjection_middle(String value, String sc) {
+		String split[] = value.split("");
+		
+		String string = new StringBuilder().append(split[0]).append(sc).toString();
+		if (split.length>1 ){
+			for (int i = 1; i< split.length; i++) {
+				string = string + split[i];
+			}
+		}
+		
+		return string;
+		
+	}
+	// val+ sc + ue
+	public static String SCInjection_middle(JsonObject formInput, String sc) {
+		String value="";
+		
+		
+		 if ( !formInput.get("values").getAsString().equals("[]") ||
+				  !formInput.get("type").getAsString().equals("hidden")) {
+			value = formInput.get("values").getAsString();
+		}
+		 
+
+		 String split[] = value.split("");
+			
+			String string = new StringBuilder().append(split[0]).append(sc).toString();
+			if (split.length>1 ){
+				for (int i = 1; i< split.length; i++) {
+					string = string + split[i];
+				}
+			}
+			
+			return string;
+		
+	}
+	
 }
 
 
