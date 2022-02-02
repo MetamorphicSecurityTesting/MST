@@ -300,7 +300,7 @@ public abstract class MR {
 			}
 			
 			
-			String msg = extractExecutionInformation(false, false);
+			String msg = extractExecutionInformation(false, true, true);
 			
 			if ( PRINT_EXECUTED_MRS ) {
 				System.out.println("Executed with: "+msg);
@@ -467,7 +467,7 @@ public abstract class MR {
 		
 		LOGGER.log(Level.INFO,"FAILURE");
 		
-		String msg = extractExecutionInformation(true, true);
+		String msg = extractExecutionInformation(true, false, false);
 		
 		if ( msg == null ) {
 			System.out.println("(DUPLICATED FAILURE, ignoring)");
@@ -478,7 +478,7 @@ public abstract class MR {
 		System.out.println("FAILURE: \n"+msg);
 	}
 	
-	private String extractExecutionInformation(boolean performFiltring, boolean countInputs) {
+	private String extractExecutionInformation(boolean performFiltring, boolean countInputs, boolean verboseOutput ) {
 		String msg = "";
 		
 		String lastInputStrs[] = new String[lastInputs.size()];
@@ -559,51 +559,52 @@ public abstract class MR {
 						}
 					}
 
-					msg += "output HTML at: "+outputUrl;
+					//msg += "output HTML at: "+outputUrl;
 				}
 				PrintUtil.USER_FRIENDLY_TO_STRING = false;
 			}	
 		}
 		
-			
-		
-		msg += "\n **Inputs processed: ";
-		
-		
-		for ( int j=0; j<lastInputStrs.length; j++ ) {
-			msg += "\n"+lastInputStrs[j]+" (action position: "+lastPosStrs[j]+")";
-		}
-		
-		msg += "\n **** ";
-		
-		msg += "\n **Actions : ";
-		
-		
-		for ( int j=0; j<lastInputStrs.length; j++ ) {
-			msg += "\n"+lastInputStrs[j]+" (action position: "+lastPosStrs[j]+")";
-			if ( lastInputs.size() <= j  ) {
-				msg += "\n"+"CANNOT FIND INPUT "+j+"";
-			} else {
-				if ( lastInputs.get(j).actions().size() <= lastPosStrs[j]  ) {
-					msg += "\n"+"CANNOT FIND ACTION "+lastPosStrs[j]+"";
-					for ( Action action : lastInputs.get(j).actions() ) {
-						msg += "\n\t\t"+action;	
-					}
-				} else { 
-					if ( lastPosStrs[j] < 0 ) {
-						msg += "\n"+"ALL ACTIONS MIGHT BE FAULTY "+lastPosStrs[j]+"";
+		if ( verboseOutput ) {	
+
+			msg += "\n **Inputs processed: ";
+
+
+			for ( int j=0; j<lastInputStrs.length; j++ ) {
+				msg += "\n"+lastInputStrs[j]+" (action position: "+lastPosStrs[j]+")";
+			}
+
+			msg += "\n **** ";
+
+			msg += "\n **Actions : ";
+
+
+			for ( int j=0; j<lastInputStrs.length; j++ ) {
+				msg += "\n"+lastInputStrs[j]+" (action position: "+lastPosStrs[j]+")";
+				if ( lastInputs.size() <= j  ) {
+					msg += "\n"+"CANNOT FIND INPUT "+j+"";
+				} else {
+					if ( lastInputs.get(j).actions().size() <= lastPosStrs[j]  ) {
+						msg += "\n"+"CANNOT FIND ACTION "+lastPosStrs[j]+"";
 						for ( Action action : lastInputs.get(j).actions() ) {
 							msg += "\n\t\t"+action;	
 						}
-					} else {
-						msg += "\n"+lastInputs.get(j).actions().get(lastPosStrs[j]).toCompleteString();
+					} else { 
+						if ( lastPosStrs[j] < 0 ) {
+							msg += "\n"+"ALL ACTIONS MIGHT BE FAULTY "+lastPosStrs[j]+"";
+							for ( Action action : lastInputs.get(j).actions() ) {
+								msg += "\n\t\t"+action;	
+							}
+						} else {
+							msg += "\n"+lastInputs.get(j).actions().get(lastPosStrs[j]).toCompleteString();
+						}
 					}
 				}
 			}
+
+			msg += "\n **** ";
+
 		}
-		
-		msg += "\n **** ";
-		
 		
 		if( countInputs ){
 			countExecutedFollowUpInputs( );
@@ -613,10 +614,7 @@ public abstract class MR {
 //		
 //		msg += "\n**[Last equal: "+lastEqual+"]";
 		
-		lastInputs = new ArrayList<Input>();
-		lastInputPos = new ArrayList<Integer>();
-		lastEqualA = null;
-		lastEqualB = null;
+		
 		
 //		HashMap<String, I> inputsMap = inputsDB.getProcessedInputs();
 //		String msg = "";
@@ -942,9 +940,9 @@ public abstract class MR {
 
 	private String lastEqual;
 
-	private Object lastEqualA;
-
-	private Object lastEqualB;
+//	private Object lastEqualA;
+//
+//	private Object lastEqualB;
 	
 	public void ifThenBlock() {
 		StackTraceElement[] st = Thread.currentThread().getStackTrace();
