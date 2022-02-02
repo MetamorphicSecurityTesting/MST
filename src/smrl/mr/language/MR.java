@@ -300,10 +300,10 @@ public abstract class MR {
 			}
 			
 			
-			String msg = extractExecutionInformation(false, true, true);
+			ExecutionInformation info = extractExecutionInformation(false, true, true);
 			
 			if ( PRINT_EXECUTED_MRS ) {
-				System.out.println("Executed with: "+msg);
+				System.out.println("Executed with: "+info.verboseMSG);
 			}
 			
 			executions++;
@@ -467,18 +467,23 @@ public abstract class MR {
 		
 		LOGGER.log(Level.INFO,"FAILURE");
 		
-		String msg = extractExecutionInformation(true, false, false);
+		ExecutionInformation info = extractExecutionInformation(true, false, true);
 		
-		if ( msg == null ) {
+		if ( info == null ) {
 			System.out.println("(DUPLICATED FAILURE, ignoring)");
 			return;
 		}
 		
-		failures.add(msg);
-		System.out.println("FAILURE: \n"+msg);
+		failures.add(info.verboseMSG);
+		System.out.println("FAILURE: \n"+info.msg);
 	}
 	
-	private String extractExecutionInformation(boolean performFiltring, boolean countInputs, boolean verboseOutput ) {
+	public static class ExecutionInformation {
+		public String msg;
+		public String verboseMSG;
+	}
+	
+	private ExecutionInformation extractExecutionInformation(boolean performFiltring, boolean countInputs, boolean verboseOutput ) {
 		String msg = "";
 		
 		String lastInputStrs[] = new String[lastInputs.size()];
@@ -496,17 +501,21 @@ public abstract class MR {
 					Object value = i.getValue();
 					if ( value instanceof Input ) {
 						if ( filteringApplied == false) { //filtering is done on the first returned follow-up input, which is the one submitted
-							Input inp = (Input) value;
-							boolean containsNewData = registerInput(inp );
+							if ( value instanceof MRData ) {
+								if ( ((MRData) value).isFollowUp() ) {
+									Input inp = (Input) value;
+									boolean containsNewData = registerInput(inp );
 
-							if ( ! containsNewData ) {
-//								System.out.println("!!! Does not contain new data");
-								return null;
-							} 
-//							else {
-//								System.out.println("!!! Contains new data");
-//							}
-							filteringApplied = true;
+									if ( ! containsNewData ) {
+										//								System.out.println("!!! Does not contain new data");
+										return null;
+									} 
+									//							else {
+									//								System.out.println("!!! Contains new data");
+									//							}
+									filteringApplied = true;
+								}
+							}
 						}
 					}
 				}
@@ -565,6 +574,9 @@ public abstract class MR {
 			}	
 		}
 		
+		ExecutionInformation info = new ExecutionInformation(); 
+		info.msg = msg;
+		
 		if ( verboseOutput ) {	
 
 			msg += "\n **Inputs processed: ";
@@ -606,9 +618,7 @@ public abstract class MR {
 
 		}
 		
-		if( countInputs ){
-			countExecutedFollowUpInputs( );
-		}
+		info.verboseMSG = msg;
 		
 //		msg += "\n**[Last equal: "+lastEqualA+" ="+lastEqualBStr+"]";
 //		
@@ -626,7 +636,7 @@ public abstract class MR {
 //		for ( Entry<String,User> i : usersMap.entrySet() ){
 //			msg += i.getKey()+": "+i.toString()+"\n";
 //		}
-		return msg;
+		return info;
 	}
 	
 	private boolean considerParameters = false;
@@ -922,6 +932,9 @@ public abstract class MR {
 
 
 	private void resetLastOutputs() {
+		
+		countExecutedFollowUpInputs( );
+		
 		lastInputPos = new ArrayList<Integer>();
 		lastInputs = new ArrayList<Input>();
 	}
