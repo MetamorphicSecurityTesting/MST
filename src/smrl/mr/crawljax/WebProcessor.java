@@ -697,6 +697,8 @@ public class WebProcessor {
 		if ( longWaitPerformed ) {
 			resetTime();
 		}
+		
+		
 
 		return outputSequence;
 	}
@@ -1304,7 +1306,7 @@ public class WebProcessor {
 								break;
 							}
 						}
-
+			
 
 						//Phu: just commented statements under (20/12/2019) to try another way to click on the element
 						//							try {
@@ -1489,8 +1491,9 @@ public class WebProcessor {
 
 		//call web browser
 		if (exePath == null ) {
-			//	exePath = "/usr/local/bin/geckodriver";
-			exePath = "C:\\Users\\nbaya076\\geckodriver.exe";
+			exePath = "/usr/local/bin/geckodriver";
+			//Fabrizio 2022-02-03: Never set a variable to a user-specific path
+//			exePath = "C:\\Users\\nbaya076\\geckodriver.exe";
 		}
 
 
@@ -1528,8 +1531,9 @@ public class WebProcessor {
 
 		//call web browser
 		if (exePath == null ) {
-			//exePath = "/usr/local/bin/chromedriver";
-			exePath = "C:\\Users\\nbaya076\\chromedriver.exe";
+			exePath = "/usr/local/bin/chromedriver";
+			//Fabrizio 2022-02-03: Never set a variable to a user-specific path
+			//exePath = "C:\\Users\\nbaya076\\chromedriver.exe";
 		}
 
 
