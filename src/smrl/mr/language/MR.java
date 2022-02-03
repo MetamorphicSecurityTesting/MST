@@ -72,6 +72,10 @@ public abstract class MR {
 
 	private int executedSourceInputsCounter;
 
+	private int executedFollowUpInputActionsCounter;
+
+	private int executedSourceInputActionsCounter;
+
 
 
 
@@ -218,6 +222,8 @@ public abstract class MR {
 		followUpInputsCounter = 0;
 		executedFollowUpInputsCounter = 0;
 		executedSourceInputsCounter = 0;
+		executedFollowUpInputActionsCounter = 0;
+		executedSourceInputActionsCounter = 0;
 		
 		resetMRState();
 		
@@ -249,6 +255,9 @@ public abstract class MR {
 		System.out.println("Follow-up inputs executed : "+executedFollowUpInputsCounter);
 		System.out.println("Source inputs executed : "+executedSourceInputsCounter);
 		
+		System.out.println("Actions belonging to Follow-up inputs executed : "+executedFollowUpInputActionsCounter);
+		System.out.println("Actions belonging to Source inputs executed : "+executedSourceInputActionsCounter);
+		
 	}
 	
 	private void countExecutedFollowUpInputs() {
@@ -257,10 +266,20 @@ public abstract class MR {
 		for ( Input input : lastInputs ) {
 			if ( input instanceof MRData ) {
 				if ( uniqueInputs.add( input ) ) {//Avoid duplicates
+					
+					int actions = 0;
+					if ( input instanceof Input ) {
+						actions = ((Input) input).actions().size();
+					}
+					 
+					
 					if ( ((MRData) input).isFollowUp() ) {
 						executedFollowUpInputsCounter++;
+						executedFollowUpInputActionsCounter += actions;
+						
 					} else {
 						executedSourceInputsCounter++;
+						executedSourceInputActionsCounter += actions;
 					}
 				}
 			}
@@ -489,8 +508,18 @@ public abstract class MR {
 		String lastInputStrs[] = new String[lastInputs.size()];
 		int lastPosStrs[] = new int[lastInputPos.size()];
 		
+		if ( countInputs ) {
+			followUpInputsCounter = 0;
+			sourceInputsCounter = 0;
+		}
 		
 		for ( MrDataDB db : sortedDBs ){
+			
+			if ( countInputs ) {
+				followUpInputsCounter += db.followUpInputsCounter;
+				sourceInputsCounter += db.sourceInputsCounter;
+			}
+			
 			HashMap<String, Object> inputsMap = db.getProcessedInputs();
 			
 			boolean filteringApplied = false;
@@ -526,14 +555,14 @@ public abstract class MR {
 					if ( ((MRData) input).isFollowUp() ) {
 						followUp = "[FOLLOW-UP INPUT]";
 						
-						if ( countInputs ) {
-							followUpInputsCounter++;
-						}
+//						if ( countInputs ) {
+//							followUpInputsCounter++;
+//						}
 					} else {
 						if ( input instanceof Input ) {
-							if ( countInputs ) {
-								sourceInputsCounter++;	
-							}
+//							if ( countInputs ) {
+//								sourceInputsCounter++;	
+//							}
 						}
 					}
 				}
@@ -908,8 +937,10 @@ public abstract class MR {
 	 */
 	public void cleanupReassignedData() {
 		
-//		System.out.println("cleanupReassignedData");
 		for ( MrDataDB db : sortedDBs ){
+
+			//		System.out.println("cleanupReassignedData");
+
 			db.cleanupReassignedData();	
 		}
 	}

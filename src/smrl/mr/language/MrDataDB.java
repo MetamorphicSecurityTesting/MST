@@ -90,6 +90,7 @@ public class MrDataDB<D> {
 			
 			D _input = (D) cloneM.invoke(input);
 			generatedData.put(key, _input);
+			sourceInputsCounter++;
 			
 			if ( _input instanceof MRData ){
 				((MRData)_input).setID(key);
@@ -168,7 +169,8 @@ public class MrDataDB<D> {
 	}
 
 
-
+	int followUpInputsCounter;
+	int sourceInputsCounter;
 	
 	public boolean reassign(MRData lhs, MRData rhs) {
 		if ( lhs.isReassignable() == false ){
@@ -186,6 +188,9 @@ public class MrDataDB<D> {
 			_lhs.addReassignment( rhs );
 			generatedData.put( lhs.id, (D)_lhs );
 			reassignedData.put( lhs.id, (D)_lhs );
+			
+			followUpInputsCounter++;
+			sourceInputsCounter--;
 			
 			return true;
 		} catch (CloneNotSupportedException e) {
