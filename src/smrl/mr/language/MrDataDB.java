@@ -37,6 +37,10 @@ public class MrDataDB<D> {
 	
 	protected String dbName;
 	
+	public String getDbName() {
+		return dbName;
+	}
+
 	public MrDataDB(String dbName){
 		this.dbName = dbName;
 	}

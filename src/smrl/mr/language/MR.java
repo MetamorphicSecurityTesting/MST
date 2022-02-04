@@ -248,15 +248,23 @@ public abstract class MR {
 //		}
 		
 		
-		System.out.println("MR tested with "+executions+" set of inputs");
-		System.out.println("Source inputs : "+sourceInputsCounter);
-		System.out.println("Follow-up inputs : "+followUpInputsCounter);
+		System.out.println("MR tested with "+executions+" sets of inputs");
 		
-		System.out.println("Follow-up inputs executed : "+executedFollowUpInputsCounter);
-		System.out.println("Source inputs executed : "+executedSourceInputsCounter);
+		System.out.println("Source input instances : "+sourceInputsCounter);
+		System.out.println("Follow-up input instances : "+followUpInputsCounter);
 		
-		System.out.println("Actions belonging to Follow-up inputs executed : "+executedFollowUpInputActionsCounter);
-		System.out.println("Actions belonging to Source inputs executed : "+executedSourceInputActionsCounter);
+		for ( MrDataDB db : sortedDBs ){
+			System.out.println("\t"+db.getDbName()+" source input instances: "+db.sourceInputsCounter+ " follow-up input instances: "+db.followUpInputsCounter);
+		}
+		
+		System.out.println("Source input sequences (Input) : "+sourceInputSequencesCounter);
+		System.out.println("Follow-up input sequences (Input) : "+followUpInputSequencesCounter);
+		
+		System.out.println("Follow-up inputs sequences executed : "+executedFollowUpInputsCounter);
+		System.out.println("Source inputs sequences executed : "+executedSourceInputsCounter);
+		
+		System.out.println("Actions belonging to Follow-up input sequences executed : "+executedFollowUpInputActionsCounter);
+		System.out.println("Actions belonging to Source input sequences executed : "+executedSourceInputActionsCounter);
 		
 	}
 	
@@ -475,6 +483,10 @@ public abstract class MR {
 
 	private int sourceInputsCounter;
 	private int followUpInputsCounter;
+	
+	private int sourceInputSequencesCounter;
+	private int followUpInputSequencesCounter;
+	
 	private int executedFollowUpInputsCounter;
 	
 	public LinkedList<String> getFailures() {
@@ -511,13 +523,21 @@ public abstract class MR {
 		if ( countInputs ) {
 			followUpInputsCounter = 0;
 			sourceInputsCounter = 0;
+			followUpInputSequencesCounter = 0;
+			sourceInputSequencesCounter = 0;
 		}
 		
 		for ( MrDataDB db : sortedDBs ){
 			
 			if ( countInputs ) {
+				
 				followUpInputsCounter += db.followUpInputsCounter;
 				sourceInputsCounter += db.sourceInputsCounter;
+				
+				if ( db.getDbName().equals("Input") ) {
+					followUpInputSequencesCounter += db.followUpInputsCounter;
+					sourceInputSequencesCounter += db.sourceInputsCounter;
+				}
 			}
 			
 			HashMap<String, Object> inputsMap = db.getProcessedInputs();
