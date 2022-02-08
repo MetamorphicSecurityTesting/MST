@@ -630,27 +630,7 @@ public abstract class Action implements Cloneable {
 		// FIXME : ADD CODE
 	}
 
-	public  String EncodeUrl(String url){ 
-		if(url==null){
-			return null;
-		}
-
-		try {
-			return URLEncoder.encode(url, StandardCharsets.UTF_8.name());
-			//return URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
-		} catch (UnsupportedEncodingException ex) {
-			throw new RuntimeException(ex.getCause());
-		}
-		/* try {  
-             String encodeURL = URLEncoder.encode( url, "UTF-8" );  
-             return encodeURL;  
-        } catch (UnsupportedEncodingException e) {  
-             return "Issue while encoding" +e.getMessage();  
-        }  */
-
-
-
-	}
+	
 
 	public String toCompleteString() {
 		// TODO Auto-generated method stub

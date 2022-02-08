@@ -1707,6 +1707,19 @@ public class Operations {
 			return string;
 		
 	}
+	public static String EncodeUrl(String url){ 
+		if(url==null){
+			return null;
+		}
+
+		try {
+			return URLEncoder.encode(url, StandardCharsets.UTF_8.name());
+			//return URLEncoder.encode(url, StandardCharsets.UTF_8.toString());
+		} catch (UnsupportedEncodingException ex) {
+			throw new RuntimeException(ex.getCause());
+		}
+		
+	}
 	
 }
 
