@@ -521,7 +521,16 @@ public abstract class Action implements Cloneable {
 
 	public abstract JsonArray getFormInputs();
 	
-	public boolean setFormInputParameterValue(String type, String parameterName, String value ) {
+	public boolean setFormInputsOfType(String value, String type  ) {
+		JsonArray inputs = getFormInputs();
+		boolean result = false;
+		for ( JsonElement input : inputs ) {
+			result |= Operations.updateStringFormInput(input.getAsJsonObject(), value, type );
+		}
+		return result;
+	}
+	
+	public boolean setFormInputsParameterValue(String type, String parameterName, String value ) {
 		JsonArray inputs = getFormInputs();
 		boolean result = false;
 		for ( JsonElement input : inputs ) {
