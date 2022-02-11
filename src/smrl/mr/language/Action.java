@@ -684,6 +684,11 @@ public abstract class Action implements Cloneable {
 			return null;
 		}
 	}
+
+	public boolean containAnyFormInput() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 	

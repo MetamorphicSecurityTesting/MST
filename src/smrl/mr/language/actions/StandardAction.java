@@ -841,7 +841,32 @@ public class StandardAction extends Action {
 		return false;
 	}
 
+	////nazanin Feb 11, 2022
 	
+	@Override
+	public boolean containAnyFormInput() {
+		
+		
+		 
+		if(formInputs==null || 
+				formInputs.size()<1
+				){
+			return false;
+		}
+		
+		for(int i=0; i<formInputs.size(); i++){
+			JsonObject fi = formInputs.get(i).getAsJsonObject();
+			
+			if ( fi.keySet().contains("values")){
+				
+					
+					return true;
+				
+			}
+		}
+		
+		return false;
+	}
 	
 	
 }
