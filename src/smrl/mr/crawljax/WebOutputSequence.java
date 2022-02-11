@@ -569,5 +569,15 @@ public class WebOutputSequence implements Output {
 		return ((WebOutputCleaned)last).getHtmlFile();
 	}
 
+
+
+
+
+	@Override
+	public String getResultUrl() {
+		Object last = seq.get(seq.size()-1);
+		return ((WebOutputCleaned)last).getResultUrl();
+	}
+
 	
 }

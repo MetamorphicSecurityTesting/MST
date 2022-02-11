@@ -636,5 +636,12 @@ public class WebOutputCleaned implements Output {
 		this.input = input;
 		this.inputPos = pos;
 	}
+
+
+
+	@Override
+	public String getResultUrl() {
+		return resultedUrl;
+	}
 	
 }

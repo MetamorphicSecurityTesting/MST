@@ -26,6 +26,8 @@ public interface Output {
 	 */
 	public String redirectURL();
 	
+	public String getResultUrl();
+	
 	public boolean isError();
 	
 	/**

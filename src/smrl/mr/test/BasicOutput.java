@@ -133,5 +133,11 @@ public class BasicOutput implements Output {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public String getResultUrl() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }
