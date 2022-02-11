@@ -972,6 +972,27 @@ public class Operations {
 
 		return updateStringFormInput(fi, value, type);
 	}
+	
+	public static boolean updateStringFormInputParameter(JsonObject fi, String value, String type, String parameterName) {
+
+		ArrayList<LoginParam> loginParams = WebProcessor.getSysConfig().getLoginParams();
+		boolean hasUserParam = false;
+		
+		if(fi.keySet().contains("identification")){
+			JsonObject iden = fi.get("identification").getAsJsonObject();
+			if(iden.keySet().contains("value")){
+				if(iden.get("value").getAsString().trim().equals(parameterName)){
+					hasUserParam = true;
+				}
+			}
+		}
+
+		if ( ! hasUserParam ) {
+			return false;
+		}
+
+		return updateStringFormInput(fi, value, type);
+	}
 
 	public static boolean updateStringFormInput(JsonObject formInput, Object value, String type) {
 		if(formInput==null || 

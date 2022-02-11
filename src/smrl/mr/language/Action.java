@@ -45,6 +45,7 @@ import smrl.mr.language.CookieSession;
 import smrl.mr.utils.URLUtil;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 public abstract class Action implements Cloneable {
@@ -519,6 +520,16 @@ public abstract class Action implements Cloneable {
 	public abstract boolean containFormInput();
 
 	public abstract JsonArray getFormInputs();
+	
+	public boolean setFormInputParameterValue(String type, String parameterName, String value ) {
+		JsonArray inputs = getFormInputs();
+		boolean result = false;
+		for ( JsonElement input : inputs ) {
+			result |= Operations.updateStringFormInputParameter(input.getAsJsonObject(), value, type, parameterName );
+		}
+		return result;
+	}
+	
 	
 	public boolean setFormInput(int pos, String value) {
 		return Operations.updateStringFormInput(getFormInputs().get(pos).getAsJsonObject(), value );
