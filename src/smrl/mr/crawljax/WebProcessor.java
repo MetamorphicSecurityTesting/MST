@@ -955,8 +955,7 @@ public class WebProcessor {
 							String userParam = sysConfig.getSignupUserParam().trim();
 							if(userParam!= null &&
 									userParam.equals(idValue)){
-								//Fabrizio: 2022.02.08 commnting out the fllowing, not good here, randomization should be in the MR
-//								valueToSend += RandomStringUtils.random(5,true,false);
+								valueToSend += RandomStringUtils.random(5,true,false);
 							}
 							else{
 								//Check if this input is the confirm password in the signup action
