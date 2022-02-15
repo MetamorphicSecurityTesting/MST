@@ -1650,6 +1650,10 @@ public class Operations {
 		
 	}
 	
+	public void getSysConfig() {
+		MR.CURRENT.provider.getSysConfig();
+	}
+	
 	public static String SCInjection_beginning_double(String value, String sc) {
 		String str = sc + sc + value;
 		return str;
