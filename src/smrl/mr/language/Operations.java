@@ -1650,7 +1650,7 @@ public class Operations {
 		
 	}
 	
-	public void getSysConfig() {
+	public static void getSysConfig() {
 		MR.CURRENT.provider.getSysConfig();
 	}
 	
