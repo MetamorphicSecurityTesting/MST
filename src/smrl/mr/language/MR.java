@@ -51,7 +51,16 @@ public abstract class MR {
 	
 	public static MR CURRENT;
 	
-	private static final boolean COLLECT_ALL_FAILURES = true;
+	private static boolean COLLECT_ALL_FAILURES = true;
+
+	public static boolean isCOLLECT_ALL_FAILURES() {
+		return COLLECT_ALL_FAILURES;
+	}
+
+
+	public static void setCOLLECT_ALL_FAILURES(boolean cOLLECT_ALL_FAILURES) {
+		COLLECT_ALL_FAILURES = cOLLECT_ALL_FAILURES;
+	}
 
 	private static final boolean PERFORM_FILTERING = true;
 

@@ -45,6 +45,10 @@ import smrl.mr.language.actions.WaitAction;
 import smrl.mr.utils.RemoteFile;
 
 public class Operations {
+	
+	public static void setCollectAllFailures(boolean value) {
+		MR.setCOLLECT_ALL_FAILURES(value);
+	}
 
 	/**
 	 * SMRL boolean operator.
