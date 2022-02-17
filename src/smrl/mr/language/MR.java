@@ -506,7 +506,8 @@ public abstract class MR {
 		}
 		
 		failures.add(info.verboseMSG);
-		System.out.println("FAILURE: \n"+info.msg);
+		System.out.println("FAILURE: \n"+info.verboseMSG);
+		
 	}
 	
 	public static class ExecutionInformation {

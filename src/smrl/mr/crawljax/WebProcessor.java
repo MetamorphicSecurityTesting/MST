@@ -598,7 +598,7 @@ public class WebProcessor {
 				if(jsonInput.size()>0){
 					WebInputCrawlJax input = new WebInputCrawlJax(jsonInput);
 					input.identifyUsers(this);
-
+					input.setDBid( key );
 					this.inputList.add(input);
 				}
 			}
