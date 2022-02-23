@@ -955,7 +955,8 @@ public class WebProcessor {
 							String userParam = sysConfig.getSignupUserParam().trim();
 							if(userParam!= null &&
 									userParam.equals(idValue)){
-								valueToSend += RandomStringUtils.random(5,true,false);
+								//Fabrizio: 2022.02.08 commnting out the fllowing, not good here, randomization should be in the MR
+//								valueToSend += RandomStringUtils.random(5,true,false);
 							}
 							else{
 								//Check if this input is the confirm password in the signup action
@@ -1527,15 +1528,17 @@ public class WebProcessor {
 
 
 	private void loadDefaultDriver(WebInputCrawlJax input) {
+		//String exePath = sysConfig.getFirefoxDriverPath();
 		String exePath = sysConfig.getChromeDriverPath();
-
+		
+		
+		
 		//call web browser
 		if (exePath == null ) {
 			exePath = "/usr/local/bin/chromedriver";
 			//Fabrizio 2022-02-03: Never set a variable to a user-specific path
 			//exePath = "C:\\Users\\nbaya076\\chromedriver.exe";
 		}
-
 
 		File exeFile = new File ( exePath );
 
@@ -1605,12 +1608,72 @@ public class WebProcessor {
 			driver.manage().timeouts().implicitlyWait(SEARCH_ELEMENT_TIMEOUT, TimeUnit.MILLISECONDS);
 			driver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.MILLISECONDS);
 		}
+		
+/*//// Nazanin 22.02.2022: RUN Firefox
+
+		File exeFile = new File ( exePath );
+
+		System.out.println("FirefoxDRIVER: "+exeFile.getAbsolutePath());
+
+		if ( ! exeFile.exists() ) {
+			exeFile = new File (Paths.get(".").toFile(),"geckodriver.exe");
+			exePath = exeFile.getAbsolutePath();
+			System.out.println("FirefoxDRIVER RESET TO: "+exePath);
+			System.out.println("FirefoxDRIVER: "+exeFile.getAbsolutePath());
+		}
+
+		System.setProperty("webdriver.gecko.driver", exePath);
+		//System.setProperty("webdriver.gecko.driver", "C:\\Users\\nbaya076\\geckodriver.exe");
+
+
+		LoggingPreferences logPrefs = new LoggingPreferences();
+		logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+
+		HashMap<String, Object> chromePrefs = new HashMap<String, Object>();
+		chromePrefs.put("profile.default_content_settings.popups", 0);
+		chromePrefs.put("download.default_directory", this.downloadFilePath);
+
+		//		System.out.println("Download file path: " + this.downloadFilePath);
+		ProfilesIni profile = new ProfilesIni();
+		FirefoxProfile myprofile = profile.getProfile("OutdatedCertificate");
+		//WebDriver driver = new FirefoxDriver(myprofile);
+
+		FirefoxOptions options = new FirefoxOptions();
+		options.setProfile(myprofile);
+
+		if(headless) {
+			options.addArguments("headless");
+			options.setHeadless(true);
+		}
+
+		if ( driver == null || 
+				Operations.getResetBrowserBetweenInputs() || 
+				! ( driver instanceof FirefoxDriver) ) 
+		{
+			if ( driver != null ) {
+				driver.quit();
+				driver = null;
+			}
+			driver = new FirefoxDriver(options);
+		}
+
+
+
+		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
+	
+	
+	*/
 	}
 
 
 	private void setCookieInDriver(Cookie ck) {
+		if (ck == null) {
+			return;
+		}
 		Cookie cookie = driver.manage().getCookieNamed(ck.getName());
-		driver.manage().deleteCookie(cookie);
+		if (cookie != null) {
+			driver.manage().deleteCookie(cookie);
+		}
 		driver.manage().addCookie(
 				new Cookie.Builder(cookie.getName(), ck.getValue())
 				.domain(cookie.getDomain())
