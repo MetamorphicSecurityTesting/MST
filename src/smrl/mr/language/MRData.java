@@ -24,6 +24,7 @@ public class MRData implements Cloneable {
 	String id;
 	List<MRData> reassignments = new ArrayList<MRData>();
 	boolean alreadyUsedInRHS = false;
+	private String DBid;
 	
 	public void setAlreadyUsedInRHS() {
 		alreadyUsedInRHS = true;
@@ -54,6 +55,14 @@ public class MRData implements Cloneable {
 
 	public String getId() {
 		return id;
+	}
+	
+	public void setDBid(String id) {
+		this.DBid = id;
+	}
+	
+	public String getDBid() {
+		return DBid;
 	}
 	
 	public boolean isFollowUp() {
