@@ -14,8 +14,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class SessionValue{
 	private SessionId SessionID;
-	//static WebDriver driver = new ChromeDriver();
-	static WebDriver driver = new FirefoxDriver();
+	static WebDriver driver = new ChromeDriver();
+	//static WebDriver driver = new FirefoxDriver();
 	public SessionId getSessionID() {
 		this.SessionID = ((RemoteWebDriver) driver).getSessionId();
 		return SessionID;
@@ -23,8 +23,8 @@ public class SessionValue{
 	
 	public static void main(String[] args) {
       //set chromedriver.exe file path
-      //System.setProperty("webdriver.chrome.driver",         "C:\\Users\\ghs6kor\\Desktop\\Java\\chromedriver.exe");
-		System.setProperty("webdriver.gecko.driver", "C:\\Users\\nbaya076\\geckodriver.exe");
+      System.setProperty("webdriver.chrome.driver",         "C:\\Users\\ghs6kor\\Desktop\\Java\\chromedriver.exe");
+		//System.setProperty("webdriver.gecko.driver", "C:\\Users\\nbaya076\\geckodriver.exe");
       //implicit wait
       driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
       //URL launch
