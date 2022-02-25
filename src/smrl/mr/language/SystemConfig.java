@@ -70,6 +70,7 @@ public class SystemConfig {
 	private String chromeDriverPath;
 	private String serverSideLanguage;
 	private String firefoxDriverPath;
+	private Boolean browserCertificateRequired;
 	
 	
 	static final int DEFAULT_WAIT_TIME = 1000;
@@ -186,6 +187,13 @@ public class SystemConfig {
 			}
 			else{
 				this.logoutURL = "";
+			}
+			
+			if(jsonObject.keySet().contains("browserCertificateRequired")){
+				this.browserCertificateRequired = Boolean.valueOf( jsonObject.get("browserCertificateRequired").getAsString().trim()) ;
+			}
+			else{
+				this.browserCertificateRequired = false;
 			}
 			
 			if(jsonObject.keySet().contains("resetURL")){
@@ -946,6 +954,14 @@ public class SystemConfig {
 
 	public String getFirefoxDriverPath() {
 		return this.firefoxDriverPath;
+	}
+
+	public boolean isBrowserCertificateRequired() {
+		return browserCertificateRequired;
+	}
+
+	public void setBrowserCertificateRequired(Boolean browserCertificateRequired) {
+		this.browserCertificateRequired = browserCertificateRequired;
 	}
 	
 }
