@@ -1374,14 +1374,14 @@ public class Operations {
 
 
 	@MRDataProvider  
-	public static Object StaticInjectionString(){ 
+	public static String StaticInjectionString(){ 
 		return StaticInjectionString(1);
 	}
 
 
 	@MRDataProvider()
-	public static Object StaticInjectionString(int x){ 
-		return MR.CURRENT.getMRData("StaticInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+	public static String StaticInjectionString(int x){ 
+		return (String) MR.CURRENT.getMRData("StaticInjectionString",x);
 	}
 
 
