@@ -70,4 +70,5 @@ public interface Output {
 
 	public File getHtmlFile();
 
+	public String getHtml();
 }

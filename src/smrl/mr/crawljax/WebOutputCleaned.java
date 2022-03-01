@@ -643,5 +643,12 @@ public class WebOutputCleaned implements Output {
 	public String getResultUrl() {
 		return resultedUrl;
 	}
+
+
+
+	@Override
+	public String getHtml() {
+		return html;
+	}
 	
 }

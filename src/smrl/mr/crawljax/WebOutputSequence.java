@@ -562,7 +562,7 @@ public class WebOutputSequence implements Output {
 
 	@Override
 	public File getHtmlFile() {
-		Object last = seq.get(seq.size()-1);
+		Object last = getLastOutput();
 		if(!(last instanceof WebOutputCleaned)) {
 			return null;
 		}
@@ -575,8 +575,30 @@ public class WebOutputSequence implements Output {
 
 	@Override
 	public String getResultUrl() {
-		Object last = seq.get(seq.size()-1);
+		Object last = getLastOutput();
 		return ((WebOutputCleaned)last).getResultUrl();
+	}
+
+
+
+
+
+	private Object getLastOutput() {
+		Object last = seq.get(seq.size()-1);
+		return last;
+	}
+
+
+
+
+
+	@Override
+	public String getHtml() {
+		Object last = getLastOutput();
+		if(!(last instanceof WebOutputCleaned)) {
+			return null;
+		}
+		return ((WebOutputCleaned)last).getHtml();
 	}
 
 	
