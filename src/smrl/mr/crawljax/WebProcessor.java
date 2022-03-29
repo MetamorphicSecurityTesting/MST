@@ -1609,8 +1609,9 @@ public class WebProcessor {
 			driver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.MILLISECONDS);
 		}
 		
-/*//// Nazanin 22.02.2022: RUN Firefox
-
+/* //// Nazanin 22.02.2022: RUN Firefox
+		String exePath = sysConfig.getFirefoxDriverPath();
+		
 		File exeFile = new File ( exePath );
 
 		System.out.println("FirefoxDRIVER: "+exeFile.getAbsolutePath());
@@ -1662,7 +1663,7 @@ public class WebProcessor {
 		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
 	
 	
-	*/
+	// */
 	}
 
 
