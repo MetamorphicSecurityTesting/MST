@@ -21,6 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.internal.TextListener;
+import org.junit.runner.JUnitCore;
 import org.reflections.Reflections;
 
 public class MRRunner {
@@ -69,5 +71,7 @@ public class MRRunner {
 		
 		return mr.failures;
 	}
+	
+	
 
 }
