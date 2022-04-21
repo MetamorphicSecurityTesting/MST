@@ -1,6 +1,8 @@
 package smrl.mr.utils;
 
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,6 +27,12 @@ public class WebMRRunner {
 		String configFile = args[0];
 		String MR = args[1];
 		
+		
+//		String classpath = System.getProperty("java.class.path");
+//		System.out.println(classpath);
+//        
+//        System.exit( 1 );
+        
 		
 		smrl.mr.crawljax.WebProcessor.DEFAULT_HEADLESS = false;
 		WebOperationsProvider provider = new WebOperationsProvider(configFile);
