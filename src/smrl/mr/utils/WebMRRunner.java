@@ -46,17 +46,24 @@ public class WebMRRunner {
 			if ( failures.size() > 0 ) {
 				System.out.println(failures);
 				
-				System.exit( failures.size() );
+				System.exit( 1 );
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			System.exit( 2 );
+			
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			System.exit( 2 );
 		} catch (IllegalAccessException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
+			System.exit( 2 );
 		} 
 		
 		
