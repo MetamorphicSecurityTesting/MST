@@ -28,8 +28,8 @@ public class WebMRRunner {
 		String MR = args[1];
 		
 		
-//		String classpath = System.getProperty("java.class.path");
-//		System.out.println(classpath);
+		String classpath = System.getProperty("java.class.path");
+		System.out.println(classpath);
 //        
 //        System.exit( 1 );
         
