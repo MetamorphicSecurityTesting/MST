@@ -309,7 +309,7 @@ public abstract class MR {
 	public static boolean PRINT_EXECUTED_MRS = false;
 	
 	private void iterateMR(List<MrDataDB> sortedDBs, int i) {
-//		System.out.println("!!!iterateMR executions="+executions+" i="+i);
+		//System.out.println("!!!iterateMR executions="+executions+" i="+i);
 		
 		if ( sortedDBs.size() == i ){ //no other data to iterate on, execute the MR
 			try {
@@ -804,8 +804,15 @@ public abstract class MR {
 		
 		if ( _lhs instanceof MRData ){
 			MRData lhs = (MRData) _lhs;
-			if ( subTypes( lhs, rhs ) ){	
-				if ( inputsDB().contains(lhs) ){
+			if ( subTypes( lhs, rhs ) ){
+				MrDataDB inputsDB = inputsDB();
+				
+				//Code added to handle multiple types of source inputs
+				if (inputsDB == null ) {
+					inputsDB = dataDBs.get(lhs.getDbName());
+				}
+				
+				if ( inputsDB.contains(lhs) ){
 					MRData _rhs;
 					if ( ! instanceOf(lhs, rhs) ){
 						_rhs = buildReassignableElement(lhs,rhs);
@@ -816,8 +823,9 @@ public abstract class MR {
 						_rhs = (MRData) rhs;
 					}
 					
-					return inputsDB().reassign(lhs,_rhs);
+					return inputsDB.reassign(lhs,_rhs);
 				}
+				
 			}
 		}
 		

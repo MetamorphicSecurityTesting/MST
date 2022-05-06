@@ -97,6 +97,7 @@ public class MrDataDB<D> {
 			sourceInputsCounter++;
 			
 			if ( _input instanceof MRData ){
+				((MRData)_input).setDbName(dbName);
 				((MRData)_input).setID(key);
 			}
 			return _input;

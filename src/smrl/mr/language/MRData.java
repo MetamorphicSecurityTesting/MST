@@ -48,6 +48,16 @@ public class MRData implements Cloneable {
 		
 		return reassignments.size() == 0;
 	}
+	
+	private String dbName;
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
+	}
 
 	public void setID(String id) {
 		this.id = id;
