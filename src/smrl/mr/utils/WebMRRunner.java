@@ -63,7 +63,7 @@ public class WebMRRunner {
 				content.add("\"executions\":\""+executedMR.executions+"\",");
 				content.add("\"followUpInputSequencesLeadingToAFailure\":\""+failures.size()+"\",");
 				content.add("\"sourceUpInputSequencesExecuted\":\""+executedMR.executedSourceInputsCounter+"\",");
-				content.add("\"followUpInputSequencesExecuted\":\""+executedMR.executedFollowUpInputsCounter+"\",");
+				content.add("\"followUpInputSequencesExecuted\":\""+executedMR.executedFollowUpInputsCounter+"\"");
 				content.add("}");
 				
 				Path file = Paths.get(MR+"-WebMRRunner.json");
