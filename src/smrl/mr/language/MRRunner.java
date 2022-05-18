@@ -62,6 +62,15 @@ public class MRRunner {
 			}
 		}
 	}
+	
+	public static MR run(OperationsProvider provider, Class clazz)
+			throws InstantiationException, IllegalAccessException {
+		MR mr = (MR)clazz.newInstance();
+		mr.setProvider(provider);
+		mr.run();
+		
+		return mr;
+	}
 
 	public static List<String> runAndGetFailures(OperationsProvider provider, Class clazz)
 			throws InstantiationException, IllegalAccessException {

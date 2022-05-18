@@ -7,6 +7,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.internal.TextListener;
@@ -14,6 +15,7 @@ import org.junit.runner.JUnitCore;
 
 import smrl.mr.crawljax.WebOperationsProvider;
 import smrl.mr.language.MRRunner;
+import smrl.mr.language.MrDataDB;
 
 public class WebMRRunner {
 
@@ -40,17 +42,38 @@ public class WebMRRunner {
 		Class mr;
 		try {
 			mr = Class.forName( MR );
-			List<String> failures = MRRunner.runAndGetFailures( provider, mr );
-			
-			
-			Path file = Paths.get(MR+"-WebMRRunner.FAILURES.txt");
-			try {
-				Files.write(file, failures, StandardCharsets.UTF_8);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			 
+			smrl.mr.language.MR executedMR = MRRunner.run( provider, mr );
+			List<String> failures = executedMR.getFailures(); 
+			{
+				Path file = Paths.get(MR+"-WebMRRunner.FAILURES.txt");
+				try {
+					Files.write(file, failures, StandardCharsets.UTF_8);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 			}
 			
+			{
+				
+				List<String> content = new ArrayList(); 
+				content.add("{");
+				content.add("\"executions\":\""+executedMR.executions+"\",");
+				content.add("\"followUpInputSequencesLeadingToAFailure\":\""+failures.size()+"\",");
+				content.add("\"sourceUpInputSequencesExecuted\":\""+executedMR.executedSourceInputsCounter+"\",");
+				content.add("\"followUpInputSequencesExecuted\":\""+executedMR.executedFollowUpInputsCounter+"\",");
+				content.add("}");
+				
+				Path file = Paths.get(MR+"-WebMRRunner.json");
+				try {
+					Files.write(file, content, StandardCharsets.UTF_8);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
 			if ( failures.size() > 0 ) {
 				System.out.println(failures);
 				

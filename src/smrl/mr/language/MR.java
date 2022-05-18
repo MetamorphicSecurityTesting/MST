@@ -75,11 +75,11 @@ public abstract class MR {
 
 	private HashMap<String, MrDataDB> dataDBs = new HashMap<String,MrDataDB>();
 
-	private int executions;
+	public int executions;
 
 	private ArrayList<MrDataDB> sortedDBs;
 
-	private int executedSourceInputsCounter;
+	public int executedSourceInputsCounter;
 
 	private int executedFollowUpInputActionsCounter;
 
@@ -496,7 +496,7 @@ public abstract class MR {
 	private int sourceInputSequencesCounter;
 	private int followUpInputSequencesCounter;
 	
-	private int executedFollowUpInputsCounter;
+	public int executedFollowUpInputsCounter;
 	
 	public LinkedList<String> getFailures() {
 		return failures;
