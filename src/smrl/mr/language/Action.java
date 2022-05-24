@@ -709,6 +709,10 @@ public abstract class Action implements Cloneable {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	public String getFormInputStringValue(int pos) {
+		return null;
+	}
 	
 	
 	

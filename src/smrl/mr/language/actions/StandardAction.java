@@ -233,6 +233,11 @@ public class StandardAction extends Action {
 	public JsonArray getFormInputs() {
 		return formInputs;
 	}
+	
+	@Override
+	public String getFormInputStringValue(int pos) {
+		return formInputs.get(pos).getAsJsonObject().get("value").getAsString();
+	}
 
 	public void setFormInputs(JsonArray formInputs) {
 		this.formInputs = formInputs;

@@ -100,6 +100,7 @@ public class ProcessRunner {
 				try {
 					while (true) {
 						int c = in.read();
+						System.out.println("c "+c);
 						if (c < 0)
 							break;
 						else
@@ -134,7 +135,7 @@ public class ProcessRunner {
 	        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(stdin));
 			writer.append(stdInCommands);
 			writer.flush();
-			
+			System.out.println("!!!STARTED");
 			int exitCode = p.waitFor();
 			
 			while ( t1.isAlive() || t.isAlive() ){
@@ -148,6 +149,9 @@ public class ProcessRunner {
 			if ( stopperThread != null && stopperThread.isAlive() ){
 				stopperThread.terminate();	
 			}
+			
+			System.out.println("!!!! "+outputBuffer.toString());
+			
 			LOGGER.info("Exit code "+exitCode);
 			return exitCode;
 			
