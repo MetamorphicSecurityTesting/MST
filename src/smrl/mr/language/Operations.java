@@ -1262,6 +1262,25 @@ public class Operations {
 
 		return MR.CURRENT.getMRData(dbName,1).toString();
 	}
+	
+	public static List parameterValuesUsedByOtherUsers(Action action, int parPosition) {
+		String superDB = "parameterValuesForEachUser";
+		MrMultiDataDB multiDB = MR.CURRENT.loadParameterValuesForEachUser();
+		
+		
+		
+		String dbName = MR.CURRENT.getParameterValueUsedByOtherUsers_DBName(action, parPosition);
+		if (dbName==null) {
+			return null;
+		}
+
+		//check if the mrDatabase contains dbName
+		if ( ! multiDB.setCurrent( dbName ) ) {
+			return null;
+		}
+		
+		return multiDB.values();
+	}
 
 	public static Object randomFilePath(int x){ 
 		//		return MR.CURRENT.getMRData("RandomValue:"+Path.class.getCanonicalName(),x);
