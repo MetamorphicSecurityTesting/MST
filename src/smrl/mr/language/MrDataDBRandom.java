@@ -23,7 +23,7 @@ public class MrDataDBRandom extends MrDataDB<Object> {
 
 	public MrDataDBRandom(String dbName) {
 		super(dbName);
-		LEN=100;
+		LEN=10;
 	}
 
 
