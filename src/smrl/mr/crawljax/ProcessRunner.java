@@ -100,7 +100,7 @@ public class ProcessRunner {
 				try {
 					while (true) {
 						int c = in.read();
-						System.out.println("c "+c);
+						//System.out.println("c "+c);
 						if (c < 0)
 							break;
 						else

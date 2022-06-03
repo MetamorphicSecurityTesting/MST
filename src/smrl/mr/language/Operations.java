@@ -1345,6 +1345,15 @@ public class Operations {
 		return value.matches("^[:,\\w,\\,/,\\s-]+\\.[A-Za-z]{2,3}");
 	}
 
+	public static boolean sleep(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			return false;
+		}
+		return true;
+	}
+	
 	//// Nazanin's Implementation Start Point
 
 	public static boolean isFormInput(Object formInput) {
