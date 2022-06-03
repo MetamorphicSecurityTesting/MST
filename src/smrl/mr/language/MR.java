@@ -147,7 +147,7 @@ public abstract class MR {
 				
 				MrDataDB db = new MrDataDB(dataName);
 				dataDBs.put(dataName, db);
-				db.load(provider.load(dataName));  //  loads data using a provider
+				db.load(provider.load(dataName));  //  loads data using a provider	
 				sortedDBs.add(db);
 			}
 			
@@ -835,6 +835,15 @@ public abstract class MR {
 			return true;
 		}
 		
+		return reassign(_lhs, rhs);
+	}
+	
+	public boolean create(Object _lhs, Object rhs) {
+		return reassign(_lhs, rhs);
+	}
+
+
+	private boolean reassign(Object _lhs, Object rhs) {
 		if ( _lhs instanceof MRData ){
 			MRData lhs = (MRData) _lhs;
 			if ( subTypes( lhs, rhs ) ){

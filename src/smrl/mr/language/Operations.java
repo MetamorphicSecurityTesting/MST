@@ -132,6 +132,23 @@ public class Operations {
 
 		return eq;
 	};
+	
+	/**
+	 * SMRL boolean operator. Create 'a' as a copy of 'b'.
+	 * 
+	 * @param a
+	 * @param b
+	 * @return true if a can be assigned using the value of b; false if cannot assign b to a.
+	 */
+	public static boolean CREATE( Object a, Object b ){ 
+		boolean eq =false;
+
+		if(b!=null) {
+			eq = MR.CURRENT.create(a, b);
+		}
+
+		return eq;
+	};
 
 	/**
 	 * SMRL boolean operator.
