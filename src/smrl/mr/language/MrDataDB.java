@@ -173,6 +173,10 @@ public class MrDataDB<D> {
 		return generatedData;
 	}
 
+//	public void addProcessedInput( MRData d) {
+//		generatedData.put(d.id, (D) d );
+//	}
+
 
 	int followUpInputsCounter;
 	int sourceInputsCounter;

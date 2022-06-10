@@ -394,6 +394,8 @@ public abstract class MR {
 //				e.printStackTrace();
 //			}
 			
+//			additionalInputs.cleanUpGeneratedAndReassignedData();
+			
 			return;
 		}
 		
@@ -557,6 +559,11 @@ public abstract class MR {
 		public String verboseMSG;
 	}
 	
+//	private MrDataDB additionalInputs = new MrDataDB(""); 
+//	protected void addAdditionalInput ( MRData d ) {
+//		additionalInputs.addProcessedInput(d);
+//	}
+	
 	private ExecutionInformation extractExecutionInformation(boolean performFiltring, boolean countInputs, boolean verboseOutput ) {
 		String msg = "";
 		
@@ -570,101 +577,19 @@ public abstract class MR {
 			sourceInputSequencesCounter = 0;
 		}
 		
+//		msg = processDBDataForFailure(performFiltring, countInputs, msg, lastInputStrs, lastPosStrs, additionalInputs);	
+		
 		for ( MrDataDB db : sortedDBs ){
 			
-			if ( countInputs ) {
-				
-				followUpInputsCounter += db.followUpInputsCounter;
-				sourceInputsCounter += db.sourceInputsCounter;
-				
-				if ( db.getDbName().equals("Input") ) {
-					followUpInputSequencesCounter += db.followUpInputsCounter;
-					sourceInputSequencesCounter += db.sourceInputsCounter;
-				}
+			msg = processDBDataForFailure(performFiltring, countInputs, msg, lastInputStrs, lastPosStrs, db);	
+			if ( msg == null ) {
+				return null;
 			}
 			
-			HashMap<String, Object> inputsMap = db.getProcessedInputs();
-			
-			boolean filteringApplied = false;
-			
-			for ( Entry<String,Object> i : inputsMap.entrySet() ){
-				
-				if ( performFiltring && PERFORM_FILTERING ) {
-					Object value = i.getValue();
-					if ( value instanceof Input ) {
-						if ( filteringApplied == false) { //filtering is done on the first returned follow-up input, which is the one submitted
-							if ( value instanceof MRData ) {
-								if ( ((MRData) value).isFollowUp() ) {
-									Input inp = (Input) value;
-									boolean containsNewData = registerInput(inp );
-
-									if ( ! containsNewData ) {
-										//								System.out.println("!!! Does not contain new data");
-										return null;
-									} 
-									//							else {
-									//								System.out.println("!!! Contains new data");
-									//							}
-									filteringApplied = true;
-								}
-							}
-						}
-					}
-				}
-				
-				String followUp = "[SOURCE INPUT]";
-				Object input = i.getValue();
-				if ( input instanceof MRData ) {
-					if ( ((MRData) input).isFollowUp() ) {
-						followUp = "[FOLLOW-UP INPUT]";
-						
-//						if ( countInputs ) {
-//							followUpInputsCounter++;
-//						}
-					} else {
-						if ( input instanceof Input ) {
-//							if ( countInputs ) {
-//								sourceInputsCounter++;	
-//							}
-						}
-					}
-				}
-				
-				
-				
-				for ( int j = 0; j < lastInputs.size(); j++ ) {
-					Input linput = lastInputs.get(j);
-				
-					if ( input == linput ) {
-						lastInputStrs[j] = i.getKey();
-						lastPosStrs[j] = lastInputPos.get(j);
-					}
-					
-					//+lastInputStr+"";	
-				}
-				
-				
-				
-				
-				PrintUtil.USER_FRIENDLY_TO_STRING = true;
-				msg += i.getKey()+ " "+ followUp +" : \n"+i.toString()+"\n";
-				
-				Object output = i.getValue();
-				if ( output instanceof WebInputCrawlJax ) {
-					Output cachedOut = provider.getCachedOutput( (WebInputCrawlJax) output );
-					String outputUrl = null;
-					if ( cachedOut != null ) {
-						File file = cachedOut.getHtmlFile();
-						if ( file != null ) {
-							outputUrl = file.getAbsolutePath();
-						}
-					}
-
-					//msg += "output HTML at: "+outputUrl;
-				}
-				PrintUtil.USER_FRIENDLY_TO_STRING = false;
-			}	
 		}
+		
+		
+		
 		
 		ExecutionInformation info = new ExecutionInformation(); 
 		info.msg = msg;
@@ -730,6 +655,104 @@ public abstract class MR {
 //		}
 		return info;
 	}
+
+
+	private String processDBDataForFailure(boolean performFiltring, boolean countInputs, String msg,
+			String[] lastInputStrs, int[] lastPosStrs, MrDataDB db) {
+		if ( countInputs ) {
+			
+			followUpInputsCounter += db.followUpInputsCounter;
+			sourceInputsCounter += db.sourceInputsCounter;
+			
+			if ( db.getDbName().equals("Input") ) {
+				followUpInputSequencesCounter += db.followUpInputsCounter;
+				sourceInputSequencesCounter += db.sourceInputsCounter;
+			}
+		}
+		
+		HashMap<String, Object> inputsMap = db.getProcessedInputs();
+		
+		boolean filteringApplied = false;
+		
+		for ( Entry<String,Object> i : inputsMap.entrySet() ){
+			
+			if ( performFiltring && PERFORM_FILTERING ) {
+				Object value = i.getValue();
+				if ( value instanceof Input ) {
+					if ( filteringApplied == false) { //filtering is done on the first returned follow-up input, which is the one submitted
+						if ( value instanceof MRData ) {
+							if ( ((MRData) value).isFollowUp() ) {
+								
+								boolean containsNewData = registerInput((MRData)value );
+
+								if ( ! containsNewData ) {
+									//								System.out.println("!!! Does not contain new data");
+									return null;
+								} 
+								//							else {
+								//								System.out.println("!!! Contains new data");
+								//							}
+								filteringApplied = true;
+							}
+						}
+					}
+				}
+			}
+			
+			String followUp = "[SOURCE INPUT]";
+			Object input = i.getValue();
+			if ( input instanceof MRData ) {
+				if ( ((MRData) input).isFollowUp() ) {
+					followUp = "[FOLLOW-UP INPUT]";
+					
+//						if ( countInputs ) {
+//							followUpInputsCounter++;
+//						}
+				} else {
+					if ( input instanceof Input ) {
+//							if ( countInputs ) {
+//								sourceInputsCounter++;	
+//							}
+					}
+				}
+			}
+			
+			
+			
+			for ( int j = 0; j < lastInputs.size(); j++ ) {
+				Input linput = lastInputs.get(j);
+			
+				if ( input == linput ) {
+					lastInputStrs[j] = i.getKey();
+					lastPosStrs[j] = lastInputPos.get(j);
+				}
+				
+				//+lastInputStr+"";	
+			}
+			
+			
+			
+			
+			PrintUtil.USER_FRIENDLY_TO_STRING = true;
+			msg += i.getKey()+ " "+ followUp +" : \n"+i.toString()+"\n";
+			
+			Object output = i.getValue();
+			if ( output instanceof WebInputCrawlJax ) {
+				Output cachedOut = provider.getCachedOutput( (WebInputCrawlJax) output );
+				String outputUrl = null;
+				if ( cachedOut != null ) {
+					File file = cachedOut.getHtmlFile();
+					if ( file != null ) {
+						outputUrl = file.getAbsolutePath();
+					}
+				}
+
+				//msg += "output HTML at: "+outputUrl;
+			}
+			PrintUtil.USER_FRIENDLY_TO_STRING = false;
+		}
+		return msg;
+	}
 	
 	private boolean considerParameters = false;
 	
@@ -738,12 +761,17 @@ public abstract class MR {
 	}
 	
 	private HashSet<String> observedInputKeys = new HashSet<>();
-	protected boolean registerInput(Input inp) {
+	protected boolean registerInput(MRData _value) {
+		
+		if ( ! ( _value instanceof Input ) ) {
+			return true;
+		}
 		
 //		System.out.println("!!!Register input "+inp);
+		Input value = (Input) _value;
 		
 		boolean isNew = false;
-		for ( Action action : inp.actions() ) {
+		for ( Action action : value.actions() ) {
 			String url = action.getUrl();
 			
 			if ( url == null ) {
@@ -1023,6 +1051,8 @@ public abstract class MR {
 
 			db.cleanupReassignedData();	
 		}
+		
+		
 	}
 	
 	int passingExpressions = 0;
