@@ -16,6 +16,8 @@
         	<zipfileset excludes="META-INF/*.SF" src="/Users/fabrizio.pastore/.m2/repository/com/google/guava/guava/25.0-jre/guava-25.0-jre.jar"/>
         	
         	<zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/asm-7.0.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/asm-tree-7.0.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/asm-util-7.0.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/javassist-3.12.1.GA.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="${dir.jarfile}/lib/reflections-0.9.10.jar"/>
             <!--

@@ -25,16 +25,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
 
-import jdk.internal.org.objectweb.asm.ClassReader;
-import jdk.internal.org.objectweb.asm.Opcodes;
-import jdk.internal.org.objectweb.asm.tree.AbstractInsnNode;
-import jdk.internal.org.objectweb.asm.tree.ClassNode;
-import jdk.internal.org.objectweb.asm.tree.InsnList;
-import jdk.internal.org.objectweb.asm.tree.MethodInsnNode;
-import jdk.internal.org.objectweb.asm.tree.MethodNode;
-import jdk.internal.org.objectweb.asm.util.Printer;
-import jdk.internal.org.objectweb.asm.util.Textifier;
-import jdk.internal.org.objectweb.asm.util.TraceMethodVisitor;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
+import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.InsnList;
+import org.objectweb.asm.tree.MethodInsnNode;
+import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.util.Printer;
+import org.objectweb.asm.util.Textifier;
+import org.objectweb.asm.util.TraceMethodVisitor;
 import smrl.mr.language.ExpressionPassTag;
 import smrl.mr.language.MR;
 import smrl.mr.language.MRDataProvider;
@@ -124,7 +124,7 @@ public class ASMUtil {
 			for(int i = 0; i< inList.size(); i++){
 				AbstractInsnNode inst = inList.get(i);
 				if ( inst.getOpcode() == Opcodes.INVOKEVIRTUAL || inst.getOpcode() == Opcodes.INVOKESTATIC){
-					if( inst instanceof jdk.internal.org.objectweb.asm.tree.MethodInsnNode ){
+					if( inst instanceof org.objectweb.asm.tree.MethodInsnNode ){
 						MethodInsnNode _inst = (MethodInsnNode) inst;
 						String meth = _inst.name;
 						String clazz = _inst.owner;

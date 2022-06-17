@@ -16,23 +16,22 @@
  *******************************************************************************/
 package smrl.mr.language;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.Set;
 import java.util.StringJoiner;
 
 import org.apache.http.client.utils.URIBuilder;
-import org.hamcrest.core.IsInstanceOf;
 import org.openqa.selenium.Cookie;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 
 import smrl.mr.crawljax.Account;
 import smrl.mr.language.actions.AlertAction;
@@ -41,12 +40,7 @@ import smrl.mr.language.actions.IndexAction;
 import smrl.mr.language.actions.InnerAction;
 import smrl.mr.language.actions.StandardAction;
 import smrl.mr.language.actions.WaitAction;
-import smrl.mr.language.CookieSession;
 import smrl.mr.utils.URLUtil;
-
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 public abstract class Action implements Cloneable {
 
