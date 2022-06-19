@@ -36,29 +36,34 @@ public class OutputDBFiller {
 	}
 
 	public static void main(String[] args) {
-		String outFolder;// = "./testData/Jenkins/outputStore";
-		String sysConfigFile;// = "./testData/Jenkins/jenkinsSysConfig.json";
-//		String sysConfigFile = "./testData/Jenkins/jenkinsSysConfig_trying.json";
+		String outFolder = null;
+		String sysConfigFile;
 		
-//		String outFolder = "./testData/DVWA/outputStore"; 
-//		String sysConfigFile = "./testData/DVWA/DVWASysConfigDEMO.json"; 
-		
-		if(args!=null && args.length>=2) {
-			outFolder = args[0].trim();
-			sysConfigFile = args[1].trim();
+		if ( args.length == 1 ) {
+			sysConfigFile = args[0].trim();
+		} else {
+			if(args!=null && args.length>=2) {
+				outFolder = args[0].trim();
+				sysConfigFile = args[1].trim();
+			}
+			else {
+				System.out.println("Usage: " + OutputDBFiller.class.getSimpleName() + 
+						" <path_of_output_store> <path_to_system_config_file>");
+				return;
+			}
 		}
-		else {
-			System.out.println("Usage: " + OutputDBFiller.class.getSimpleName() + 
-					" <path_of_output_store> <path_to_system_config_file>");
-			return;
+		
+		WebOperationsProvider provider = new WebOperationsProvider(sysConfigFile){
+			//Have to override the function nextStep (do nothing) to not reset the updateUrlMap variable of WebProcessor
+			@Override
+			public void nextTest() {}
+		};
+		
+		if ( outFolder == null ) {
+			SystemConfig config = provider.getSysConfig();
+			outFolder = config.getOutputStore();
 		}
 		
-//		OutputDBFiller db = new OutputDBFiller(new File("./testData/OTG_AUTHZ_002/edlah2/outputStore"));
-//		OutputDBFiller db = new OutputDBFiller(new File("./testData/OTG_AUTHZ_002/jenkins-1/outputStore"));
-//		OutputDBFiller db = new OutputDBFiller(new File("./testData/OTG_AUTHZ_002/jenkins-agentLog/outputStore"));
-//		OutputDBFiller db = new OutputDBFiller(new File("./testData/OTG_AUTHZ_002/jenkins/outputStore"));
-//		OutputDBFiller db = new OutputDBFiller(new File("./testData/Jenkins/simple/outputStore"));
-//		OutputDBFiller db = new OutputDBFiller(new File("./testData/Jenkins/fullWithAnonym/outputStore"));
 		OutputDBFiller db = new OutputDBFiller(new File(outFolder));
 		
 		
@@ -68,11 +73,7 @@ public class OutputDBFiller {
 //		WebOperationsProvider provider = new WebOperationsProvider("./testData/OTG_AUTHZ_002/jenkins-1/jenkinsSysconfig.json"){
 //		WebOperationsProvider provider = new WebOperationsProvider("./testData/OTG_AUTHZ_002/jenkins-agentLog/jenkinsSysconfig.json"){
 //		WebOperationsProvider provider = new WebOperationsProvider("./testData/OTG_AUTHZ_002/jenkins/jenkinsSysconfig.json"){
-		WebOperationsProvider provider = new WebOperationsProvider(sysConfigFile){
-			//Have to override the function nextStep (do nothing) to not reset the updateUrlMap variable of WebProcessor
-			@Override
-			public void nextTest() {}
-		};
+		
 		
 		mr.setProvider(provider);
 		

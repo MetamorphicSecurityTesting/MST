@@ -25,7 +25,7 @@ import smrl.mr.language.MRData;
 public class ParallelScenario extends MRData {
 	private List<Scenario> parallelScenarios = new ArrayList<Scenario>();
 
-	
+
 	
 	public ParallelScenario(Scenario... scenarios) {
 		for ( Scenario scenario : scenarios ) {
