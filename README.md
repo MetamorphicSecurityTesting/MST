@@ -8,6 +8,6 @@ For more information https://sntsvv.github.io/SMRL/
 
 ##COMPILE
 
-To use the SMRL library (i.e., to execute metamorphic relations) in a MRL project, you need to create a jar file containing the compiled library and all its dependencies. To this end it is sufficient to rely on maven with the following goals: "clean compile package assembly:single".
+To use the MST / SMRL library (i.e., to execute metamorphic relations) in a MRL project, you need to create a jar file containing the compiled library and all its dependencies. To this end it is sufficient to rely on maven with the following goals: "clean compile package assembly:single".
 
-The jar is created in the directory "target" as SMRL-1.0.0-jar-with-dependencies.jar
+The jar is created in the directory "target" as MST-1.0.0-jar-with-dependencies.jar

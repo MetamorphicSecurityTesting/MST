@@ -290,4 +290,13 @@ public class MrDataDB<D> {
 		all.addAll(inputs);
 		return all;
 	}
+
+	public void setSplit(int totalSplits, int selectedSplit) {
+		int chunksSize = LEN / totalSplits;
+		
+		START = chunksSize * selectedSplit;
+		int chunkEnd = Math.min( START + chunksSize, LEN );
+		
+		LEN = chunkEnd;
+	}
 }

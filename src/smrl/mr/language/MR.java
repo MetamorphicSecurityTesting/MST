@@ -148,6 +148,19 @@ public abstract class MR {
 				MrDataDB db = new MrDataDB(dataName);
 				dataDBs.put(dataName, db);
 				db.load(provider.load(dataName));  //  loads data using a provider	
+				
+				if ( dataName.equals("Input") ) {
+					SystemConfig config  = provider.getSysConfig();
+					int totalSplits = config.getTotalInputSplits();
+					if ( totalSplits > 1 ) {
+						System.out.println("!!!! Considering a subset of Inputs: " );
+						System.out.println("!!!! totalSplits: "+totalSplits );
+						int selectedSplit = config.getSelectedInputSplit();
+						System.out.println("!!!! selectedSplit: "+selectedSplit );
+						db.setSplit( totalSplits, selectedSplit );
+					}
+				}
+				
 				sortedDBs.add(db);
 			}
 			

@@ -71,6 +71,8 @@ public class SystemConfig {
 	private String serverSideLanguage;
 	private String firefoxDriverPath;
 	private Boolean browserCertificateRequired;
+	private int totalInputSplits;
+	private int selectedInputSplit;
 	
 	
 	static final int DEFAULT_WAIT_TIME = 1000;
@@ -326,6 +328,25 @@ public class SystemConfig {
 			else{
 				this.cleanUp = new JsonObject();
 			}
+			
+			//The following two are the configurations needed if we intend to execute a same MR on multiple nodes
+			
+			if(jsonObject.keySet().contains("totalInputSplits")){
+				this.totalInputSplits = jsonObject.get("totalInputSplits").getAsInt();
+			}
+			else{
+				this.totalInputSplits = 1;
+			}
+			
+			//Note: if we define '10', the first split will be '0' the last one will be '10' 
+			//(otherwise we exclude the last chunk of data, the 'module')
+			if(jsonObject.keySet().contains("selectedInputSplit")){
+				this.selectedInputSplit = jsonObject.get("selectedInputSplit").getAsInt();
+			}
+			else{
+				this.selectedInputSplit = 0;
+			}
+			
 			
 			if(jsonObject.keySet().contains("waitTimeAfterAction")){
 				this.waitTimeAfterAction = jsonObject.get("waitTimeAfterAction").getAsLong();
@@ -962,6 +983,14 @@ public class SystemConfig {
 
 	public void setBrowserCertificateRequired(Boolean browserCertificateRequired) {
 		this.browserCertificateRequired = browserCertificateRequired;
+	}
+
+	public int getTotalInputSplits() {
+		return totalInputSplits;
+	}
+
+	public int getSelectedInputSplit() {
+		return selectedInputSplit;
 	}
 	
 }
