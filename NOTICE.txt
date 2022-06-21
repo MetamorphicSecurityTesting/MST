@@ -1,0 +1,10 @@
+SMRL is © 2018 - 2022 University of Luxembourg
+
+Authors: 
+-	Xuan Phu MAI - xuanphu.mai@uni.lu
+-	Fabrizio Pastore - fabrizio.pastore@uni.lu
+-	Lionel Briand - lionel.briand@uni.lu
+
+Licensed under Apache License version 2.0 (see COPYING.txt)
+
+Copyright (C) 2022 University of Luxembourg
