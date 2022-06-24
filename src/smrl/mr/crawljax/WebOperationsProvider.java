@@ -254,6 +254,8 @@ public class WebOperationsProvider implements OperationsProvider {
 	public List<Action> loadActionsAvailableWithoutLogin() {
 		List<WebInputCrawlJax> inps = impl.getInputList();
 		LinkedList<Action> actions = new LinkedList<>();
+		
+		HashSet<String> urls = new HashSet<String>(); 
 		for (WebInputCrawlJax i : inps) {
 			boolean loggedIn = false;
 			boolean isLogOut = true;
@@ -272,11 +274,13 @@ public class WebOperationsProvider implements OperationsProvider {
 				}
 
 				if(!loggedIn && !isLogOut &&
-						!containActionURL(actions, a) &&
+//						!containActionURL(actions, a) &&
 						a.getUrl()!=null &&
 						!a.getUrl().isEmpty() &&
 						!impl.sysConfig.isLoginURL(a.getUrl()) &&
-						!isEmptyUrl(a.getUrl())) {
+						!isEmptyUrl(a.getUrl()) &&
+						! urls.contains(a.getUrl())
+						) {
 					actions.add(a);
 				}
 			}
