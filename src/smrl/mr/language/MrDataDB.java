@@ -154,11 +154,12 @@ public class MrDataDB<D> {
 	private List<D> inputs;
 	protected int LEN;
 	protected int START;
+	protected int BASE_START = 0;
 
 	public void load(List<D> loadInputs) {
 		inputs = loadInputs;
 		LEN = inputs.size();
-		START=0;
+		START=BASE_START;
 	}
 
 	public boolean hasMore() {
@@ -166,7 +167,7 @@ public class MrDataDB<D> {
 	}
 
 	public void resetTestsCounter() {
-		START=0;
+		START=BASE_START;
 	}
 
 	public HashMap<String, D> getProcessedInputs() {
@@ -237,44 +238,50 @@ public class MrDataDB<D> {
 		if ( unshuffled != null ) {
 			inputs = unshuffled;
 		} else {
-//			System.out.println("New random");
+			//			System.out.println("New random");
 			rnd = new Random(System.currentTimeMillis());
 		}
-		
+
 		int start = START % LEN;
-		
+
 		//we shuffle everything except the one at position start, which should remain at position start
-		
+
 		unshuffled = inputs;
 		inputs = new LinkedList<D>();
-		
-		LinkedList<D> toShuffle = new LinkedList<D>();
-		toShuffle.addAll(unshuffled);
-		
-		
-		
-//		System.out.println("START "+START);
-//		System.out.println("start "+start);
-		
-//		System.out.println("TOKEEP (before) "+toShuffle.get(start-1).hashCode()+" "+toShuffle.get(start-1));
-//		System.out.println("TOKEEP  "+toShuffle.get(start).hashCode()+" "+toShuffle.get(start));
-//		System.out.println("TOKEEP (after) "+toShuffle.get(start+1).hashCode()+" "+toShuffle.get(start+1));
-		
-		
-		D first = toShuffle.remove(start);
-		
-		
-		
-		Collections.shuffle(toShuffle, rnd);
-		
-		inputs.addAll(toShuffle);
-		inputs.add(start, first);
-		
-//		System.out.println("ELEMENT-1 "+inputs.get(start).hashCode()+" "+inputs.get(start));
-//		System.out.println("ELEMENT-2 "+inputs.get(start+1).hashCode()+" "+inputs.get(start+1));
-		
+
+		if ( BASE_START > 0 ) {
+			LinkedList<D> toShuffle = new LinkedList<D>();
+			toShuffle.addAll(unshuffled.subList(BASE_START,BASE_START+LEN));	
+
+			D first = toShuffle.remove(start);
+
+			Collections.shuffle(toShuffle, rnd);
+
+			//At the beginning we keep unshuffled data
+			inputs.addAll(unshuffled.subList(0,BASE_START));
+
+			//Shuffled data in the middle
+			inputs.add(start, first);
+			inputs.addAll(toShuffle);
+
+			//At the end we keep unshuffled data
+			inputs.addAll(unshuffled.subList(BASE_START+LEN,unshuffled.size()));
+
+		} else {
+			//Original implementation for non shuffled code
+			LinkedList<D> toShuffle = new LinkedList<D>();
+			toShuffle.addAll(unshuffled);
+
+			D first = toShuffle.remove(start);
+
+			Collections.shuffle(toShuffle, rnd);
+
+			inputs.addAll(toShuffle);
+			inputs.add(start, first);
+		}
+
 		cleanUpGeneratedAndReassignedData();
-		
+
 	}
 
 	public void unshuffle() {
@@ -294,7 +301,8 @@ public class MrDataDB<D> {
 	public void setSplit(int totalSplits, int selectedSplit) {
 		int chunksSize = LEN / totalSplits;
 		
-		START = chunksSize * selectedSplit;
+		BASE_START = chunksSize * selectedSplit;
+		START = BASE_START;
 		int chunkEnd = Math.min( START + chunksSize, LEN );
 		
 		LEN = chunkEnd;
