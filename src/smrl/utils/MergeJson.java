@@ -104,7 +104,7 @@ public class MergeJson
 				JSONParser parser = new JSONParser();
 			
 				
-				FileReader filereader=new FileReader(file,StandardCharsets.UTF_8);
+				FileReader filereader=new FileReader(file);
 				Object obj = parser.parse(filereader);
 				
 				//creating file reader to read json file	
