@@ -374,9 +374,26 @@ public class Operations {
 	@MRDataProvider
 	public static Object RandomValue(Class type) {
 		MrDataDBRandom randomDB = (MrDataDBRandom) MR.CURRENT.getDataDB("RandomValue");
-		return randomDB.get(type,1);
+		return randomDB.get(type,randomDB.nextValueCounter());
+	}
+	
+	/**
+	 * Data Representation Function.
+	 * Return a random value of a specific class.
+	 * 
+	 * @param type The class type to be returned.
+	 * @return
+	 */
+	@MRDataProvider
+	public static Integer RandomInteger(int min, int max) {
+		
+		MrDataDBRandom randomDB = (MrDataDBRandom) MR.CURRENT.getDataDB("RandomValue");
+		return (Integer) randomDB.get(Integer.class,randomDB.nextValueCounter(), min, max );
+		
 	}
 
+	public static int counter = 0;
+	
 	/**
 	 * Web-specific function.
 	 * Return the corresponding class of a value pattern.

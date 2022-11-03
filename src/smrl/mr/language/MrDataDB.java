@@ -307,4 +307,17 @@ public class MrDataDB<D> {
 		
 		LEN = chunkEnd;
 	}
+
+	protected void set(int i, D v) {
+		String key = dbName+"("+i+")";
+		generatedData.put( key, v );
+	}
+
+	public boolean shufflingEnabled() {
+		return true;
+	}
+
+	public int shuffleSize() {
+		return size();
+	}
 }

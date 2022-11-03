@@ -20,23 +20,31 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MrDataDBRandom extends MrDataDB<Object> {
-
+	public static int SIZE = 10; 
+			
 	public MrDataDBRandom(String dbName) {
 		super(dbName);
-		LEN=10;
+		LEN=SIZE;
 	}
 
 
 	HashMap<Class, ArrayList<Object>> typesDB = new HashMap<>();
+	private Class type;
+	
 	public Object get(Class type, int i) {
+		return this.get( type, i, 0, 100 );
+	}
+	
+	public Object get(Class type, int i, int min, int max) {
 		ArrayList<Object> db = typesDB.get(type);
 		if ( db == null ) {
-			db = populateDB( type );
+			db = populateDB( type, min, max );
 		}
 		
 		int pos = (START+i-1) % LEN;
 		
 		Object data = db.get(pos);
+		
 		
 		String key = dbName+"("+i+")";
 		generatedData.put(key, data);
@@ -44,33 +52,94 @@ public class MrDataDBRandom extends MrDataDB<Object> {
 		return data;
 	}
 	
-	
-	private ArrayList<Object> populateDB(Class type) {
-		ArrayList<Object> db = new ArrayList<>();
+	private Object createDataValue(Class type) {
 		if ( type == String.class ) {
-			for ( int i = 0; i < LEN; i++ ) {
-				int val = (int) Math.floor( Math.random()*100 );
-				db.add(val);
-			}
+			return String.valueOf( Math.floor( Math.random()*100 ) );
 		} else if ( type == Integer.class ) {
-			for ( int i = 0; i < LEN; i++ ) {
-				int val = (int) Math.floor( Math.random()*100 );
-				db.add(val);
-			}
+			return (int) Math.floor( Math.random()*100 );
 		} else if ( type == Double.class ) {
-			for ( int i = 0; i < LEN; i++ ) {
-				double val = Math.random()*100 ;
-				db.add(val);
-			}
+			return Math.random()*100 ;
 		} else if ( type == Boolean.class ) {
-			db.add(true);
-			db.add(false);
+			if ( Math.random() > 0.5 ) {
+				return true;
+			} else {
+				return false;
+			}
 		} else {
 			throw new RuntimeException("Type "+type+"not handled by "+MrDataDBRandom.class.getName() );
 		}
-		return db;
 	}
 	
-	
+	private ArrayList<Object> populateDB(Class type, int min, int max) {
+		this.type = type;
+		ArrayList<Object> db = new ArrayList<>();
+		
+		int delta = max-min;
+		
+		for ( int i = 0; i < LEN; i++ ) {
 
+			double value = min + Math.random()*delta;
+
+			if ( type == String.class ) {
+				db.add( String.valueOf( value ) );
+			} else if ( type == Integer.class ) {
+
+				int val = (int) value;
+				db.add(val);
+
+			} else if ( type == Double.class ) {
+
+				db.add(value);
+
+			} else if ( type == Boolean.class ) {
+				if ( value < 0.5 )
+					db.add(true);
+				else
+					db.add(false);
+			} else {
+				throw new RuntimeException("Type "+type+"not handled by "+MrDataDBRandom.class.getName() );
+			}
+
+		}
+		return db;
+	}
+
+//	@Override
+//	public Object get(int i) {
+//		Object v = createDataValue(this.type);
+//		
+//		super.set(i,v);
+//		
+//		return v;
+//	}
+	
+	@Override
+	public void shuffle() {
+		
+	}
+	
+	public boolean shufflingEnabled() {
+		return false;
+	}
+	
+	@Override
+	public int size() {
+		return SIZE;
+	}
+	
+	private int nextValue=1;
+	public int nextValueCounter() {
+		return nextValue++;
+	}
+
+	@Override
+	public void cleanupReassignedData() {
+		nextValue=1;
+		typesDB.clear();
+		super.cleanupReassignedData();
+	}
+
+	public int shuffleSize() {
+		return size();
+	}
 }

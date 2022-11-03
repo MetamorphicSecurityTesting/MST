@@ -129,7 +129,14 @@ public abstract class MR {
 					dataDBs.put(dataName, db);
 					sortedDBs.add(db);
 					continue;
-				} 
+				}
+				
+				if ( dataName.equals("RandomInteger") ) {
+					MrDataDBRandom db = new MrDataDBRandom("RandomValue");
+					dataDBs.put("RandomValue", db);
+					sortedDBs.add(db);
+					continue;
+				}
 				
 //				if ( dataName.equals("RandomHttpMethod") ) {
 				if ( dataName.equals("HttpMethod") ) {
@@ -429,7 +436,7 @@ public abstract class MR {
 			
 			int expectedSrcInputs = expectedSourceInputsOfType(db);
 			
-			if ( expectedSrcInputs <= 1 ) {
+			if ( expectedSrcInputs <= 1  || ! db.shufflingEnabled() ) {
 				iterateMR(sortedDBs, i+1);
 				traceSourceInputsOfSameType(db);
 				expectedSrcInputs = expectedSourceInputsOfType(db);
@@ -437,7 +444,7 @@ public abstract class MR {
 			
 			
 			
-			if ( expectedSrcInputs > 1 ) {
+			if ( expectedSrcInputs > 1 && db.shufflingEnabled() ) {
 //				if ( true ) {
 //					throw new IllegalStateException("This is a debug message, this code should be executed for SESS_003, never tested");
 //				}
@@ -495,7 +502,7 @@ public abstract class MR {
 
 	private void iterateMRshuffling(List<MrDataDB> sortedDBs, MrDataDB db, int i) {
 //		System.out.println("Shuffling "+db.dbName);
-		int max = db.size() < MAX_SHUFFLING ? db.size() : MAX_SHUFFLING;
+		int max = db.shuffleSize() < MAX_SHUFFLING ? db.shuffleSize() : MAX_SHUFFLING;
 //		System.out.println("***Shuffling "+db.dbName + " max:" + max);
 		for ( int j = 0; j < max; j++ ) {
 			db.shuffle();
