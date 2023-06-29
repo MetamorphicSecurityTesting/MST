@@ -22,11 +22,25 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 public abstract class MRBaseTest {
 
 	private OperationsProvider _provider;
 
+//	{
+//		ClassLoader cl = ClassLoader.getSystemClassLoader();
+//		
+//		
+//        URL[] urls = ((URLClassLoader)cl).getURLs();
+//        String path = "";
+//        for(URL url: urls){
+//        	path+=url.getFile()+":";
+//        }
+//        System.out.println(path);
+//	}
+	
 	public void setProvider(OperationsProvider provider) {
 		this._provider = provider;
 	}

@@ -457,6 +457,11 @@ public abstract class MR {
 		}
 	}
 
+	public OperationsProvider getProvider() {
+		return provider;
+	}
+
+
 	//Kill all running chromedriver (and Google Chrome)
 	private void killChromeDriver() {
 		

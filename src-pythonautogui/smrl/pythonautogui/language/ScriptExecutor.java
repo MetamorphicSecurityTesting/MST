@@ -28,18 +28,22 @@ import java.util.List;
 
 
 import smrl.mr.crawljax.ProcessRunner;
+import smrl.mr.language.MR;
 
 public class ScriptExecutor {
-	String python = System.getProperty("python","python3");
+	static String python = System.getProperty("python","python3");
 	
 	public static int execute(Scenario scenario) throws IOException {
 
 		StringBuffer outputBuffer = new StringBuffer();
 		StringBuffer errorBuffer = new StringBuffer();
 		List<String> exec = new ArrayList<>();
-		exec.add("");
+		exec.add(python);
 		
-		File script = new File("MSTscript.py");
+		File dir = new File("MST_Data");
+		dir = new File(dir, "Scenarios");
+		
+		File script = new File(dir,"MSTscript.py");
 		Path filePath = script.toPath();
 		Files.deleteIfExists(filePath);
 		Files.createFile(filePath);
@@ -52,7 +56,11 @@ public class ScriptExecutor {
 		exec.add(script.getAbsolutePath());
 
 		try {
-			int exitCode = ProcessRunner.run( exec, "", outputBuffer, errorBuffer, (int) 0 );
+//			System.out.println(System.getenv("PATH") );
+//			File dir = new File("MST_Data");
+//			dir = new File(dir, "Scenarios");
+			System.out.println(dir.getAbsolutePath());
+			int exitCode = ProcessRunner.run( exec, "", outputBuffer, errorBuffer, (int) 0, dir );
 
 			System.out.println("DONE");
 			

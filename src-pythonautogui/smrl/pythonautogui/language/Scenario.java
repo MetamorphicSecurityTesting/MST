@@ -24,7 +24,7 @@ import smrl.mr.crawljax.ProcessRunner;
 import smrl.mr.language.MRData;
 
 public class Scenario extends MRData {
-
+	String name;
 	ArrayList<Command> commands = new ArrayList<Command>();
 
 	//	@Override
@@ -42,13 +42,15 @@ public class Scenario extends MRData {
 		}
 	}
 
-	public Scenario(Command... _commands) {
+	public Scenario(String name, Command... _commands) {
+		this.name = name;
 		for ( Command s : _commands ) {
 			commands.add(s);
 		}
 	}
 
-	public Scenario(String _commands[]) {
+	public Scenario(String name, String _commands[]) {
+		this.name = name;
 		for ( String command : _commands ) {
 			commands.add(new Command ( command ));
 		}
@@ -124,16 +126,29 @@ public boolean waitForTermination() {
 	return true;
 }
 
-public Integer getReturnValue() {
+/**
+ * Returns the exit state of the process
+ * @return
+ */
+public Integer getExistState() {
 	return returnValue;
 }
 
+/**
+ * Replaces all the nstances of 'orig' with 'replacement.
+ * Returns true if anything has been replaced
+ * 
+ * @param origin
+ * @param replacement
+ * @return
+ */
 public boolean replaceAll(String origin, String replacement) {
+	this.setAlreadyUsedInRHS();
+	boolean ret = false;
 	for ( Command command : commands ) {
-		command.replaceAll(origin,replacement);
+		ret |= command.replaceAll(origin,replacement);
 	}
-	
-	return true;
+	return ret;
 }
 
 //public String getOutput() {
@@ -142,7 +157,7 @@ public boolean replaceAll(String origin, String replacement) {
 
 @Override
 public String toString() {
-	return commands.toString();
+	return "Scenario "+name+": "+commands.toString();
 }
 
 public boolean hasIP() {
@@ -161,6 +176,17 @@ public String getIP() {
 
 public ScreenShot getScreenShot() {
 	return null;
+}
+
+@Override
+public MRData clone() throws CloneNotSupportedException {
+	Scenario result = (Scenario) super.clone();
+	result.commands = new ArrayList<Command>();
+	for ( Command command : commands ) {
+		result.add((Command) command.clone());
+	}
+	
+	return result;
 }
 
 
