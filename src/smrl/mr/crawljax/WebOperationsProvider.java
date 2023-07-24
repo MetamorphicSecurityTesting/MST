@@ -637,6 +637,35 @@ public class WebOperationsProvider implements OperationsProvider {
 	 */
 	@Override
 	public smrl.mr.language.Output Output(Input input, int pos) {
+		if (MR.extractCost) {
+			if(input==null || pos<0){
+				return null;
+			}
+			
+
+			boolean CACHED = outputCache.containsKey(input);
+			//		System.out.println("\t!!! CACHED:"+CACHED+" "+System.identityHashCode(input)+" "+input);
+			if(CACHED){
+				WebOutputSequence res = new WebOutputSequence();
+
+				ArrayList<Object> listOutput = outputCache.get(input).getOutputSequence();
+
+				if(listOutput.size() <= pos){
+					int size = listOutput.size();
+					res.add(listOutput.get(size-1), outputCache.get(input).redirectURL(size-1), (CookieSession) outputCache.get(input).getSession(size-1));
+					return res;
+				}
+				else{
+					res.add(listOutput.get(pos), outputCache.get(input).redirectURL(pos), (CookieSession) outputCache.get(input).getSession(pos));
+					//				res.add(listOutput.get(pos-1));
+					//				res.addRedirectURL(outputCache.get(input).redirectURL(pos-1));
+					return res;
+				}
+			}
+
+			
+		}
+		
 		if(input==null || pos<0){
 			return null;
 		}

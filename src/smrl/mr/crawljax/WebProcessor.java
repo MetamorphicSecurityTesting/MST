@@ -106,7 +106,9 @@ public class WebProcessor {
 	private static final long PAGELOAD_TIMEOUT = 5000;			// in ms
 	private static final boolean setTimeouts = false;
 	private static final boolean storeDOMs = true;
+	
 
+	
 	private List<Account> userList;
 	private List<WebInputCrawlJax> inputList;
 	private Iterator<WebInputCrawlJax> inputIter;
@@ -620,6 +622,14 @@ public class WebProcessor {
 
 	WebDriver driver = null;
 	public WebOutputSequence output(WebInputCrawlJax input, boolean checkDownloadedObjects) {
+		
+//		if (extractCost == true) {
+//			MR.executedAction = input.actions().size();
+//			return null;
+//					
+//		}
+		
+		
 		System.out.println("HERE");
 		System.out.flush();
 		if(input==null) {
@@ -635,7 +645,8 @@ public class WebProcessor {
 		} if ( input.isUseRemovedCertificate() ) {
 			loadProfileWithRemovedCertificate(input);
 		} else {
-			loadDefaultDriver(input);	
+			if(MR.extractCost_test==false) {
+			loadDefaultDriver(input);	}
 		}
 
 
@@ -643,34 +654,50 @@ public class WebProcessor {
 
 
 		List<Action> actions = input.actions();
+//		MR.executedAction = input.actions().size();
 
 		HashMap<Long,String> actionUrls = new HashMap<Long, String>();
-
+// I can get the length f the actions from here!!!
 		int timeOfConfirm=0;
+		MR.actionSize = actions.size();
 		for(int i=0; i<actions.size(); i++){
-			try {
-				System.out.println("!!!PROCESSING ACT "+i+ " OF "+input.getId());
-				Action act = actions.get(i);
-				
-				long before = System.currentTimeMillis();
-				
-				timeOfConfirm = processInput(input, checkDownloadedObjects, outputSequence, 
-						act, actionUrls,
-						timeOfConfirm, i);
-				long after = System.currentTimeMillis();
-				
-				outputSequence.setDurationOfLast( after - before );
-				
-			} catch ( Throwable t ) {
-				System.out.println("!!!Throwable "+t);
-				outputSequence.add(null,null,null);
+			
+//			if (MR.extractCost == false) {
 				try {
-					Thread.sleep(3000);
+					
+					System.out.println("!!!PROCESSING ACT "+i+ " OF "+input.getId());
+					Action act = actions.get(i);
+
+					long before = System.currentTimeMillis();
+
+					timeOfConfirm = processInput(input, checkDownloadedObjects, outputSequence, 
+							act, actionUrls,
+							timeOfConfirm, i);
+					long after = System.currentTimeMillis();
+
+					outputSequence.setDurationOfLast( after - before );
+
+				} catch ( Throwable t ) {
+					System.out.println("!!!Throwable "+t);
+					outputSequence.add(null,null,null);
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+//				}
+			}
+//			else {
+//				MR.executedAction++;
+				
+				try {
+					Thread.sleep(3);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-				
+//				}
 			}
 		}
 
@@ -697,8 +724,8 @@ public class WebProcessor {
 		if ( longWaitPerformed ) {
 			resetTime();
 		}
-		
-		
+
+
 
 		return outputSequence;
 	}
@@ -706,10 +733,12 @@ public class WebProcessor {
 
 	private int processInput(WebInputCrawlJax input, boolean checkDownloadedObjects, WebOutputSequence outputSequence,
 			Action act, HashMap<Long, String> actionUrls, int timeOfConfirm, int i) {
-		
+ 
 		String text = "index";
 		String aURL = act.getUrl();
 
+		MR.executedAction++; 
+		if (MR.extractCost_test) {return 0;} 
 		if(act.getUrl()!=null && 
 				!act.getUrl().trim().isEmpty() && 
 				!actionUrls.containsKey(act.getActionID())) {
@@ -767,11 +796,11 @@ public class WebProcessor {
 
 		CookieSession session = (CookieSession) act.getSession();
 		if ( session != null ) {
-			
+
 			if ( session.isClean() ) {
 				driver.manage().deleteAllCookies();
 			}
-			
+
 			for (Cookie ck : session.getCookies() ) {
 				setCookieInDriver(ck);
 			}
@@ -956,7 +985,7 @@ public class WebProcessor {
 							if(userParam!= null &&
 									userParam.equals(idValue)){
 								//Fabrizio: 2022.02.08 commnting out the fllowing, not good here, randomization should be in the MR
-//								valueToSend += RandomStringUtils.random(5,true,false);
+								//								valueToSend += RandomStringUtils.random(5,true,false);
 							}
 							else{
 								//Check if this input is the confirm password in the signup action
@@ -1307,7 +1336,7 @@ public class WebProcessor {
 								break;
 							}
 						}
-			
+
 
 						//Phu: just commented statements under (20/12/2019) to try another way to click on the element
 						//							try {
@@ -1382,7 +1411,7 @@ public class WebProcessor {
 			outObj.realRequestedUrl = realRequestedUrl;
 			outObj.realClickedElementText = realClickedElementText;
 			outObj.setInputWithPos(input,i);
-			
+
 			if(checkStatusCode) {
 				outObj.statusCode = getStatusCode(driver);
 			}
@@ -1413,7 +1442,7 @@ public class WebProcessor {
 				outObj.downloadedObjects = null;
 			}
 
-			
+
 
 			//get cookie
 			CookieSession currentSession = null;
@@ -1429,7 +1458,7 @@ public class WebProcessor {
 					currentSession = new CookieSession();
 				}
 			}
-			
+
 			outputSequence.add(outObj, redirectURL, currentSession );
 
 			String inputID = input.getId();
@@ -1453,9 +1482,9 @@ public class WebProcessor {
 				fileName = executionId+"_"+inputID+"_" + (standardText(text) + "_" + aURL).hashCode() + "_text_";
 				saveDomToFile(outObj.text, fileName);
 			}
-			
+
 			outObj.setHtmlFile ( storedFile );
-			
+
 		}
 
 		//clear all replacer rule in the proxy
@@ -1494,7 +1523,7 @@ public class WebProcessor {
 		if (exePath == null ) {
 			exePath = "/usr/local/bin/geckodriver";
 			//Fabrizio 2022-02-03: Never set a variable to a user-specific path
-//			exePath = "C:\\Users\\nbaya076\\geckodriver.exe";
+			//			exePath = "C:\\Users\\nbaya076\\geckodriver.exe";
 		}
 
 
@@ -1530,9 +1559,9 @@ public class WebProcessor {
 	private void loadDefaultDriver(WebInputCrawlJax input) {
 		//String exePath = sysConfig.getFirefoxDriverPath();
 		String exePath = sysConfig.getChromeDriverPath();
-		
-		
-		
+
+
+
 		//call web browser
 		if (exePath == null ) {
 			exePath = "/usr/local/bin/chromedriver";
@@ -1608,10 +1637,10 @@ public class WebProcessor {
 			driver.manage().timeouts().implicitlyWait(SEARCH_ELEMENT_TIMEOUT, TimeUnit.MILLISECONDS);
 			driver.manage().timeouts().pageLoadTimeout(PAGELOAD_TIMEOUT, TimeUnit.MILLISECONDS);
 		}
-		
-/* //// Nazanin 22.02.2022: RUN Firefox
+
+		/* //// Nazanin 22.02.2022: RUN Firefox
 		String exePath = sysConfig.getFirefoxDriverPath();
-		
+
 		File exeFile = new File ( exePath );
 
 		System.out.println("FirefoxDRIVER: "+exeFile.getAbsolutePath());
@@ -1661,8 +1690,8 @@ public class WebProcessor {
 
 
 		driver.manage().timeouts().implicitlyWait(4, TimeUnit.SECONDS);
-	
-	
+
+
 	// */
 	}
 
@@ -2513,14 +2542,14 @@ public class WebProcessor {
 		fullFileName += "_" + (i-1) + ".html";
 
 		File storedFile = new File (fullFileName);
-		
+
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fullFileName, false))) {
 			bw.write(dom);
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		return storedFile;
 
 	}
@@ -3345,6 +3374,9 @@ public class WebProcessor {
 
 
 	public boolean isError(Object output) {
+		if(MR.extractCost) {
+			return false;
+		}
 		if(!(output instanceof WebOutputSequence)){
 			return true;
 		}

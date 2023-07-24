@@ -45,7 +45,7 @@ import smrl.mr.language.actions.WaitAction;
 import smrl.mr.utils.RemoteFile;
 
 public class Operations {
-	
+
 	public static void setCollectAllFailures(boolean value) {
 		MR.setCOLLECT_ALL_FAILURES(value);
 	}
@@ -132,7 +132,7 @@ public class Operations {
 
 		return eq;
 	};
-	
+
 	/**
 	 * SMRL boolean operator. Create 'a' as a copy of 'b'.
 	 * 
@@ -376,7 +376,7 @@ public class Operations {
 		MrDataDBRandom randomDB = (MrDataDBRandom) MR.CURRENT.getDataDB("RandomValue");
 		return randomDB.get(type,randomDB.nextValueCounter());
 	}
-	
+
 	/**
 	 * Data Representation Function.
 	 * Return a random value of a specific class.
@@ -386,14 +386,14 @@ public class Operations {
 	 */
 	@MRDataProvider
 	public static Integer RandomInteger(int min, int max) {
-		
+
 		MrDataDBRandom randomDB = (MrDataDBRandom) MR.CURRENT.getDataDB("RandomValue");
 		return (Integer) randomDB.get(Integer.class,randomDB.nextValueCounter(), min, max );
-		
+
 	}
 
 	public static int counter = 0;
-	
+
 	/**
 	 * Web-specific function.
 	 * Return the corresponding class of a value pattern.
@@ -1010,12 +1010,12 @@ public class Operations {
 
 		return updateStringFormInput(fi, value, type);
 	}
-	
+
 	public static boolean updateStringFormInputParameter(JsonObject fi, String value, String type, String parameterName) {
 
 		ArrayList<LoginParam> loginParams = WebProcessor.getSysConfig().getLoginParams();
 		boolean hasUserParam = false;
-		
+
 		if(fi.keySet().contains("identification")){
 			JsonObject iden = fi.get("identification").getAsJsonObject();
 			if(iden.keySet().contains("value")){
@@ -1158,7 +1158,7 @@ public class Operations {
 	 * @return
 	 */
 	private static boolean _notTried(String username, String url) {
-
+		MR.notTried_flag=false;
 		HashSet<String> setOfInputs = triedInputs.get(username);
 
 		if ( setOfInputs == null ) {
@@ -1168,6 +1168,8 @@ public class Operations {
 
 		if ( setOfInputs.contains(url) ) {
 			System.out.println("!!! _notTried WITH "+username+" "+url+" FALSE");
+			if(MR.extractCost) {
+				MR.notTried_flag=true;}
 			return false;
 		}
 
@@ -1296,13 +1298,13 @@ public class Operations {
 
 		return MR.CURRENT.getMRData(dbName,1).toString();
 	}
-	
+
 	public static List parameterValuesUsedByOtherUsers(Action action, int parPosition) {
 		String superDB = "parameterValuesForEachUser";
 		MrMultiDataDB multiDB = MR.CURRENT.loadParameterValuesForEachUser();
-		
-		
-		
+
+
+
 		String dbName = MR.CURRENT.getParameterValueUsedByOtherUsers_DBName(action, parPosition);
 		if (dbName==null) {
 			return null;
@@ -1312,7 +1314,7 @@ public class Operations {
 		if ( ! multiDB.setCurrent( dbName ) ) {
 			return null;
 		}
-		
+
 		return multiDB.values();
 	}
 
@@ -1387,7 +1389,7 @@ public class Operations {
 		}
 		return true;
 	}
-	
+
 	//// Nazanin's Implementation Start Point
 
 	public static boolean isFormInput(Object formInput) {
@@ -1421,7 +1423,7 @@ public class Operations {
 	@MRDataProvider()
 	public static String CodeInjectionString(int x){
 		return (String) MR.CURRENT.getMRData("CodeInjectionString",x);
-//		return (String) MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
+		//		return (String) MR.CURRENT.getMRData("CodeInjectionString_"+MR.CURRENT.provider.getSysConfig().getServerSideLanguage(),x);
 	}
 
 	@MRDataProvider  
@@ -1643,23 +1645,23 @@ public class Operations {
 	public static String  PayloadEntry(String catalogName, int x ){ 
 		return (String) MR.CURRENT.getMRData(catalogName,x);
 	}
-	
+
 	public static String SCInjection_beginning(String value, String sc) {
-		
+
 		String str = sc+ value;
 		return str;
-		
+
 	}
-	
+
 	public static String SCInjection_beginning(JsonObject formInput, String sc) {
 		String str="";
 		if(formInput==null || 
 				!formInput.keySet().contains("type")||
 				!(formInput.get("type").getAsString().startsWith("text") ))
-					{			return str;		}
-		
+		{			return str;		}
+
 		else if ( !formInput.get("values").getAsString().equals("[]") ||
-				  !formInput.get("type").getAsString().equals("hidden")) {
+				!formInput.get("type").getAsString().equals("hidden")) {
 			str = formInput.get("values").getAsString();
 		}
 
@@ -1669,21 +1671,21 @@ public class Operations {
 		valueArray.add(sc);
 
 		return sc+str;
-		
+
 	}
-	
+
 	public static String SCInjection_last(String value, String sc) {
 		String str = value + sc;
 		return str;
-		
+
 	}
-	
+
 	public static String SCInjection_last(JsonObject formInput, String sc) {
 		String str="";
-		
-		
-		 if ( !formInput.get("values").getAsString().equals("[]") ||
-				  !formInput.get("type").getAsString().equals("hidden")) {
+
+
+		if ( !formInput.get("values").getAsString().equals("[]") ||
+				!formInput.get("type").getAsString().equals("hidden")) {
 			str = formInput.get("values").getAsString();
 		}
 
@@ -1693,110 +1695,110 @@ public class Operations {
 		valueArray.add(sc);
 
 		return str+sc;
-		
+
 	}
-	
-	
+
+
 	public static String SCInjection_sides(String value, String sc) {
 		String str = sc + value + sc;
 		return str;
-		
+
 	}
-	
+
 	public static String SCInjection_sides(JsonObject formInput, String sc) {
 		String str="";
-		
-		
-		 if ( !formInput.get("values").getAsString().equals("[]") ||
-				  !formInput.get("type").getAsString().equals("hidden")) {
+
+
+		if ( !formInput.get("values").getAsString().equals("[]") ||
+				!formInput.get("type").getAsString().equals("hidden")) {
 			str = formInput.get("values").getAsString();
 		}
 
 		return sc+str+sc;
-		
+
 	}
-	
+
 	public static SystemConfig getSysConfig() {
 		return MR.CURRENT.provider.getSysConfig();
 	}
-	
+
 	public static String SCInjection_beginning_double(String value, String sc) {
 		String str = sc + sc + value;
 		return str;
-		
+
 	}
-	
+
 	public static String SCInjection_beginning_double(JsonObject formInput, String sc) {
 		String str="";
-		
-		
-		 if ( !formInput.get("values").getAsString().equals("[]") ||
-				  !formInput.get("type").getAsString().equals("hidden")) {
+
+
+		if ( !formInput.get("values").getAsString().equals("[]") ||
+				!formInput.get("type").getAsString().equals("hidden")) {
 			str = formInput.get("values").getAsString();
 		}
 
 		return sc + sc + str;
-		
+
 	}
-	
-	
+
+
 	public static String SCInjection_last_double(String value, String sc) {
 		String str = value + sc + sc;
 		return str;
-		
+
 	}
-	
+
 	public static String SCInjection_last_double(JsonObject formInput, String sc) {
 		String str="";
-		
-		
-		 if ( !formInput.get("values").getAsString().equals("[]") ||
-				  !formInput.get("type").getAsString().equals("hidden")) {
+
+
+		if ( !formInput.get("values").getAsString().equals("[]") ||
+				!formInput.get("type").getAsString().equals("hidden")) {
 			str = formInput.get("values").getAsString();
 		}
 
 
 		return str + sc + sc;
-		
+
 	}
-	
-	
+
+
 	// val+ sc + ue
 	public static String SCInjection_middle(String value, String sc) {
 		String split[] = value.split("");
-		
+
 		String string = new StringBuilder().append(split[0]).append(sc).toString();
 		if (split.length>1 ){
 			for (int i = 1; i< split.length; i++) {
 				string = string + split[i];
 			}
 		}
-		
+
 		return string;
-		
+
 	}
 	// val+ sc + ue
 	public static String SCInjection_middle(JsonObject formInput, String sc) {
 		String value="";
-		
-		
-		 if ( !formInput.get("values").getAsString().equals("[]") ||
-				  !formInput.get("type").getAsString().equals("hidden")) {
+
+
+		if ( !formInput.get("values").getAsString().equals("[]") ||
+				!formInput.get("type").getAsString().equals("hidden")) {
 			value = formInput.get("values").getAsString();
 		}
-		 
 
-		 String split[] = value.split("");
-			
-			String string = new StringBuilder().append(split[0]).append(sc).toString();
-			if (split.length>1 ){
-				for (int i = 1; i< split.length; i++) {
-					string = string + split[i];
-				}
+
+		String split[] = value.split("");
+
+		String string = new StringBuilder().append(split[0]).append(sc).toString();
+		if (split.length>1 ){
+			for (int i = 1; i< split.length; i++) {
+				string = string + split[i];
 			}
-			
-			return string;
-		
+		}
+
+		return string;
+
 	}
 	public static String EncodeUrl(String url){ 
 		if(url==null){
@@ -1809,9 +1811,9 @@ public class Operations {
 		} catch (UnsupportedEncodingException ex) {
 			throw new RuntimeException(ex.getCause());
 		}
-		
+
 	}
-	
+
 }
 
 
