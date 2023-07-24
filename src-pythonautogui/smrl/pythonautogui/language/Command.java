@@ -65,9 +65,13 @@ public class Command extends MRData {
 		}
 	}
 
-	public void replaceAll(String origin, String replacement) {
+	public boolean replaceAll(String origin, String replacement) {
+		String orig = stringCommand;
 		stringCommand = stringCommand.replace(origin, replacement);
+		return ! orig.equals(stringCommand);
 	}
 
-	
+	public MRData clone() {
+		return new Command(stringCommand);
+	}
 }

@@ -107,9 +107,22 @@ public class Operations {
 	/**
 	 * @param a
 	 * @param b
-	 * @return true if a equals b or when a can be assigned using the value of b; false if a does not equal b, or cannot assign b to a.
+	 * @return true if a equals b 
+	 * 
+	 * NOTE: before 28/06/2023 it was returning true 
+	 * also "when a can be assigned using the value of b; false if a does not equal b, or cannot assign b to a."
+	 * because it was invoking EQUAL.
+	 * We changed the semantic.
 	 */
-	public static boolean equal( Object a, Object b ){ return EQUAL(a, b); };
+	public static boolean equal( Object a, Object b ){ 
+		if ( a == b) {
+			return true;
+		}
+		if ( a == null || b == null ) {
+			return false;
+		}
+		return a.equals(b);
+	};
 
 	/**
 	 * SMRL boolean operator.

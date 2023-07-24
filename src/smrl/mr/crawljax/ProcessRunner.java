@@ -136,7 +136,9 @@ public class ProcessRunner {
 			writer.append(stdInCommands);
 			writer.flush();
 			System.out.println("!!!STARTED");
-			int exitCode = p.waitFor();
+			int exitCode = -1;
+			exitCode =p.waitFor();
+			
 			
 			while ( t1.isAlive() || t.isAlive() ){
 				Thread.sleep(100);

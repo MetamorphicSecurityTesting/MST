@@ -103,12 +103,12 @@ public class PAGOperationsProvider implements OperationsProvider {
 
 				@Override
 				public boolean accept(File arg0, String arg1) {
-					return arg1.endsWith(".py");
+					return arg1.startsWith("Test") && arg1.endsWith(".py");
 				}
 				
 			});
 			for ( File script : pythonScripts ) {
-				content.add( new Scenario(loadContent(script)) );
+				content.add( new Scenario(script.getName(),loadContent(script)) );
 			}
 			
 		} else if ( "IP".equals(dataName) ) {
