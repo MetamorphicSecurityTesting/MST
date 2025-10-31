@@ -2,7 +2,7 @@
 This repository contains the source of the MST Library (previously called "SMRL library" or simply "SMRL"). 
 It includes all the algorithms necessary to execute metamorphic relations.
 
-See NOTICE.txt and COPYING.txt for license information.
+See NOTICE.txt and LICENSE.txt for license information.
 
 For more information https://sntsvv.github.io/SMRL/
 
